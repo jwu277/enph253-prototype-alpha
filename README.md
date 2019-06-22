@@ -5,19 +5,21 @@ Feel free to modify our SW approach/this README as need be.
 
 ## Structure
 An OOP infrastructure is used to create the HW sensors + actuators in SW.
+
 Concrete components are derived from abstract base classes, depending on their properties.
 
 ### Class List
-*Concrete*
+**Concrete**
 - `DriveMotor`: The driving motors
 
-*Abstract*
+**Abstract**
 - `BaseActuator`
 - `PolarityActuator`
 - `PwmActuator`
 
 ## Program Flow
 `setup()`: SW + HW initialization of components
+
 `loop()`:
 - read sensors
 - perform SW calculations
