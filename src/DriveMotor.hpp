@@ -2,31 +2,36 @@
 #define MOTOR
 
 #include "PolarityMotor.hpp"
-#include "PwmMotor.hpp"
+#include "PwmActuator.hpp"
 
-// TODO: refactor code
-
-class DriveMotor: public PolarityMotor, public PwmMotor {
+// DriveMotor is a concrete class that represents a driving motor.
+class DriveMotor: public PolarityMotor, public PwmActuator {
 
     private:
 
-        //the pin that corresponds to driving the motor forward 
+        // The forward operation pin
         PinName forward_pin; 
 
-        //the pin that corresponds to driving the motor backward
+        // The reverse operation pin
         PinName reverse_pin;   
 
     public:
 
-        //class constructor
+        // Initializes the pins and pwm
+        // forward_pin  -- the motor's forward operation pin
+        // reverse_pin  -- the motor's reverse operation pin
+        // pwm_clk_freq -- the pwm clock frequency in Hz
+        // pwm_period   -- the pwm cycle period in # pwm clk cycles
         DriveMotor(PinName forward_pin, PinName reverse_pin, int pwm_clk_freq, int pwm_period);
 
+        // Initializes the drive motor in HW
         void init();
 
-        // todo: comments
-        void updateMotor(int pwm, Direction dir);
+        // Updates the motor
+        // TODO: look into moving this into BaseActuator
+        void update(int pwm, Direction dir);
 
-        // actuate updates the motors hardware to the set values
+        // Actuates the motor...
         void actuate();
 
 };
