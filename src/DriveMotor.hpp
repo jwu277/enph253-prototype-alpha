@@ -1,11 +1,11 @@
 #ifndef MOTOR
 #define MOTOR
 
-#include "PolarityMotor.hpp"
+#include "PolarityActuator.hpp"
 #include "PwmActuator.hpp"
 
 // DriveMotor is a concrete class that represents a driving motor.
-class DriveMotor: public PolarityMotor, public PwmActuator {
+class DriveMotor: public PolarityActuator, public PwmActuator {
 
     private:
 

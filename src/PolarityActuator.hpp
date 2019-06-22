@@ -1,15 +1,15 @@
-#ifndef POLARITYMOTOR
-#define POLARITYMOTOR
+#ifndef POLARITYACTUATOR
+#define POLARITYACTUATOR
 
 #include "BaseActuator.hpp"
 
-// PolarityMotor is an abstract base class for motors with a polarity.
+// PolarityActuator is an abstract base class for actuators with a polarity.
 // That is, there is a distinction between a forward and reverse mode/motion.
-class PolarityMotor: public BaseActuator {
+class PolarityActuator: public BaseActuator {
 
     protected:
 
-        // dir is the current direction of the motor
+        // dir is the current direction of the actuator
 
         enum Direction {
             FORWARD,
