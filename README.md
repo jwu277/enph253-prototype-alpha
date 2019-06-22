@@ -1,4 +1,5 @@
 # enph253-prototype-alpha
+[![Build Status](https://travis-ci.com/jwu277/enph253-prototype-alpha.svg?token=GxxSjGqNnwfCvuxigwZq&branch=master)](https://travis-ci.com/jwu277/enph253-prototype-alpha)
 ENPH 253: Code for Prototype Alpha
 
 Feel free to modify our SW approach/this README as need be.
