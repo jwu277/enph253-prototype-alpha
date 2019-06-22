@@ -9,6 +9,11 @@ DriveMotor::DriveMotor(PinName forward_pin, PinName reverse_pin, int pwm_clk_fre
     this->dir = FORWARD;
 }
 
+void DriveMotor::init() {
+    PwmMotor::initPwm(this->forward_pin);
+    PwmMotor::initPwm(this->reverse_pin);
+}
+
 // todo: comments
 void DriveMotor::updateMotor(int pwm, Direction dir) {
     this->pwm = pwm;

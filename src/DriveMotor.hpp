@@ -21,6 +21,8 @@ class DriveMotor: public PolarityMotor, public PwmMotor {
         //class constructor
         DriveMotor(PinName forward_pin, PinName reverse_pin, int pwm_clk_freq, int pwm_period);
 
+        void init();
+
         // todo: comments
         void updateMotor(int pwm, Direction dir);
 
