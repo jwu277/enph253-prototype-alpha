@@ -40,6 +40,9 @@ install:
 script:
     - platformio run
 
+notifications:
+    slack: robot-competition:N1ms6vfiVjyPKFZgoax4JcRa
+
 
 #
 # Template #2: The project is intended to be used as a library with examples.
