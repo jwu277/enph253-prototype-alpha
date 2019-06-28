@@ -2,7 +2,11 @@
 #include "AnalogSensor.hpp"
 
 // Reads the analog device + stores result in state
-int AnalogSensor::read() {
+void AnalogSensor::update() {
     this->value = analogRead(this->pin);
-    return this->value;
 };
+
+// Return the read value
+int AnalogSensor::get_value() {
+    return this->value;
+}

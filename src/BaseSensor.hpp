@@ -5,10 +5,9 @@
 class BaseSensor {
 
     public:
-
-        // Hardware read of sensor
-        // To be put in loop()
-        virtual int read() = 0;
+        
+        // Update device state with a reading
+        virtual void update() = 0;
 
 };
 

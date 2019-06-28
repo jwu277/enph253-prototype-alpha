@@ -17,8 +17,11 @@ class AnalogSensor: public BaseSensor {
     
     public:
 
-        // reads the sensor
-        int read();
+        // update read
+        void update();
+
+        // obtain the read value
+        int get_value();
 
 };
 
