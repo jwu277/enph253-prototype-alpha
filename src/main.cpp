@@ -3,6 +3,7 @@
 
 // Device Modules
 #include "DriveMotor.hpp"
+#include "QrdSensor.hpp"
 
 // Constants
 #define PWM_CLK_FREQ 1000000
@@ -10,21 +11,23 @@
 
 // Functions
 void actuator_init();
-void sensor_init();
 
 void read_sensors();
 void compute();
 void update_actuators();
 void run_actuators();
 
-// Define Devices
+// Create + SW Init Devices
+// TODO: pins
 DriveMotor left_drive_motor = DriveMotor(PA_0, PA_1, PWM_CLK_FREQ, PWM_PERIOD);
 DriveMotor right_drive_motor = DriveMotor(PA_2, PA_3, PWM_CLK_FREQ, PWM_PERIOD);
+
+QrdSensor left_tape_sensor = QrdSensor(PA_4);
+QrdSensor right_tape_sensor = QrdSensor(PA_5);
 
 void setup() {
   
   actuator_init();
-  sensor_init();
 
 }
 
@@ -32,10 +35,6 @@ void actuator_init() {
 
   left_drive_motor.init();
   right_drive_motor.init();
-
-}
-
-void sensor_init() {
 
 }
 
