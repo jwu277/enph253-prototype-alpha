@@ -15,7 +15,6 @@ void actuator_init();
 
 void update_sensors();
 void compute();
-void update_actuators();
 void run_actuators();
 
 // Create + SW Init Devices
@@ -50,13 +49,10 @@ void loop() {
 
   // TODO: maybe merge compute() with update_actuators() ?
 
-  // 2. Perform computations
+  // 2. Perform computations + update actuators in SW
   compute();
 
-  // 3. Update actuators in SW
-  update_actuators();
-
-  // 4. Tick the actuators in HW
+  // 3. Tick the actuators in HW
   run_actuators();
 
 }
@@ -66,11 +62,7 @@ void update_sensors() {
 }
 
 void compute() {
-
-}
-
-void update_actuators() {
-
+  // TODO
 }
 
 void run_actuators() {

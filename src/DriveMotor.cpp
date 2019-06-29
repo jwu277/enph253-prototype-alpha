@@ -20,15 +20,18 @@ void DriveMotor::init() {
 }
 
 // Updates the motor
-// TODO: look into moving this into BaseActuator
-void DriveMotor::update(int pwm, Direction dir) {
+void DriveMotor::update(double pct) {
+
+    int pwm = min((int) (fabs(pct) * this->pwm_period), this->pwm_period);
     this->pwm = pwm;
-    this->dir = dir;
+
+    this->dir = (pct >= 0.0) ? DriveMotor::FORWARD : DriveMotor::REVERSE;
+    
 }
 
 // Actuates the motor...
 void DriveMotor::actuate() {
-    if (dir == FORWARD) {
+    if (dir == DriveMotor::FORWARD) {
         writePwm(this->reverse_pin, 0);
         writePwm(this->forward_pin, this->pwm);
     }

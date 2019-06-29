@@ -28,10 +28,12 @@ class DriveMotor: public PolarityActuator, public PwmActuator {
         void init();
 
         // Updates the motor
-        // TODO: look into moving this into BaseActuator
-        void update(int pwm, Direction dir);
+        // pct -- the percentage duty cycle to apply
+        //     between -1.00 to 1.00 inclusive. Negative means reverse.
+        //     Will be clipped to be within this range.
+        void update(double pct);
 
-        // Actuates the motor...
+        // Actuates the motor
         void actuate();
 
 };
