@@ -18,6 +18,19 @@ class TapeSensor: public BaseSensor {
         // x = 0 is centered
         double x;
 
+        // state machine
+        enum State {
+            LEFT,
+            CENTRE,
+            RIGHT
+        };
+
+        State state;
+
+        void update_qrds();
+
+        void update_state();
+
     public:
 
         // Constructor: includes the two QRDs
