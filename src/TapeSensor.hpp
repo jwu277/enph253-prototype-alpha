@@ -13,11 +13,6 @@ class TapeSensor: public BaseSensor {
         QrdSensor left_qrd;
         QrdSensor right_qrd;
 
-        // PID error term
-        // Corresponds to how far off the tape we are
-        // x = 0 is centered
-        double x;
-
         // state machine
         enum State {
             LEFT,
@@ -31,6 +26,12 @@ class TapeSensor: public BaseSensor {
 
         void update_state();
 
+        // PID error term
+        // Corresponds to how far off the tape we are
+        // x = 0 is centered
+
+        double x;
+
     public:
 
         // Constructor
@@ -39,8 +40,7 @@ class TapeSensor: public BaseSensor {
         // Update tape sensor
         void update();
 
-        // Get x
-        double get_x();
+        double* get_x_ptr();
 
 };
 

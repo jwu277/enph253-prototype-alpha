@@ -78,6 +78,7 @@ void TapeSensor::update_state() {
 
 }
 
-double TapeSensor::get_x() {
-    return this->x;
+// For PID
+double* TapeSensor::get_x_ptr() {
+    return &(this->x);
 }
