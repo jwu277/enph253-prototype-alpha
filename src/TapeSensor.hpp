@@ -33,7 +33,7 @@ class TapeSensor: public BaseSensor {
 
     public:
 
-        // Constructor: includes the two QRDs
+        // Constructor
         TapeSensor(PinName left_qrd_pin, PinName right_qrd_pin);
 
         // Update tape sensor

@@ -1,10 +1,11 @@
 // Arduino Modules
 #include <Arduino.h>
 
-// Device Modules
-#include "DriveMotor.hpp"
-#include "QrdSensor.hpp"
+// Sensor Modules
 #include "TapeSensor.hpp"
+
+// Actuator Modules
+#include "DriveSystem.hpp"
 
 // Constants
 #define PWM_CLK_FREQ 1000000
@@ -24,8 +25,7 @@ void run_actuators();
 TapeSensor main_tape_sensor = TapeSensor(PA_4, PA_5);
 
 // Actuators
-DriveMotor left_drive_motor = DriveMotor(PA_0, PA_1, PWM_CLK_FREQ, PWM_PERIOD);
-DriveMotor right_drive_motor = DriveMotor(PA_2, PA_3, PWM_CLK_FREQ, PWM_PERIOD);
+DriveSystem drive_system = DriveSystem(PA_0, PA_1, PA_2, PA_3, PWM_CLK_FREQ, PWM_PERIOD);
 
 void setup() {
   
@@ -35,8 +35,7 @@ void setup() {
 
 void actuator_init() {
 
-  left_drive_motor.init();
-  right_drive_motor.init();
+  drive_system.init();
 
 }
 
@@ -47,8 +46,6 @@ void loop() {
   // 1. Read new data from sensors
   update_sensors();
 
-  // TODO: maybe merge compute() with update_actuators() ?
-
   // 2. Perform computations + update actuators in SW
   compute();
 
@@ -58,16 +55,23 @@ void loop() {
 }
 
 void update_sensors() {
+
   main_tape_sensor.update();
+
 }
 
 void compute() {
-  // TODO
+
+  // TODO: maybe organize computation logic into files
+  // Use main_tape_sensor.get_x() as PID input
+  // Use drive_system.pid_update() as PID output
+
+
+
 }
 
 void run_actuators() {
 
-  left_drive_motor.actuate();
-  right_drive_motor.actuate();
+  drive_system.actuate();
 
 }

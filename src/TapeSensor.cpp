@@ -21,7 +21,7 @@ TapeSensor::TapeSensor(PinName left_qrd_pin, PinName right_qrd_pin)
     this->x = 0.0; // default value of 0.0
     this->state = CENTRE; // start neutral
 
-};
+}
 
 // Read data
 void TapeSensor::update() {
