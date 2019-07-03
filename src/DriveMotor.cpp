@@ -31,12 +31,16 @@ void DriveMotor::update(double pct) {
 
 // Actuates the motor...
 void DriveMotor::actuate() {
+
+    // IMPORTANT: ensure we never have both pins simeoultaneously on
+
     if (dir == DriveMotor::FORWARD) {
         writePwm(this->reverse_pin, 0);
         writePwm(this->forward_pin, this->pwm);
     }
     else {
-        writePwm(this->reverse_pin, this->pwm);
         writePwm(this->forward_pin, 0);
+        writePwm(this->reverse_pin, this->pwm);
     }
+    
 }

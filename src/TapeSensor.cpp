@@ -41,7 +41,7 @@ void TapeSensor::update_state() {
     bool left_on = this->left_qrd.is_on();
     bool right_on = this->right_qrd.is_on();
     
-    if ((!left_on && !right_on && this->state == TapeSensor::CENTRE) || (left_on && right_on)) {
+    if (left_on && right_on) {
 
         // Currently also interpreting two sensors on tape as being on centre
 
@@ -49,21 +49,22 @@ void TapeSensor::update_state() {
         this->x = 0.0;
 
     }
-    else if (left_on) {
+    else if (left_on && !right_on) {
 
         // To the right
         this->x = 1.0;
         this->state = TapeSensor::RIGHT;
 
     }
-    else if (right_on) {
+    else if (right_on && !left_on) {
 
         // To the left
         this->x = -1.0;
         this->state = TapeSensor::LEFT;
 
     }
-    else if (!left_on && !right_on && this->state == TapeSensor::RIGHT) {
+    // At  this point, both tape sensors are off the tape
+    else if (this->state == TapeSensor::RIGHT) {
 
         // Far to the right
         this->x = FAR_OFF;

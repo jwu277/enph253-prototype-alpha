@@ -13,7 +13,7 @@
 #define PWM_PERIOD 100
 
 // PID Parameters
-#define KP 0.2
+#define KP 0.04
 #define KD 0.0
 #define KI 0.0
 
@@ -28,20 +28,24 @@ void run_actuators();
 // TODO: pins
 
 // Sensors
-TapeSensor main_tape_sensor = TapeSensor(PA_4, PA_5);
+TapeSensor main_tape_sensor = TapeSensor(PA_7, PA_6);
 
 // Actuators
-DriveSystem drive_system = DriveSystem(PA_0, PA_1, PA_2, PA_3, PWM_CLK_FREQ, PWM_PERIOD);
+DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
 
 // Control
-double pid_setpoint = 0.0;
+double* pid_input = main_tape_sensor.get_x_ptr();
 double pid_output;
-PID drive_pid = PID(main_tape_sensor.get_x_ptr(), &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
+double pid_setpoint = 0.0;
+PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
 void setup() {
+
+  Serial.begin(9600);
   
   actuator_init();
 
+  drive_pid.SetOutputLimits(-2.0, 2.0);
   drive_pid.SetMode(AUTOMATIC);
 
 }
