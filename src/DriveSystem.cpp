@@ -3,7 +3,7 @@
 #include "DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define DIFFERENTIAL_BASE 0.85
+#define DIFFERENTIAL_BASE 0.78
 
 
 // Constructor
@@ -23,13 +23,13 @@ void DriveSystem::init() {
 // Read data
 void DriveSystem::update(double left_pct, double right_pct) {
 
-    //Serial.print("Left: ");
-    //Serial.print(left_pct, 3);
-    //Serial.println();
+    Serial.print("Left: ");
+    Serial.print(left_pct, 3);
+    Serial.println();
 
-    //Serial.print("Right: ");
-    //Serial.print(right_pct, 3);
-    //Serial.println();
+    Serial.print("Right: ");
+    Serial.print(right_pct, 3);
+    Serial.println();
 
     this->left_motor.update(left_pct);
     this->right_motor.update(right_pct);
@@ -39,7 +39,9 @@ void DriveSystem::update(double left_pct, double right_pct) {
 // diff -- motor differential, steers
 //     +ve means turn left (right motor more pwm), -ve opposite
 void DriveSystem::pid_update(double diff) {
-    this->update(1.0, 1.0);
+    this->update(1.0, 0.8);
+    //Serial.print(diff, 3);
+    //Serial.println();
     //this->update(DIFFERENTIAL_BASE - diff, DIFFERENTIAL_BASE + diff);
 }
 

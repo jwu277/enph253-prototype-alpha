@@ -41,7 +41,7 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
 void setup() {
 
-  Serial.begin(9600);
+  //Serial.begin(9600);
   
   actuator_init();
 
