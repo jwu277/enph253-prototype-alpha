@@ -13,8 +13,8 @@
 #define PWM_PERIOD 100
 
 // PID Parameters
-#define KP 0.04
-#define KD 0.0
+#define KP 17.0
+#define KD 16.0
 #define KI 0.0
 
 // Functions
@@ -40,6 +40,13 @@ double pid_setpoint = 0.0;
 PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
 void setup() {
+
+  // pinMode(PA_7, INPUT_PULLUP);
+  // pinMode(PA_6, INPUT_PULLUP);
+  // pinMode(PB_6, OUTPUT);
+  // pinMode(PB_7, OUTPUT);
+  // pinMode(PB_8, OUTPUT);
+  // pinMode(PB_9, OUTPUT);
 
   Serial.begin(9600);
   

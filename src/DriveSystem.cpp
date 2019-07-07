@@ -3,7 +3,7 @@
 #include "DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define DIFFERENTIAL_BASE 0.85
+#define DIFFERENTIAL_BASE 0.90
 
 
 // Constructor
@@ -39,8 +39,8 @@ void DriveSystem::update(double left_pct, double right_pct) {
 // diff -- motor differential, steers
 //     +ve means turn left (right motor more pwm), -ve opposite
 void DriveSystem::pid_update(double diff) {
-    this->update(1.0, 1.0);
-    //this->update(DIFFERENTIAL_BASE - diff, DIFFERENTIAL_BASE + diff);
+    //this->update(0.8, 0.8);
+    this->update(DIFFERENTIAL_BASE - diff, DIFFERENTIAL_BASE + diff);
 }
 
 void DriveSystem::actuate() {

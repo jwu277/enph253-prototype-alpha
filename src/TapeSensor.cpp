@@ -11,7 +11,7 @@
 
 // How far off the tape follower would be if both sensors are off tape
 // (could be computed as 1 + tape width / sensor width), units of sensor widths
-#define FAR_OFF 5.0
+#define FAR_OFF 3.0
 
 
 // Constructor
