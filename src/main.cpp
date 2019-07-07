@@ -13,8 +13,8 @@
 #define PWM_PERIOD 1000
 
 // PID Parameters
-#define KP 0.012
-#define KD 0.0
+#define KP 16.0
+#define KD 16.0
 #define KI 0.0
 
 // Functions

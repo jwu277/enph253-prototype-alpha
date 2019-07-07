@@ -3,7 +3,7 @@
 #include "DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define DIFFERENTIAL_BASE 0.910
+#define DIFFERENTIAL_BASE 0.90
 
 
 // Constructor
