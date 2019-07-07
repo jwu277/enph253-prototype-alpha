@@ -9,11 +9,11 @@
 #include "DriveSystem.hpp"
 
 // Constants
-#define PWM_CLK_FREQ 1000000
-#define PWM_PERIOD 100
+#define PWM_CLK_FREQ 10000000
+#define PWM_PERIOD 1000
 
 // PID Parameters
-#define KP 0.04
+#define KP 0.012
 #define KD 0.0
 #define KI 0.0
 
@@ -82,6 +82,9 @@ void compute() {
   // TODO: maybe organize computation logic into files
   // Use main_tape_sensor.x as PID input
   // Use drive_system.pid_update() as PID output
+
+  Serial.print(*pid_input, 3);
+  Serial.println();
 
   drive_pid.Compute();
   drive_system.pid_update(pid_output);
