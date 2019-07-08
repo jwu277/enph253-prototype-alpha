@@ -39,7 +39,7 @@ void DriveSystem::update(double left_pct, double right_pct) {
 // diff -- motor differential, steers
 //     +ve means turn left (right motor more pwm), -ve opposite
 void DriveSystem::pid_update(double diff) {
-    //this->update(0.8, 0.8);
+    //this->update(0.9, 0.8);
     this->update(DIFFERENTIAL_BASE - diff, DIFFERENTIAL_BASE + diff);
 }
 
