@@ -42,6 +42,8 @@ class MainTapeSensor: public BaseSensor {
         // Update tape sensor
         void update();
 
+        bool is_both_on();
+
         double* get_x_ptr();
 
 };

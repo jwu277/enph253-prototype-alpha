@@ -86,6 +86,10 @@ void MainTapeSensor::update_state() {
 
 }
 
+bool MainTapeSensor::is_both_on() {
+    return this->left_qrd.is_on() && this->right_qrd.is_on();
+}
+
 // For PID
 double* MainTapeSensor::get_x_ptr() {
     return &(this->x);

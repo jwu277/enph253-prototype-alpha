@@ -9,6 +9,9 @@
 // Actuator Modules
 #include "DriveSystem.hpp"
 
+// Control/Logic/Computation Classes
+#include "IntersectionManager.hpp"
+
 // Constants
 #define PWM_CLK_FREQ 10000000
 #define PWM_PERIOD 1000
@@ -26,9 +29,6 @@ void update_sensors();
 void compute();
 void run_actuators();
 
-// Create + SW Init Devices
-// TODO: pins
-
 // Sensors
 MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
 SideTapeSensor side_tape_sensor = SideTapeSensor(PA_12, PA_13); // TODO: pins
@@ -36,70 +36,77 @@ SideTapeSensor side_tape_sensor = SideTapeSensor(PA_12, PA_13); // TODO: pins
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
 
-// Control
+// Control/Logic/Computation
+
+// PID
 double* pid_input = main_tape_sensor.get_x_ptr();
 double pid_output;
 double pid_setpoint = 0.0;
 PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
+IntersectionManager intersection_manager = IntersectionManager(
+    &main_tape_sensor, &side_tape_sensor, &drive_system);
+
 void setup() {
 
-  sensor_init();
-  
-  actuator_init();
+    sensor_init();
+    actuator_init();
 
-  drive_pid.SetOutputLimits(-2.0, 2.0);
-  drive_pid.SetMode(AUTOMATIC);
+    drive_pid.SetOutputLimits(-2.0, 2.0);
+    drive_pid.SetMode(AUTOMATIC);
 
 }
 
 void sensor_init() {
 
-  main_tape_sensor.init();
-  side_tape_sensor.init();
+    main_tape_sensor.init();
+    side_tape_sensor.init();
 
 }
 
 void actuator_init() {
 
-  drive_system.init();
+    drive_system.init();
 
 }
 
 void loop() {
 
-  // TODO: incorporate interrupts
+    // TODO: incorporate interrupts
 
-  // 1. Read new data from sensors
-  update_sensors();
+    // 1. Read new data from sensors
+    update_sensors();
 
-  // 2. Perform computations + update actuators in SW
-  compute();
+    // 2. Perform computations + update actuators in SW
+    compute();
 
-  // 3. Tick the actuators in HW
-  run_actuators();
+    // 3. Tick the actuators in HW
+    run_actuators();
 
 }
 
 void update_sensors() {
 
-  main_tape_sensor.update();
+    main_tape_sensor.update();
+    side_tape_sensor.update();
 
 }
 
 void compute() {
 
-  // TODO: maybe organize computation logic into files
-  // Use main_tape_sensor.x as PID input
-  // Use drive_system.pid_update() as PID output
+    // TODO (ongoing): maybe organize computation logic into files
+    // Use main_tape_sensor.x as PID input
+    // Use drive_system.pid_update() as PID output
 
-  drive_pid.Compute();
-  drive_system.pid_update(pid_output);
+    drive_pid.Compute();
+    drive_system.pid_update(pid_output);
+
+    intersection_manager.update();
 
 }
 
 void run_actuators() {
 
-  drive_system.actuate();
+    drive_system.actuate();
 
 }
