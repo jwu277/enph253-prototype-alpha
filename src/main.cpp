@@ -10,11 +10,15 @@
 #include "DriveSystem.hpp"
 
 // Constants
-#define PWM_CLK_FREQ 1000000
-#define PWM_PERIOD 100
+#define PWM_CLK_FREQ 10000000
+#define PWM_PERIOD 1000
 
 // PID Parameters
+<<<<<<< HEAD
 #define KP 17.0
+=======
+#define KP 16.0
+>>>>>>> db5f3532f782da575744932754d73114e0a4605f
 #define KD 16.0
 #define KI 0.0
 
@@ -44,7 +48,11 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
 void setup() {
 
+<<<<<<< HEAD
   sensor_init();
+=======
+  //Serial.begin(9600);
+>>>>>>> db5f3532f782da575744932754d73114e0a4605f
   
   actuator_init();
 
@@ -92,6 +100,9 @@ void compute() {
   // TODO: maybe organize computation logic into files
   // Use main_tape_sensor.x as PID input
   // Use drive_system.pid_update() as PID output
+
+  Serial.print(*pid_input, 3);
+  Serial.println();
 
   drive_pid.Compute();
   drive_system.pid_update(pid_output);
