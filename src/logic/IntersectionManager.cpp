@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "IntersectionManager.hpp"
+#include "logic\IntersectionManager.hpp"
 
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* main_tape_sensor,

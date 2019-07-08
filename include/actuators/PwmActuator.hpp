@@ -1,7 +1,7 @@
 #ifndef PWMACTUATOR
 #define PWMACTUATOR
 
-#include "BaseActuator.hpp"
+#include "actuators\BaseActuator.hpp"
 
 // PwmActuator is an abstract base class for actuators that are pwm controlled
 class PwmActuator: public BaseActuator {

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "QrdSensor.hpp"
+#include "sensors\QrdSensor.hpp"
 
 #define THRESHOLD 512
 

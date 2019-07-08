@@ -1,8 +1,8 @@
 #ifndef MAINTAPESENSOR
 #define MAINTAPESENSOR
 
-#include "QrdSensor.hpp"
-#include "BaseSensor.hpp"
+#include "sensors\BaseSensor.hpp"
+#include "sensors\QrdSensor.hpp"
 
 
 // MainTapeSensor is the main tape-sensing system, composite of QRD sensors

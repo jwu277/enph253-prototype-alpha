@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#include "QrdSensor.hpp"
-#include "SideTapeSensor.hpp"
+#include "sensors\QrdSensor.hpp"
+#include "sensors\SideTapeSensor.hpp"
 
 // Constructor
 SideTapeSensor::SideTapeSensor(PinName left_side_qrd_pin, PinName right_side_qrd_pin)

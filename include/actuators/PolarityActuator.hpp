@@ -1,7 +1,7 @@
 #ifndef POLARITYACTUATOR
 #define POLARITYACTUATOR
 
-#include "BaseActuator.hpp"
+#include "actuators\BaseActuator.hpp"
 
 // PolarityActuator is an abstract base class for actuators with a polarity.
 // That is, there is a distinction between a forward and reverse mode/motion.

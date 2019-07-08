@@ -2,7 +2,7 @@
 #define ANALOGSENSOR
 
 #include <Arduino.h>
-#include "BaseSensor.hpp"
+#include "sensors\BaseSensor.hpp"
 
 // AnalogSensor is a base class for single-pin analog sensors
 class AnalogSensor: public BaseSensor {

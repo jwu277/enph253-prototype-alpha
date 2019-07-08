@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#include "QrdSensor.hpp"
-#include "MainTapeSensor.hpp"
+#include "sensors\QrdSensor.hpp"
+#include "sensors\MainTapeSensor.hpp"
 
 // Current operation:
 // x-axis: x = 0 at centered, left-to-right

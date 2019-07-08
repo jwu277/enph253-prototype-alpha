@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "PwmActuator.hpp"
+#include "actuators\PwmActuator.hpp"
 
 // Initializes the pwm clock frequency and period
 // clk_freq -- the pwm clock frequency in Hz

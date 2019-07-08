@@ -1,7 +1,7 @@
 #ifndef QRDSENSOR
 #define QRDSENSOR
 
-#include "AnalogSensor.hpp"
+#include "sensors\AnalogSensor.hpp"
 
 // QRDSensor is a concrete QRD Sensor
 class QrdSensor: public AnalogSensor {
