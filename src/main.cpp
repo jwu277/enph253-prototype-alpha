@@ -3,7 +3,7 @@
 #include <PID_v1.h>
 
 // Sensor Modules
-#include "TapeSensor.hpp"
+#include "MainTapeSensor.hpp"
 
 // Actuator Modules
 #include "DriveSystem.hpp"
@@ -17,7 +17,8 @@
 #define KD 16.0
 #define KI 0.0
 
-// Functions
+// Function declarations
+void sensor_init();
 void actuator_init();
 
 void update_sensors();
@@ -28,7 +29,7 @@ void run_actuators();
 // TODO: pins
 
 // Sensors
-TapeSensor main_tape_sensor = TapeSensor(PA_7, PA_6);
+MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
@@ -41,19 +42,18 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
 
 void setup() {
 
-  // pinMode(PA_7, INPUT_PULLUP);
-  // pinMode(PA_6, INPUT_PULLUP);
-  // pinMode(PB_6, OUTPUT);
-  // pinMode(PB_7, OUTPUT);
-  // pinMode(PB_8, OUTPUT);
-  // pinMode(PB_9, OUTPUT);
-
-  Serial.begin(9600);
+  sensor_init();
   
   actuator_init();
 
   drive_pid.SetOutputLimits(-2.0, 2.0);
   drive_pid.SetMode(AUTOMATIC);
+
+}
+
+void sensor_init() {
+
+  main_tape_sensor.init();
 
 }
 

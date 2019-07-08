@@ -9,6 +9,9 @@ class BaseSensor {
         // Update device state with a reading
         virtual void update() = 0;
 
+        // HW (+ any SW) initialization
+        virtual void init() = 0;
+
 };
 
 #endif

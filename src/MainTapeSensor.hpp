@@ -1,12 +1,12 @@
-#ifndef TAPESENSOR
-#define TAPESENSOR
+#ifndef MAINTAPESENSOR
+#define MAINTAPESENSOR
 
 #include "QrdSensor.hpp"
 #include "BaseSensor.hpp"
 
 
-// TapeSensor is the main tape-sensing system, composite of QRD sensors
-class TapeSensor: public BaseSensor {
+// MainTapeSensor is the main tape-sensing system, composite of QRD sensors
+class MainTapeSensor: public BaseSensor {
 
     private:
 
@@ -35,7 +35,9 @@ class TapeSensor: public BaseSensor {
     public:
 
         // Constructor
-        TapeSensor(PinName left_qrd_pin, PinName right_qrd_pin);
+        MainTapeSensor(PinName left_qrd_pin, PinName right_qrd_pin);
+
+        void init();
 
         // Update tape sensor
         void update();

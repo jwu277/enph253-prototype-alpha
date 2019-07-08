@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "QrdSensor.hpp"
-#include "TapeSensor.hpp"
+#include "MainTapeSensor.hpp"
 
 // Current operation:
 // x-axis: x = 0 at centered, left-to-right
@@ -15,7 +15,7 @@
 
 
 // Constructor
-TapeSensor::TapeSensor(PinName left_qrd_pin, PinName right_qrd_pin)
+MainTapeSensor::MainTapeSensor(PinName left_qrd_pin, PinName right_qrd_pin)
     : left_qrd(left_qrd_pin), right_qrd(right_qrd_pin) {
 
     this->x = 0.0; // default value of 0.0
@@ -23,20 +23,27 @@ TapeSensor::TapeSensor(PinName left_qrd_pin, PinName right_qrd_pin)
 
 }
 
-// Read data
-void TapeSensor::update() {
+void MainTapeSensor::init() {
 
-    TapeSensor::update_qrds();
-    TapeSensor::update_state();
+    left_qrd.init();
+    right_qrd.init();
 
 }
 
-void TapeSensor::update_qrds() {
+// Read data
+void MainTapeSensor::update() {
+
+    MainTapeSensor::update_qrds();
+    MainTapeSensor::update_state();
+
+}
+
+void MainTapeSensor::update_qrds() {
     this->left_qrd.update();
     this->right_qrd.update();
 }
 
-void TapeSensor::update_state() {
+void MainTapeSensor::update_state() {
 
     bool left_on = this->left_qrd.is_on();
     bool right_on = this->right_qrd.is_on();
@@ -53,18 +60,18 @@ void TapeSensor::update_state() {
 
         // To the right
         this->x = 1.0;
-        this->state = TapeSensor::RIGHT;
+        this->state = MainTapeSensor::RIGHT;
 
     }
     else if (right_on && !left_on) {
 
         // To the left
         this->x = -1.0;
-        this->state = TapeSensor::LEFT;
+        this->state = MainTapeSensor::LEFT;
 
     }
     // At  this point, both tape sensors are off the tape
-    else if (this->state == TapeSensor::RIGHT) {
+    else if (this->state == MainTapeSensor::RIGHT) {
 
         // Far to the right
         this->x = FAR_OFF;
@@ -80,6 +87,6 @@ void TapeSensor::update_state() {
 }
 
 // For PID
-double* TapeSensor::get_x_ptr() {
+double* MainTapeSensor::get_x_ptr() {
     return &(this->x);
 }

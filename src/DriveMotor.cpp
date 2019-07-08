@@ -15,8 +15,13 @@ DriveMotor::DriveMotor(PinName forward_pin, PinName reverse_pin, int pwm_clk_fre
 
 // Initializes the drive motor in HW
 void DriveMotor::init() {
+
+    pinMode(forward_pin, OUTPUT);
+    pinMode(reverse_pin, OUTPUT);
+
     PwmActuator::initPwm(this->forward_pin);
     PwmActuator::initPwm(this->reverse_pin);
+
 }
 
 // Updates the motor

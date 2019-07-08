@@ -11,6 +11,8 @@ class QrdSensor: public AnalogSensor {
         // Constructor for QRD Sensor
         QrdSensor(PinName pin);
 
+        void init();
+
         bool is_on();
 
 
