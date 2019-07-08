@@ -4,6 +4,7 @@
 
 // Sensor Modules
 #include "MainTapeSensor.hpp"
+#include "SideTapeSensor.hpp"
 
 // Actuator Modules
 #include "DriveSystem.hpp"
@@ -30,6 +31,7 @@ void run_actuators();
 
 // Sensors
 MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
+SideTapeSensor side_tape_sensor = SideTapeSensor(PA_12, PA_13); // TODO: pins
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
@@ -54,6 +56,7 @@ void setup() {
 void sensor_init() {
 
   main_tape_sensor.init();
+  side_tape_sensor.init();
 
 }
 
