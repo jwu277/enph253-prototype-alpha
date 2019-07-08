@@ -5,6 +5,8 @@
 // Base driving pwm for motors
 #define DIFFERENTIAL_BASE 0.90
 
+#define TURN_LOW 0.5
+#define TURN_HIGH 0.98
 
 // Constructor
 DriveSystem::DriveSystem(PinName left_motor_forward, PinName left_motor_reverse,
@@ -46,4 +48,12 @@ void DriveSystem::pid_update(double diff) {
 void DriveSystem::actuate() {
     this->left_motor.actuate();
     this->right_motor.actuate();
+}
+
+void DriveSystem::turn_left() {
+    this->update(TURN_LOW, TURN_HIGH);
+}
+
+void DriveSystem::turn_right() {
+    this->update(TURN_HIGH, TURN_LOW);
 }

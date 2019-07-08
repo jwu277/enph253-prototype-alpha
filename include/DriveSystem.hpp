@@ -6,6 +6,7 @@
 #include "BaseActuator.hpp"
 #include "DriveMotor.hpp"
 
+
 // DriveSystem is the driving system motors, composite of two DriveMotors
 class DriveSystem: public BaseActuator {
 
@@ -24,6 +25,8 @@ class DriveSystem: public BaseActuator {
         // HW init
         void init();
 
+        // !! The last update before actuate() takes effect !!
+
         // Update motors in SW
         void update(double left_pct, double right_pct);
 
@@ -32,6 +35,10 @@ class DriveSystem: public BaseActuator {
 
         // Actuate
         void actuate();
+
+        void turn_left();
+
+        void turn_right();
 
 };
 
