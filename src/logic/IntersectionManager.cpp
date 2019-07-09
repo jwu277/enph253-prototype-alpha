@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "logic\IntersectionManager.hpp"
+#include "logic/IntersectionManager.hpp"
 
 #define TURN_COUNTER_MAX 100
 

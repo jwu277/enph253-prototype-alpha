@@ -1,8 +1,8 @@
 #ifndef SIDETAPESENSOR
 #define SIDETAPESENSOR
 
-#include "sensors\BaseSensor.hpp"
-#include "sensors\QrdSensor.hpp"
+#include "sensors/BaseSensor.hpp"
+#include "sensors/QrdSensor.hpp"
 
 
 // SideTapeSensor represents the side tape-sensing system

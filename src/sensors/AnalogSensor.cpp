@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "sensors\AnalogSensor.hpp"
+
+#include "sensors/AnalogSensor.hpp"
 
 // Reads the analog device + stores result in state
 void AnalogSensor::update() {

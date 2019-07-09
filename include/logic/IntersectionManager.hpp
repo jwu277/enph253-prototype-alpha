@@ -1,9 +1,9 @@
 #ifndef INTERSECTIONMANAGER
 #define INTERSECTIONMANAGER
 
-#include "sensors\MainTapeSensor.hpp"
-#include "sensors\SideTapeSensor.hpp"
-#include "actuators\DriveSystem.hpp"
+#include "sensors/MainTapeSensor.hpp"
+#include "sensors/SideTapeSensor.hpp"
+#include "actuators/DriveSystem.hpp"
 
 
 // IntersectionManager is a logic controller for handling intersections

@@ -3,14 +3,14 @@
 #include <PID_v1.h>
 
 // Sensor Modules
-#include "sensors\MainTapeSensor.hpp"
-#include "sensors\SideTapeSensor.hpp"
+#include "sensors/MainTapeSensor.hpp"
+#include "sensors/SideTapeSensor.hpp"
 
 // Actuator Modules
-#include "actuators\DriveSystem.hpp"
+#include "actuators/DriveSystem.hpp"
 
 // Control/Logic/Computation Classes
-#include "logic\IntersectionManager.hpp"
+#include "logic/IntersectionManager.hpp"
 
 // Constants
 #define PWM_CLK_FREQ 10000000
