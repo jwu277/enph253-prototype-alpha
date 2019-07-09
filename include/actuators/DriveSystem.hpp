@@ -40,6 +40,8 @@ class DriveSystem: public BaseActuator {
 
         void turn_right();
 
+        void drive_forward();
+
 };
 
 #endif

@@ -16,6 +16,13 @@ class IntersectionManager {
         SideTapeSensor* side_tape_sensor;
         DriveSystem* drive_system;
 
+        // State
+        // TODO: update
+        int intersection_count;
+
+        // Intersection Handler
+        void handle_intersection();
+
     public:
 
         // Constructor
@@ -24,6 +31,9 @@ class IntersectionManager {
 
         // Update logic in SW
         void update();
+
+        // Increment turn counter
+        //void increment_turn_counter();
 
 };
 

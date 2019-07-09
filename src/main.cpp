@@ -17,21 +17,27 @@
 #define PWM_PERIOD 1000
 
 // PID Parameters
-#define KP 17.0
-#define KD 16.0
+//#define KP 17.0
+//#define KD 16.0
+#define KP 0.2
+#define KD 0.3
 #define KI 0.0
 
 // Function declarations
-void sensor_init();
-void actuator_init();
 
+// Setup
+void init_sensors();
+void init_actuators();
+void init_logic();
+
+// Loop
 void update_sensors();
 void compute();
 void run_actuators();
 
 // Sensors
 MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
-SideTapeSensor side_tape_sensor = SideTapeSensor(PA_12, PA_13); // TODO: pins
+SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
@@ -49,24 +55,32 @@ IntersectionManager intersection_manager = IntersectionManager(
 
 void setup() {
 
-    sensor_init();
-    actuator_init();
+    //Serial.begin(9600);
 
-    drive_pid.SetOutputLimits(-2.0, 2.0);
-    drive_pid.SetMode(AUTOMATIC);
+    init_sensors();
+    init_actuators();
+    init_logic();
 
 }
 
-void sensor_init() {
+void init_sensors() {
 
     main_tape_sensor.init();
     side_tape_sensor.init();
 
 }
 
-void actuator_init() {
+void init_actuators() {
 
     drive_system.init();
+
+}
+
+void init_logic() {
+
+    // PID
+    drive_pid.SetOutputLimits(-2.0, 2.0);
+    drive_pid.SetMode(AUTOMATIC);
 
 }
 
@@ -99,7 +113,11 @@ void compute() {
     // Use drive_system.pid_update() as PID output
 
     drive_pid.Compute();
-    drive_system.pid_update(pid_output);
+    // diff = -pid_output, since pid_output is negative of what we want
+    drive_system.pid_update(-pid_output);
+
+    //Serial.print(pid_output, 4);
+    //Serial.println();
 
     intersection_manager.update();
 
