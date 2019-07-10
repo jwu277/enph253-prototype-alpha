@@ -17,10 +17,8 @@
 #define PWM_PERIOD 1000
 
 // PID Parameters
-//#define KP 17.0
-//#define KD 16.0
-#define KP 0.2
-#define KD 0.3
+//#define KP 0.2
+//#define KD 0.2
 #define KI 0.0
 
 // Function declarations
@@ -48,18 +46,36 @@ DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM
 double* pid_input = main_tape_sensor.get_x_ptr();
 double pid_output;
 double pid_setpoint = 0.0;
-PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, KP, KI, KD, DIRECT);
+PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 
 IntersectionManager intersection_manager = IntersectionManager(
     &main_tape_sensor, &side_tape_sensor, &drive_system);
 
 void setup() {
 
-    //Serial.begin(9600);
+    pinMode(PA_1, INPUT);
+    pinMode(PA_2, INPUT);
+
+    double kp = (0.4 * analogRead(PA_1)) / 1024;
+    double kd = (0.4 * analogRead(PA_2)) / 1024;
+
+    drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
+
+    Serial.begin(9600);
+
+    Serial.print("kp: ");
+    Serial.print(kp, 3);
+    Serial.println();
+
+    Serial.print("kd: ");
+    Serial.print(kd, 3);
+    Serial.println();
 
     init_sensors();
     init_actuators();
     init_logic();
+
+    pwm_start(PA_0, 1000000, 10, 0, 1);
 
 }
 
@@ -119,7 +135,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    intersection_manager.update();
+    //intersection_manager.update();
 
 }
 

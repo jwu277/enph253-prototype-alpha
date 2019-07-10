@@ -8,30 +8,6 @@
 // MainTapeSensor is the main tape-sensing system, composite of QRD sensors
 class MainTapeSensor: public BaseSensor {
 
-    private:
-
-        QrdSensor left_qrd;
-        QrdSensor right_qrd;
-
-        // state machine
-        enum State {
-            LEFT,
-            CENTRE,
-            RIGHT
-        };
-
-        State state;
-
-        void update_qrds();
-
-        void update_state();
-
-        // PID error term
-        // Corresponds to how far off the tape we are
-        // x = 0 is centered
-
-        double x;
-
     public:
 
         // Constructor
@@ -45,6 +21,32 @@ class MainTapeSensor: public BaseSensor {
         bool is_both_on();
 
         double* get_x_ptr();
+
+        // state machine
+        enum State {
+            LEFT,
+            CENTRE,
+            RIGHT
+        };
+
+        void set_state(State state);
+
+    private:
+
+        QrdSensor left_qrd;
+        QrdSensor right_qrd;
+
+        State state;
+
+        void update_qrds();
+
+        void update_state();
+
+        // PID error term
+        // Corresponds to how far off the tape we are
+        // x = 0 is centered
+
+        double x;
 
 };
 

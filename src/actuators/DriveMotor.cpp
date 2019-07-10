@@ -46,7 +46,7 @@ void DriveMotor::actuate() {
     }
     else {
         writePwm(this->forward_pin, 0);
-        writePwm(this->reverse_pin, this->pwm);
+        writePwm(this->reverse_pin, 0);
     }
     
 }

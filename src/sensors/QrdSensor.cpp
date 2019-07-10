@@ -2,7 +2,7 @@
 
 #include "sensors/QrdSensor.hpp"
 
-#define THRESHOLD 512
+#define THRESHOLD 480
 
 // Constructor
 QrdSensor::QrdSensor(PinName pin) {

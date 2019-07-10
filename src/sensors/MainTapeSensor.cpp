@@ -11,7 +11,7 @@
 
 // How far off the tape follower would be if both sensors are off tape
 // (could be computed as 1 + tape width / sensor width), units of sensor widths
-#define FAR_OFF 2.0
+#define FAR_OFF 1.3
 
 
 // Constructor
@@ -47,6 +47,8 @@ void MainTapeSensor::update_state() {
 
     bool left_on = this->left_qrd.is_on();
     bool right_on = this->right_qrd.is_on();
+
+    //pwm_start(PA_0, 1000000, 10, 0, 0);
     
     if (left_on && right_on) {
 
@@ -82,6 +84,8 @@ void MainTapeSensor::update_state() {
         // Far to the left
         this->x = -FAR_OFF;
 
+        //pwm_start(PA_0, 1000000, 10, 10, 0);
+
     }
 
 }
@@ -93,4 +97,8 @@ bool MainTapeSensor::is_both_on() {
 // For PID
 double* MainTapeSensor::get_x_ptr() {
     return &(this->x);
+}
+
+void MainTapeSensor::set_state(State state) {
+    this->state = state;
 }

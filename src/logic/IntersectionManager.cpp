@@ -20,11 +20,16 @@ IntersectionManager::IntersectionManager(MainTapeSensor* main_tape_sensor,
 
 void IntersectionManager::update() {
 
-    bool at_intersection = this->main_tape_sensor->is_both_on() &&
-            (this->side_tape_sensor->is_left_on() || this->side_tape_sensor->is_right_on());
+    bool at_intersection = (this->main_tape_sensor->is_both_on() &&
+            (this->side_tape_sensor->is_left_on() || this->side_tape_sensor->is_right_on()))
+            || (this->side_tape_sensor->is_left_on() && this->side_tape_sensor->is_right_on());
 
     // TEMP: for now
     if (at_intersection) {
+
+        //Serial.println("AYYYY");
+
+        pwm_start(PA_0, 1000000, 10, 10, 0);
 
         this->handle_intersection();
 
@@ -40,13 +45,15 @@ void IntersectionManager::handle_intersection() {
 
         case 0:
 
-            drive_system->drive_forward();
+            drive_system->update(1.0, 1.0);
             drive_system->actuate();
-            delay(400);
+            delay(500);
 
             drive_system->turn_left();
             drive_system->actuate();
             delay(400);
+
+            main_tape_sensor->set_state(MainTapeSensor::RIGHT);
 
             break;
 
