@@ -23,7 +23,7 @@ class SideTapeSensor: public BaseSensor {
     public:
 
         // Constructor
-        SideTapeSensor(PinName left_qrd_pin, PinName right_qrd_pin);
+        //SideTapeSensor(PinName left_qrd_pin, PinName right_qrd_pin);
 
         void init();
 

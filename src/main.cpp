@@ -21,6 +21,8 @@
 //#define KD 0.2
 #define KI 0.0
 
+using namespace std;
+
 // Function declarations
 
 // Setup
@@ -34,8 +36,26 @@ void compute();
 void run_actuators();
 
 // Sensors
-MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
-SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
+
+// QRD Tape Sensor System
+// (on_tape, on_white)
+
+// TODO
+
+// (left to right)
+vector<PinName> qrd_pins = {PA_7, PA_6, PA_5, PA_4};
+
+vector<tuple<int, int>> qrd_calibration = {
+    make_tuple(50, 150),
+    make_tuple(50, 150),
+    make_tuple(50, 150),
+    make_tuple(50, 150)
+};
+
+vector<double> qrd_weights = {-1.5, -0.5, 0.5, 1.5}; // TODO
+
+MainTapeSensor main_tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weights);
+//SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
@@ -48,19 +68,23 @@ double pid_output;
 double pid_setpoint = 0.0;
 PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 
+/*
 IntersectionManager intersection_manager = IntersectionManager(
-    &main_tape_sensor, &side_tape_sensor, &drive_system);
+    &main_tape_sensor, &side_tape_sensor, &drive_system);*/
 
 void setup() {
 
     pinMode(PA_1, INPUT);
     pinMode(PA_2, INPUT);
 
-    double kp = (0.4 * analogRead(PA_1)) / 1024;
-    double kd = (0.4 * analogRead(PA_2)) / 1024;
+    double kp = (0.5 * analogRead(PA_1)) / 1024;
+    double kd = (0.5 * analogRead(PA_2)) / 1024;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
+    Serial.begin(9600);
+
+    /*
     Serial.begin(9600);
 
     Serial.print("kp: ");
@@ -70,6 +94,7 @@ void setup() {
     Serial.print("kd: ");
     Serial.print(kd, 3);
     Serial.println();
+    */
 
     init_sensors();
     init_actuators();
@@ -82,7 +107,7 @@ void setup() {
 void init_sensors() {
 
     main_tape_sensor.init();
-    side_tape_sensor.init();
+    //side_tape_sensor.init();
 
 }
 
@@ -102,6 +127,17 @@ void init_logic() {
 
 void loop() {
 
+    Serial.print(analogRead(PA_7));
+    Serial.print("       ");
+    Serial.print(analogRead(PA_6));
+    Serial.print("       ");
+    Serial.print(analogRead(PA_5));
+    Serial.print("       ");
+    Serial.print(analogRead(PA_4));
+    Serial.print("       ");
+    Serial.print("|");
+    Serial.print("       ");
+
     // TODO: incorporate interrupts
 
     // 1. Read new data from sensors
@@ -112,13 +148,19 @@ void loop() {
 
     // 3. Tick the actuators in HW
     run_actuators();
+    
+    Serial.print("|");
+    Serial.print("       ");
+    Serial.print(*pid_input, 3);
+    
+    Serial.println();
 
 }
 
 void update_sensors() {
 
     main_tape_sensor.update();
-    side_tape_sensor.update();
+    //side_tape_sensor.update();
 
 }
 
@@ -136,6 +178,18 @@ void compute() {
     //Serial.println();
 
     //intersection_manager.update();
+
+    if (main_tape_sensor.is_far_left()) {
+        drive_system.update(0.85, -1.8);
+        pwm_start(PA_0, 1000000, 10, 10, 0);
+    }
+    else {
+        pwm_start(PA_0, 1000000, 10, 0, 0);
+    }
+
+    if (main_tape_sensor.is_far_right()) {
+        drive_system.update(-1.8, 0.85);
+    }
 
 }
 

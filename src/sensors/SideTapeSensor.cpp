@@ -4,6 +4,7 @@
 #include "sensors/SideTapeSensor.hpp"
 
 // Constructor
+/*
 SideTapeSensor::SideTapeSensor(PinName left_side_qrd_pin, PinName right_side_qrd_pin)
     : left_side_qrd(left_side_qrd_pin), right_side_qrd(right_side_qrd_pin) {
 
@@ -11,6 +12,7 @@ SideTapeSensor::SideTapeSensor(PinName left_side_qrd_pin, PinName right_side_qrd
     this->right_on = false; // default false
 
 }
+*/
 
 void SideTapeSensor::init() {
 

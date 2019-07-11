@@ -3,18 +3,27 @@
 
 #include "sensors/AnalogSensor.hpp"
 
+using namespace std;
+
 // QRDSensor is a concrete QRD Sensor
 class QrdSensor: public AnalogSensor {
+
+    private:
+
+        // Tape + white thresholds for calibration
+        int on_tape;
+        int on_white;
 
     public:
 
         // Constructor for QRD Sensor
-        QrdSensor(PinName pin);
+        QrdSensor(PinName pin, tuple<int, int> thresholds);
 
         void init();
 
-        bool is_on();
+        double get_read();
 
+        bool is_on();
 
 };
 

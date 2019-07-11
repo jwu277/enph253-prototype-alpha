@@ -3,7 +3,7 @@
 #include "actuators/DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define BASE_DRIVE 0.72
+#define BASE_DRIVE 0.90
 
 #define TURN_LOW 0.5
 #define TURN_HIGH 0.98
@@ -46,10 +46,10 @@ void DriveSystem::pid_update(double diff) {
     //this->update(0.8, 1.0);
 
     if (diff >= 0) {
-        this->update(BASE_DRIVE - 2.5 * diff, BASE_DRIVE + diff);
+        this->update(BASE_DRIVE - diff, BASE_DRIVE);
     }
     else {
-        this->update(BASE_DRIVE - diff, BASE_DRIVE + 2.5 * diff);
+        this->update(BASE_DRIVE, BASE_DRIVE + diff);
     }
 
 }
