@@ -17,8 +17,8 @@ using namespace std;
 // Constructor
 MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     vector<tuple<int, int>> calibration, vector<double> weights)
-    : qrd1(QrdSensor(PA_7, make_tuple(50, 150))),  qrd2(QrdSensor(PA_6, make_tuple(50, 150))),
-    qrd3(QrdSensor(PA_5, make_tuple(50, 150))), qrd4(QrdSensor(PA_4, make_tuple(50, 150))){
+    : qrd1(QrdSensor(PA_7, make_tuple(50, 450))),  qrd2(QrdSensor(PA_6, make_tuple(50, 450))),
+    qrd3(QrdSensor(PA_5, make_tuple(50, 450))), qrd4(QrdSensor(PA_4, make_tuple(50, 450))){
 
     this->create_qrds(pins, calibration);
 
@@ -90,14 +90,19 @@ void MainTapeSensor::update_state() {
        this->state = LEFT;
    }
 
+   pwm_start(PA_0, 1000000, 10, 0, 0);
+   pwm_start(PA_8, 1000000, 10, 0, 0);
+
    if (!this->qrd1.is_on() && !this->qrd2.is_on() && !this->qrd3.is_on() && !this->qrd4.is_on()) {
        if (this->state == LEFT || this->state == FAR_LEFT) {
            this->x = -3.0;
            this->state = FAR_LEFT;
+           pwm_start(PA_0, 1000000, 10, 10, 0);
        }
        if (this->state == RIGHT || this->state == FAR_RIGHT) {
            this->x = 3.0;
            this->state = FAR_RIGHT;
+           pwm_start(PA_8, 1000000, 10, 10, 0);
        }
    }
 

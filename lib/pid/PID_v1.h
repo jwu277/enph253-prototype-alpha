@@ -2,6 +2,10 @@
 #define PID_v1_h
 #define LIBRARY_VERSION	1.2.1
 
+#include <queue>
+
+using namespace std;
+
 class PID
 {
 
@@ -80,6 +84,7 @@ class PID
                                   //   what these values are.  with pointers we'll just know.
 			  
 	unsigned long lastTime;
+    queue<double> integral_queue;
 	double outputSum, lastInput;
 
 	unsigned long SampleTime;

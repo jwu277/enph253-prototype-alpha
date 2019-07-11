@@ -24,6 +24,8 @@ void QrdSensor::init() {
 
 double QrdSensor::get_read() {
     // must be between 0.0 and 1.0
+    //Serial.print(this->value);
+    //Serial.print("       ");
     return fmax(fmin((this->value - this->on_white) / (this->on_tape - this->on_white), 1.0), 0.0);
 }
 

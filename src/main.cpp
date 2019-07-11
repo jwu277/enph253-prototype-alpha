@@ -19,7 +19,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.0
+#define KI 0.005
 
 using namespace std;
 
@@ -77,12 +77,15 @@ void setup() {
     pinMode(PA_1, INPUT);
     pinMode(PA_2, INPUT);
 
-    double kp = (0.5 * analogRead(PA_1)) / 1024;
-    double kd = (0.5 * analogRead(PA_2)) / 1024;
+    double kp = (2.0 * analogRead(PA_1)) / 1024;
+    double kd = (200.0 * analogRead(PA_2)) / 1024;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
     Serial.begin(9600);
+
+    Serial.print(kp, 5);
+    Serial.print(kd, 5);
 
     /*
     Serial.begin(9600);
@@ -101,6 +104,7 @@ void setup() {
     init_logic();
 
     pwm_start(PA_0, 1000000, 10, 0, 1);
+    pwm_start(PA_8, 1000000, 10, 0, 1);
 
 }
 
@@ -125,8 +129,17 @@ void init_logic() {
 
 }
 
+//int foo = 0;
+//long time;
+
 void loop() {
 
+    /*
+    if (foo == 0) {
+        time = millis();
+    }*/
+
+    /*
     Serial.print(analogRead(PA_7));
     Serial.print("       ");
     Serial.print(analogRead(PA_6));
@@ -137,6 +150,7 @@ void loop() {
     Serial.print("       ");
     Serial.print("|");
     Serial.print("       ");
+    */
 
     // TODO: incorporate interrupts
 
@@ -149,11 +163,21 @@ void loop() {
     // 3. Tick the actuators in HW
     run_actuators();
     
-    Serial.print("|");
-    Serial.print("       ");
-    Serial.print(*pid_input, 3);
+    //Serial.print("|");
+    //Serial.print("       ");
+    //Serial.print(*pid_input, 3);
+
+    //Serial.println();
+
+    /*
+    foo++;
     
-    Serial.println();
+    if (foo == 1) {
+        Serial.print(millis() - time);
+        Serial.println();
+        foo = 0;
+    }
+    */
 
 }
 
@@ -179,8 +203,9 @@ void compute() {
 
     //intersection_manager.update();
 
+    
     if (main_tape_sensor.is_far_left()) {
-        drive_system.update(0.85, -1.8);
+        drive_system.update(0.87, -1.8);
         pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
@@ -188,8 +213,9 @@ void compute() {
     }
 
     if (main_tape_sensor.is_far_right()) {
-        drive_system.update(-1.8, 0.85);
+        drive_system.update(-2.1, 0.90);
     }
+    
 
 }
 
