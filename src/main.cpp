@@ -202,10 +202,10 @@ void compute() {
     //Serial.println();
 
     //intersection_manager.update();
-
+//*pid_input
     
     if (main_tape_sensor.is_far_left()) {
-        drive_system.update(0.87, -1.8);
+        drive_system.update(0.88+pid_output, -2.7);
         pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
@@ -213,7 +213,7 @@ void compute() {
     }
 
     if (main_tape_sensor.is_far_right()) {
-        drive_system.update(-2.1, 0.90);
+        drive_system.update(-2.7, 0.90-pid_output);
     }
     
 
