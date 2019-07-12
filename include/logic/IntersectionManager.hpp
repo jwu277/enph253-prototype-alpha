@@ -12,22 +12,25 @@ class IntersectionManager {
     private:
 
         // Modules
-        MainTapeSensor* main_tape_sensor;
-        SideTapeSensor* side_tape_sensor;
+        MainTapeSensor* tape_sensor;
         DriveSystem* drive_system;
 
         // State
         // TODO: update
         int intersection_count;
 
+        // Intersection Detectors
+        bool at_y_intersection();
+        // TODO: bool at_t_intersection();
+
+        // TODO: different intersection handlers for Y vs. T junctions
         // Intersection Handler
         void handle_intersection();
 
     public:
 
         // Constructor
-        IntersectionManager(MainTapeSensor* main_tape_sensor,
-            SideTapeSensor* side_tape_sensor, DriveSystem* drive_system);
+        IntersectionManager(MainTapeSensor* main_tape_sensor, DriveSystem* drive_system);
 
         // Update logic in SW
         void update();

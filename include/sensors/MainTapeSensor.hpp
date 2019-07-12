@@ -40,6 +40,8 @@ class MainTapeSensor: public BaseSensor {
 
         void set_state(State state); 
 
+        vector<bool> get_qrds_status();
+
     private:
 
         //QrdSensor left_qrd;
@@ -51,6 +53,8 @@ class MainTapeSensor: public BaseSensor {
         QrdSensor qrd2;
         QrdSensor qrd3;
         QrdSensor qrd4;
+        QrdSensor qrd5;
+        QrdSensor qrd6;
 
         State state;
 

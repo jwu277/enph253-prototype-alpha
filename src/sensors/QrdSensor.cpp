@@ -29,6 +29,7 @@ double QrdSensor::get_read() {
     return fmax(fmin((this->value - this->on_white) / (this->on_tape - this->on_white), 1.0), 0.0);
 }
 
+// TODO: calibrate
 bool QrdSensor::is_on() {
     return this->value >= (this->on_white + this->on_tape) / 2;
 }

@@ -54,7 +54,7 @@ vector<tuple<int, int>> qrd_calibration = {
 
 vector<double> qrd_weights = {-1.5, -0.5, 0.5, 1.5}; // TODO
 
-MainTapeSensor main_tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weights);
+MainTapeSensor tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weights);
 //SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
 
 // Actuators
@@ -63,14 +63,14 @@ DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM
 // Control/Logic/Computation
 
 // PID
-double* pid_input = main_tape_sensor.get_x_ptr();
+double* pid_input = tape_sensor.get_x_ptr();
 double pid_output;
 double pid_setpoint = 0.0;
 PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 
-/*
+
 IntersectionManager intersection_manager = IntersectionManager(
-    &main_tape_sensor, &side_tape_sensor, &drive_system);*/
+    &tape_sensor, &drive_system);
 
 void setup() {
 
@@ -103,14 +103,14 @@ void setup() {
     init_actuators();
     init_logic();
 
-    pwm_start(PA_0, 1000000, 10, 0, 1);
-    pwm_start(PA_8, 1000000, 10, 0, 1);
+    pwm_start(PB_4, 1000000, 10, 0, 1);
+    //pwm_start(PA_8, 1000000, 10, 0, 1);
 
 }
 
 void init_sensors() {
 
-    main_tape_sensor.init();
+    tape_sensor.init();
     //side_tape_sensor.init();
 
 }
@@ -169,21 +169,21 @@ void loop() {
 
     //Serial.println();
 
-    /*
-    foo++;
     
-    if (foo == 1) {
+    //foo++;
+    /*
+    if (foo == 100) {
         Serial.print(millis() - time);
         Serial.println();
         foo = 0;
-    }
-    */
+    }*/
+    
 
 }
 
 void update_sensors() {
 
-    main_tape_sensor.update();
+    tape_sensor.update();
     //side_tape_sensor.update();
 
 }
@@ -204,15 +204,15 @@ void compute() {
     //intersection_manager.update();
 //*pid_input
     
-    if (main_tape_sensor.is_far_left()) {
+    if (tape_sensor.is_far_left()) {
         drive_system.update(0.88+pid_output, -2.7);
-        pwm_start(PA_0, 1000000, 10, 10, 0);
+        //pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
-        pwm_start(PA_0, 1000000, 10, 0, 0);
+        //pwm_start(PA_0, 1000000, 10, 0, 0);
     }
 
-    if (main_tape_sensor.is_far_right()) {
+    if (tape_sensor.is_far_right()) {
         drive_system.update(-2.7, 0.90-pid_output);
     }
     

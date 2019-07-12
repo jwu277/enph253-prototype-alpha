@@ -5,12 +5,11 @@
 #define TURN_COUNTER_MAX 100
 
 // Constructor
-IntersectionManager::IntersectionManager(MainTapeSensor* main_tape_sensor,
-    SideTapeSensor* side_tape_sensor, DriveSystem* drive_system) {
+IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
+    DriveSystem* drive_system) {
         
     // Modules
-    this->main_tape_sensor = main_tape_sensor;
-    this->side_tape_sensor = side_tape_sensor;
+    this->tape_sensor = tape_sensor;
     this->drive_system = drive_system;
 
     // State
@@ -20,25 +19,65 @@ IntersectionManager::IntersectionManager(MainTapeSensor* main_tape_sensor,
 
 void IntersectionManager::update() {
 
-    bool at_intersection = (this->main_tape_sensor->is_both_on() &&
-            (this->side_tape_sensor->is_left_on() || this->side_tape_sensor->is_right_on()))
-            || (this->side_tape_sensor->is_left_on() && this->side_tape_sensor->is_right_on());
-
     // TEMP: for now
-    if (at_intersection) {
+    if (this->at_y_intersection()) {
 
-        //Serial.println("AYYYY");
+        pwm_start(PB_4, 1000000, 10, 10, 0);
 
-        pwm_start(PA_0, 1000000, 10, 10, 0);
+        //this->handle_intersection();
 
-        this->handle_intersection();
-
-        this->intersection_count++;
+        //this->intersection_count++;
 
     }
 
 }
 
+bool IntersectionManager::at_y_intersection() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    // duplicate end elements
+    qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
+    qrds_status.insert(qrds_status.end(), *qrds_status.end());
+
+    bool cond = false;
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Search for two blacks
+    int count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 2) {
+                break;
+            }
+        }
+    }
+
+    // Skip whites
+    for (; it != qrds_status.end(); it++) {
+        if(*it) {
+            break;
+        }
+    }
+
+    count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 2) {
+                cond = true;
+                break;
+            }
+        }
+    }
+
+    return cond;
+
+}
+
+/*
 void IntersectionManager::handle_intersection() {
 
     switch(this->intersection_count) {
@@ -53,7 +92,7 @@ void IntersectionManager::handle_intersection() {
             drive_system->actuate();
             delay(400);
 
-            main_tape_sensor->set_state(MainTapeSensor::RIGHT);
+            tape_sensor->set_state(MainTapeSensor::RIGHT);
 
             break;
 
@@ -68,6 +107,7 @@ void IntersectionManager::handle_intersection() {
     }
 
 }
+*/
 
 /*
 void IntersectionManager::update() {
