@@ -81,12 +81,12 @@ void MainTapeSensor::update_state() {
     }
     */
 
-   this->x += this->qrd1.get_read() * 2.5;
-   this->x += this->qrd2.get_read() * 1.5;
+   this->x += this->qrd1.get_read() * 1.5;
+   this->x += this->qrd2.get_read() * 1.0;
    this->x += this->qrd3.get_read() * 0.5;
    this->x += this->qrd4.get_read() * -0.5;
-   this->x += this->qrd5.get_read() * -1.5;
-   this->x += this->qrd6.get_read() * -2.5;
+   this->x += this->qrd5.get_read() * -1.0;
+   this->x += this->qrd6.get_read() * -1.5;
 
    if (this->x > 0) {
        this->state = RIGHT;

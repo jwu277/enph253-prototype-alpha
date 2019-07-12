@@ -19,7 +19,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.005
+#define KI 0.009
 
 using namespace std;
 
@@ -205,7 +205,7 @@ void compute() {
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.88+pid_output, -2.7);
+        drive_system.update(0.88+pid_output*1.4, -2.7);
         //pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
@@ -213,7 +213,7 @@ void compute() {
     }
 
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.7, 0.90-pid_output);
+        drive_system.update(-2.7, 0.90-pid_output*1.4);
     }
     
 
