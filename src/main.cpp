@@ -19,7 +19,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.009
+#define KI 0.1
 
 using namespace std;
 
@@ -78,7 +78,7 @@ void setup() {
     pinMode(PA_2, INPUT);
 
     double kp = (2.0 * analogRead(PA_1)) / 1024;
-    double kd = (200.0 * analogRead(PA_2)) / 1024;
+    double kd = (2000.0 * analogRead(PA_2)) / 1024;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
@@ -205,7 +205,7 @@ void compute() {
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.88+pid_output*1.4, -2.7);
+        drive_system.update(0.88+pid_output, -2.7);
         //pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
@@ -213,7 +213,7 @@ void compute() {
     }
 
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.7, 0.90-pid_output*1.4);
+        drive_system.update(-2.7, 0.90-pid_output);
     }
     
 
