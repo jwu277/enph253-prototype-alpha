@@ -56,8 +56,12 @@ bool IntersectionManager::at_y_intersection() {
     }
 
     // Skip whites
+    count = 0;
     for (; it != qrds_status.end(); it++) {
-        if(*it) {
+        if(!*it) {
+            count++;
+        }
+        else if (count >= 1) {
             break;
         }
     }
