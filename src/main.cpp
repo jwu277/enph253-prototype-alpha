@@ -77,8 +77,10 @@ void setup() {
     pinMode(PA_1, INPUT);
     pinMode(PA_2, INPUT);
 
-    double kp = (0.1 * analogRead(PA_1)) / 1024;
-    double kd = (100.0 * analogRead(PA_2)) / 1024;
+    // double kp = (0.1 * analogRead(PA_1)) / 1024;
+    // double kd = (100.0 * analogRead(PA_2)) / 1024;
+    double kp = 0.01602;
+    double kd = 24.51172;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
