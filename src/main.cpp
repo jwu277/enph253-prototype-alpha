@@ -88,7 +88,8 @@ void setup() {
     Serial.print(kd, 5);
 
     // p 3.51562 d 0.00000
-//3.49609 3730.46875
+    //3.49609 3730.46875
+    // p 0.01602 d 24.51172
 
     /*
     Serial.begin(9600);
@@ -204,7 +205,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    //intersection_manager.update();
+    intersection_manager.update();
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
