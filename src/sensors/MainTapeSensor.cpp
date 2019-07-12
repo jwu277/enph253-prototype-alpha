@@ -66,6 +66,8 @@ void MainTapeSensor::update_qrds() {
     this->qrd2.update();
     this->qrd3.update();
     this->qrd4.update();
+    this->qrd5.update();
+    this->qrd6.update();
 }
 
 void MainTapeSensor::update_state() {
