@@ -24,7 +24,7 @@ void IntersectionManager::update() {
 
         pwm_start(PB_4, 1000000, 10, 10, 0);
 
-        //this->handle_intersection();
+        this->handle_intersection();
 
         //this->intersection_count++;
 
@@ -81,37 +81,44 @@ bool IntersectionManager::at_y_intersection() {
 
 }
 
-/*
 void IntersectionManager::handle_intersection() {
-
-    switch(this->intersection_count) {
-
-        case 0:
-
-            drive_system->update(1.0, 1.0);
-            drive_system->actuate();
-            delay(500);
-
-            drive_system->turn_left();
-            drive_system->actuate();
-            delay(400);
-
-            tape_sensor->set_state(MainTapeSensor::RIGHT);
-
-            break;
-
-        case 1:
-            
-            drive_system->update(0.0, 0.0);
-            drive_system->actuate();
-            delay(4000);
-
-            break;
-
-    }
-
+    //right turn 
+    // if (this->at_y_intersection()){
+    //         drive_system->update(.85, -2.7);
+    //         drive_system->actuate();
+    //         delay(50);
+    // }
 }
-*/
+// void IntersectionManager::handle_intersection() {
+
+//     switch(this->intersection_count) {
+
+//         case 0:
+
+//             drive_system->update(1.0, 1.0);
+//             drive_system->actuate();
+//             delay(500);
+
+//             drive_system->turn_left();
+//             drive_system->actuate();
+//             delay(400);
+
+//             tape_sensor->set_state(MainTapeSensor::RIGHT);
+
+//             break;
+
+//         case 1:
+            
+//             drive_system->update(0.0, 0.0);
+//             drive_system->actuate();
+//             delay(4000);
+
+//             break;
+
+//     }
+
+// }
+
 
 /*
 void IntersectionManager::update() {

@@ -35,6 +35,7 @@ class IntersectionManager {
         // Update logic in SW
         void update();
 
+
         // Increment turn counter
         //void increment_turn_counter();
 
