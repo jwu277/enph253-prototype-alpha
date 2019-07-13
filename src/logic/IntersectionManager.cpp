@@ -49,7 +49,7 @@ bool IntersectionManager::at_y_intersection() {
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 2) {
+            if (count == 1) {
                 break;
             }
         }
@@ -70,7 +70,7 @@ bool IntersectionManager::at_y_intersection() {
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 2) {
+            if (count == 1) {
                 cond = true;
                 break;
             }
