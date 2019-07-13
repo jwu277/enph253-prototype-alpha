@@ -19,6 +19,12 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
 void IntersectionManager::update() {
 
+    // todo: organize into function
+    // unignore
+    if (fabs(*this->tape_sensor->get_x_ptr()) >= 0.2) {
+        this->tape_sensor->init_sensor_weights();
+    }
+
     // TEMP: for now
     if (this->at_y_intersection()) {
 
@@ -82,6 +88,9 @@ bool IntersectionManager::at_y_intersection() {
 }
 
 void IntersectionManager::handle_intersection() {
+
+    this->tape_sensor->ignore_right_sensors();
+
     //right turn 
     // if (this->at_y_intersection()){
     //         drive_system->update(.85, -2.7);

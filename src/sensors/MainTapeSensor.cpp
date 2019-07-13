@@ -31,12 +31,7 @@ MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     this->x = 0.0; // default value of 0.0
 
     // TODO: clean up
-    this->qrd1_weight = 1.5;
-    this->qrd2_weight = 1.0;
-    this->qrd3_weight = 0.5;
-    this->qrd4_weight = -0.5;
-    this->qrd5_weight = -1.0;
-    this->qrd6_weight = -1.5;
+    this->init_sensor_weights();
 
 }
 
@@ -160,4 +155,20 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 
     return status;
 
+}
+
+void MainTapeSensor::init_sensor_weights() {
+
+    this->qrd1_weight = 1.5;
+    this->qrd2_weight = 1.0;
+    this->qrd3_weight = 0.5;
+    this->qrd4_weight = -0.5;
+    this->qrd5_weight = -1.0;
+    this->qrd6_weight = -1.5;
+
+}
+
+void MainTapeSensor::ignore_right_sensors() {
+    this->qrd5_weight = 0.0;
+    this->qrd6_weight = 0.0;
 }
