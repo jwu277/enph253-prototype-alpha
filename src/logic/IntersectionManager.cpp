@@ -28,9 +28,19 @@ void IntersectionManager::update() {
     // TEMP: for now
     if (this->at_y_intersection()) {
 
-        pwm_start(PB_4, 1000000, 10, 10, 0);
+        //pwm_start(PB_4, 1000000, 10, 10, 0);
 
         this->handle_intersection();
+
+        //this->intersection_count++;
+
+    }
+
+    if (this->at_t_intersection()) {
+
+        pwm_start(PB_4, 1000000, 10, 10, 0);
+
+        //this->handle_intersection();
 
         //this->intersection_count++;
 
@@ -61,7 +71,7 @@ bool IntersectionManager::at_y_intersection() {
         }
     }
 
-    // Skip whites
+    // Skip whites + ensure at least one white
     count = 0;
     for (; it != qrds_status.end(); it++) {
         if(!*it) {
@@ -80,6 +90,40 @@ bool IntersectionManager::at_y_intersection() {
                 cond = true;
                 break;
             }
+        }
+    }
+
+    return cond;
+
+}
+
+bool IntersectionManager::at_t_intersection() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    bool cond = false;
+
+    // Skip whites
+    for (; it != qrds_status.end(); it++) {
+        if(*it) {
+            break;
+        }
+    }
+
+    // Require four blacks in a row
+    int count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if(*it) {
+            count++;
+            if (count == 4) {
+                cond = true;
+                break;
+            }
+        }
+        else {
+            count = 0;
         }
     }
 
