@@ -21,7 +21,7 @@ void IntersectionManager::update() {
 
     // todo: organize into function
     // unignore
-    if (fabs(*this->tape_sensor->get_x_ptr()) >= 0.2) {
+    if (fabs(*this->tape_sensor->get_x_ptr()) <= 0.2) {
         this->tape_sensor->init_sensor_weights();
     }
 
