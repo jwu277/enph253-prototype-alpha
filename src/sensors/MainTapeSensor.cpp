@@ -30,6 +30,14 @@ MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     this->state = CENTRE; // start neutral
     this->x = 0.0; // default value of 0.0
 
+    // TODO: clean up
+    this->qrd1_weight = 1.5;
+    this->qrd2_weight = 1.0;
+    this->qrd3_weight = 0.5;
+    this->qrd4_weight = -0.5;
+    this->qrd5_weight = -1.0;
+    this->qrd6_weight = -1.5;
+
 }
 
 void MainTapeSensor::create_qrds(vector<PinName> pins, vector<tuple<int, int>> calibration) {
@@ -83,12 +91,12 @@ void MainTapeSensor::update_state() {
     }
     */
 
-   this->x += this->qrd1.get_read() * 1.5;
-   this->x += this->qrd2.get_read() * 1.0;
-   this->x += this->qrd3.get_read() * 0.5;
-   this->x += this->qrd4.get_read() * -0.5;
-   this->x += this->qrd5.get_read() * -1.0;
-   this->x += this->qrd6.get_read() * -1.5;
+   this->x += this->qrd1.get_read() * this->qrd1_weight;
+   this->x += this->qrd2.get_read() * this->qrd2_weight;
+   this->x += this->qrd3.get_read() * this->qrd3_weight;
+   this->x += this->qrd4.get_read() * this->qrd4_weight;
+   this->x += this->qrd5.get_read() * this->qrd5_weight;
+   this->x += this->qrd6.get_read() * this->qrd6_weight;
 
    if (this->x > 0) {
        this->state = RIGHT;
