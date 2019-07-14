@@ -30,6 +30,9 @@ MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     this->state = CENTRE; // start neutral
     this->x = 0.0; // default value of 0.0
 
+    this->qrd0_status = false;
+    this->qrd7_status = false;
+
     // TODO: clean up
     this->init_sensor_weights();
 
@@ -51,12 +54,17 @@ void MainTapeSensor::init() {
         qrd.init();
     }
 
+    pinMode(PA_11, INPUT_PULLUP);
+    pinMode(PA_12, INPUT_PULLUP);
+
 }
 
 // Read data
 void MainTapeSensor::update() {
 
     MainTapeSensor::update_qrds();
+    this->qrd0_status = digitalRead(PA_11);
+    this->qrd7_status = digitalRead(PA_12);
     MainTapeSensor::update_state();
 
 }
@@ -146,12 +154,14 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 
     vector<bool> status = {};
 
+    status.push_back(this->qrd0_status);
     status.push_back(this->qrd1.is_on());
     status.push_back(this->qrd2.is_on());
     status.push_back(this->qrd3.is_on());
     status.push_back(this->qrd4.is_on());
     status.push_back(this->qrd5.is_on());
     status.push_back(this->qrd6.is_on());
+    status.push_back(this->qrd7_status);
 
     return status;
 

@@ -66,6 +66,10 @@ class MainTapeSensor: public BaseSensor {
         double qrd5_weight;
         double qrd6_weight;
 
+        // temp
+        bool qrd0_status;
+        bool qrd7_status;
+
         State state;
 
         vector<double> weights;
