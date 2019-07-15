@@ -144,8 +144,10 @@ void loop() {
     if (foo == 0) {
         time = millis();
     }*/
-
-    
+    //Serial.println("CANCER!");
+    /*
+    Serial.print(analogRead(PA_3));
+    Serial.print("       ");
     Serial.print(analogRead(PA_7));
     Serial.print("       ");
     Serial.print(analogRead(PA_6));
@@ -154,13 +156,12 @@ void loop() {
     Serial.print("       ");
     Serial.print(analogRead(PA_4));
     Serial.print("       ");
-    Serial.print(analogRead(PA_3));
-    Serial.print("       ");
     Serial.print(analogRead(PA_0));
     Serial.print("       ");
     Serial.print("|");
     Serial.print("       ");
     Serial.print("       ");
+    Serial.println();*/
     
 
     // TODO: incorporate interrupts
@@ -187,6 +188,23 @@ void loop() {
         Serial.print(millis() - time);
         Serial.println();
         foo = 0;
+    }*/
+    /*
+    if (digitalRead(PA15)) {
+        pwm_start(PB_4, 1000000, 10, 10, 0);
+        pwm_start(PA_8, 1000000, 10, 10, 0);
+    }
+    else {
+        pwm_start(PB_4, 1000000, 10, 0, 0);
+        pwm_start(PA_8, 1000000, 10, 0, 0);
+    }*/
+
+    /*
+    if (digitalRead(PA12)) {
+        pwm_start(PA_8, 1000000, 10, 10, 0);
+    }
+    else {
+        pwm_start(PA_8, 1000000, 10, 0, 0);
     }*/
     
 

@@ -54,8 +54,8 @@ void MainTapeSensor::init() {
         qrd.init();
     }
 
-    pinMode(PA_11, INPUT_PULLUP);
-    pinMode(PA_12, INPUT_PULLUP);
+    pinMode(PA11, INPUT_PULLUP);
+    pinMode(PA15, INPUT_PULLUP);
 
 }
 
@@ -63,8 +63,8 @@ void MainTapeSensor::init() {
 void MainTapeSensor::update() {
 
     MainTapeSensor::update_qrds();
-    this->qrd0_status = !digitalRead(PA_11);
-    this->qrd7_status = !digitalRead(PA_12);
+    this->qrd0_status = digitalRead(PA11);
+    this->qrd7_status = digitalRead(PA15);
     MainTapeSensor::update_state();
 
 }
@@ -162,6 +162,13 @@ vector<bool> MainTapeSensor::get_qrds_status() {
     status.push_back(this->qrd5.is_on());
     status.push_back(this->qrd6.is_on());
     status.push_back(this->qrd7_status);
+
+    // temp print
+    for (vector<bool>::iterator it = status.begin(); it != status.end(); it++) {
+        //Serial.print(*it ? 1 : 0);
+        //Serial.print("     ");
+    }
+    //Serial.println();
 
     return status;
 
