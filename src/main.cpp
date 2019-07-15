@@ -110,7 +110,7 @@ void setup() {
     init_logic();
 
     pwm_start(PB_4, 1000000, 10, 0, 1);
-    //pwm_start(PA_8, 1000000, 10, 0, 1);
+    pwm_start(PA_8, 1000000, 10, 0, 1);
 
 }
 
@@ -145,7 +145,7 @@ void loop() {
         time = millis();
     }*/
 
-    /*
+    
     Serial.print(analogRead(PA_7));
     Serial.print("       ");
     Serial.print(analogRead(PA_6));
@@ -154,9 +154,14 @@ void loop() {
     Serial.print("       ");
     Serial.print(analogRead(PA_4));
     Serial.print("       ");
+    Serial.print(analogRead(PA_3));
+    Serial.print("       ");
+    Serial.print(analogRead(PA_0));
+    Serial.print("       ");
     Serial.print("|");
     Serial.print("       ");
-    */
+    Serial.print("       ");
+    
 
     // TODO: incorporate interrupts
 

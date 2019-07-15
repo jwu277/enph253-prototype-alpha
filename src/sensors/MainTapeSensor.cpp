@@ -63,8 +63,8 @@ void MainTapeSensor::init() {
 void MainTapeSensor::update() {
 
     MainTapeSensor::update_qrds();
-    this->qrd0_status = digitalRead(PA_11);
-    this->qrd7_status = digitalRead(PA_12);
+    this->qrd0_status = !digitalRead(PA_11);
+    this->qrd7_status = !digitalRead(PA_12);
     MainTapeSensor::update_state();
 
 }
