@@ -188,7 +188,19 @@ void MainTapeSensor::init_sensor_weights() {
 
 }
 
+void MainTapeSensor::ignore_left_sensors() {
+    this->qrd1_weight = 0.0;
+    this->qrd2_weight = 0.0;
+    this->qrd3_weight = 0.0;
+    this->qrd4_weight = -1.5;
+    this->qrd5_weight = -2.5;
+    this->qrd6_weight = -3.5;
+}
+
 void MainTapeSensor::ignore_right_sensors() {
+    this->qrd1_weight = 3.5;
+    this->qrd2_weight = 2.5;
+    this->qrd3_weight = 1.5;
     this->qrd4_weight = 0.0;
     this->qrd5_weight = 0.0;
     this->qrd6_weight = 0.0;
