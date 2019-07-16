@@ -145,7 +145,7 @@ void loop() {
         time = millis();
     }*/
     //Serial.println("CANCER!");
-    
+    /*
     Serial.print(analogRead(PA_1));
     Serial.print("       ");
     Serial.print(analogRead(PA_3));
@@ -161,7 +161,7 @@ void loop() {
     Serial.print(analogRead(PA_0));
     Serial.print("       ");
     Serial.print(analogRead(PA_2));
-    Serial.println();
+    Serial.println();*/
     
 
     // TODO: incorporate interrupts

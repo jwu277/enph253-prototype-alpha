@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#include "sensors/MainTapeSensor.hpp"
+#include "actuators/DriveSystem.hpp"
 #include "logic/IntersectionManager.hpp"
 
 #define TURN_COUNTER_MAX 100
@@ -28,12 +30,17 @@ void IntersectionManager::update() {
     // TEMP: for now
     if (this->at_t_intersection()||this->at_y_intersection()) {
 
-        pwm_start(PB_4, 1000000, 10, 10, 0);
+        if (this->intersection_count % 2 == 0){
+            pwm_start(PB_4, 1000000, 10, 10, 0);
+        }
+        else {
+            pwm_start(PB_4, 1000000, 10, 0, 0);
+        }
         pwm_start(PA_8, 1000000, 10, 10, 0);
 
         this->handle_intersection();
 
-        //this->intersection_count++;
+        this->intersection_count++;
 
     }
     else {
@@ -139,7 +146,40 @@ bool IntersectionManager::at_t_intersection() {
 void IntersectionManager::handle_intersection() {
 
     //this->tape_sensor->ignore_right_sensors();
-    this->tape_sensor->ignore_left_sensors();
+    //this->tape_sensor->ignore_left_sensors();
+
+    switch (this->intersection_count) {
+        case 0:
+            // cheap disable/debounce
+            this->drive_system->update(0.85, 0.85);
+            this->drive_system->actuate();
+            delay(500);
+            this->drive_system->update(0.85, -2.1);
+            this->drive_system->actuate();
+            delay(800);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+            break;
+        /*
+        case 1:
+            this->drive_system->update(0.85, -1.8);
+            this->drive_system->actuate();
+            delay(700);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            break;
+        */
+        case 2:
+            // this->drive_system->update(0.80, 0.80);
+            // this->drive_system->actuate();
+            // delay(700);
+            // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            this->tape_sensor->ignore_right_sensors();
+            break;
+        case 3:
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(2500);
+            break;
+    }
 
     //right turn 
     // if (this->at_y_intersection()){
