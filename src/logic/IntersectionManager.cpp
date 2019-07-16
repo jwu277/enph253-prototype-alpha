@@ -26,7 +26,7 @@ void IntersectionManager::update() {
     }
 
     // TEMP: for now
-    if (this->at_t_intersection()) {
+    if (this->at_t_intersection()||this->at_y_intersection()) {
 
         pwm_start(PB_4, 1000000, 10, 10, 0);
         pwm_start(PA_8, 1000000, 10, 10, 0);
@@ -122,7 +122,7 @@ bool IntersectionManager::at_t_intersection() {
     for (; it != qrds_status.end(); it++) {
         if(*it) {
             count++;
-            if (count == 5) {
+            if (count == 4) {
                 cond = true;
                 break;
             }
@@ -138,7 +138,8 @@ bool IntersectionManager::at_t_intersection() {
 
 void IntersectionManager::handle_intersection() {
 
-    this->tape_sensor->ignore_right_sensors();
+    //this->tape_sensor->ignore_right_sensors();
+    this->tape_sensor->ignore_left_sensors();
 
     //right turn 
     // if (this->at_y_intersection()){

@@ -21,7 +21,8 @@ MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     vector<tuple<int, int>> calibration, vector<double> weights)
     : qrd1(QrdSensor(PA_3, make_tuple(50, 450))), qrd2(QrdSensor(PA_7, make_tuple(50, 450))),
     qrd3(QrdSensor(PA_6, make_tuple(50, 450))), qrd4(QrdSensor(PA_5, make_tuple(50, 450))),
-    qrd5(QrdSensor(PA_4, make_tuple(50, 450))), qrd6(QrdSensor(PA_0, make_tuple(50, 450))) {
+    qrd5(QrdSensor(PA_4, make_tuple(50, 450))), qrd6(QrdSensor(PA_0, make_tuple(50, 450))),
+    qrd7(QrdSensor(PA_2, make_tuple(50, 450))), qrd0(QrdSensor(PA_1, make_tuple(50, 450))) {
 
     this->create_qrds(pins, calibration);
 
@@ -54,8 +55,8 @@ void MainTapeSensor::init() {
         qrd.init();
     }
 
-    pinMode(PA11, INPUT_PULLUP);
-    pinMode(PA15, INPUT_PULLUP);
+    //pinMode(PA11, INPUT_PULLUP);
+    //pinMode(PA15, INPUT_PULLUP);
 
 }
 
@@ -63,8 +64,8 @@ void MainTapeSensor::init() {
 void MainTapeSensor::update() {
 
     MainTapeSensor::update_qrds();
-    this->qrd0_status = digitalRead(PA11);
-    this->qrd7_status = digitalRead(PA15);
+    //this->qrd0_status = digitalRead(PA11);
+    //this->qrd7_status = digitalRead(PA15);
     MainTapeSensor::update_state();
 
 }
@@ -73,12 +74,14 @@ void MainTapeSensor::update_qrds() {
     for (QrdSensor qrd : this->qrds) {
         qrd.update();
     }
+    this->qrd0.update();
     this->qrd1.update();
     this->qrd2.update();
     this->qrd3.update();
     this->qrd4.update();
     this->qrd5.update();
     this->qrd6.update();
+    this->qrd7.update();
 }
 
 void MainTapeSensor::update_state() {
@@ -154,21 +157,21 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 
     vector<bool> status = {};
 
-    status.push_back(this->qrd0_status);
+    status.push_back(this->qrd0.is_on());
     status.push_back(this->qrd1.is_on());
     status.push_back(this->qrd2.is_on());
     status.push_back(this->qrd3.is_on());
     status.push_back(this->qrd4.is_on());
     status.push_back(this->qrd5.is_on());
     status.push_back(this->qrd6.is_on());
-    status.push_back(this->qrd7_status);
+    status.push_back(this->qrd7.is_on());
 
     // temp print
     for (vector<bool>::iterator it = status.begin(); it != status.end(); it++) {
-        //Serial.print(*it ? 1 : 0);
-        //Serial.print("     ");
+        // Serial.print(*it ? 1 : 0);
+        // Serial.print("     ");
     }
-    //Serial.println();
+    // Serial.println();
 
     return status;
 
@@ -185,7 +188,19 @@ void MainTapeSensor::init_sensor_weights() {
 
 }
 
+void MainTapeSensor::ignore_left_sensors() {
+    this->qrd1_weight = 0.0;
+    this->qrd2_weight = 0.0;
+    this->qrd3_weight = 0.0;
+    this->qrd4_weight = -1.5;
+    this->qrd5_weight = -2.5;
+    this->qrd6_weight = -3.5;
+}
+
 void MainTapeSensor::ignore_right_sensors() {
+    this->qrd1_weight = 3.5;
+    this->qrd2_weight = 2.5;
+    this->qrd3_weight = 1.5;
     this->qrd4_weight = 0.0;
     this->qrd5_weight = 0.0;
     this->qrd6_weight = 0.0;

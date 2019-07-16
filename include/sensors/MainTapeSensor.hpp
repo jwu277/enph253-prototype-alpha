@@ -43,6 +43,7 @@ class MainTapeSensor: public BaseSensor {
         vector<bool> get_qrds_status();
 
         void init_sensor_weights();
+        void ignore_left_sensors();
         void ignore_right_sensors();
 
     private:
@@ -52,12 +53,14 @@ class MainTapeSensor: public BaseSensor {
 
         vector<QrdSensor> qrds;
 
+        QrdSensor qrd0;
         QrdSensor qrd1;
         QrdSensor qrd2;
         QrdSensor qrd3;
         QrdSensor qrd4;
         QrdSensor qrd5;
         QrdSensor qrd6;
+        QrdSensor qrd7;
 
         double qrd1_weight;
         double qrd2_weight;
