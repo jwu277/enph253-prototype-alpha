@@ -273,8 +273,36 @@ void IntersectionManager::handle_intersection() {
             delay(800);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
-            delay(300000);
+            delay(2000); //TODO get rock here
+            this->drive_system->update(-2.8, -2.8);
+            this->drive_system->actuate();
+            delay(400);
+            this->drive_system->update(-2.8, -0.1);
+            this->drive_system->actuate();
+            delay(400);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             break;
+        case 4:
+            // this->drive_system->update(0.7, 0.85);
+            // this->drive_system->actuate();
+            // delay(300);
+            // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+        case 3:
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(800);
+            this->drive_system->update(-0.1, -2.8);
+            this->drive_system->actuate();
+            delay(450);
+            this->drive_system->update(0.85, -0.1);
+            this->drive_system->actuate();
+            delay(200);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(2000); //TODO get rock here
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            break;
+            
     }
 
     //right turn 
