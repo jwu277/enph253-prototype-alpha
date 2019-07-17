@@ -162,7 +162,6 @@ void loop() {
     Serial.print("       ");
     Serial.print(analogRead(PA_2));
     Serial.println();*/
-    
 
     // TODO: incorporate interrupts
 

@@ -16,6 +16,8 @@ QrdSensor::QrdSensor(PinName pin, tuple<int, int> thresholds) {
 
     this->value = 0; // Default value of 0
 
+    this->threshold = 420;
+
 }
 
 void QrdSensor::init() {
@@ -31,5 +33,9 @@ double QrdSensor::get_read() {
 
 // TODO: calibrate
 bool QrdSensor::is_on() {
-    return this->value >= (this->on_white + this->on_tape) / 2;
+    return this->value >= this->threshold;
+}
+
+void QrdSensor::set_on_threshold(int thresh) {
+    this->threshold = thresh;
 }

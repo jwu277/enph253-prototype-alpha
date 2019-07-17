@@ -58,6 +58,9 @@ void MainTapeSensor::init() {
     //pinMode(PA11, INPUT_PULLUP);
     //pinMode(PA15, INPUT_PULLUP);
 
+    this->qrd0.set_on_threshold(520);
+    this->qrd7.set_on_threshold(520);
+
 }
 
 // Read data
@@ -204,4 +207,15 @@ void MainTapeSensor::ignore_right_sensors() {
     this->qrd4_weight = 0.0;
     this->qrd5_weight = 0.0;
     this->qrd6_weight = 0.0;
+}
+
+void MainTapeSensor::reset_thresholds() {
+    this->qrd0.set_on_threshold(250);
+    this->qrd1.set_on_threshold(250);
+    this->qrd2.set_on_threshold(250);
+    this->qrd3.set_on_threshold(250);
+    this->qrd4.set_on_threshold(250);
+    this->qrd5.set_on_threshold(250);
+    this->qrd6.set_on_threshold(250);
+    this->qrd7.set_on_threshold(250);
 }

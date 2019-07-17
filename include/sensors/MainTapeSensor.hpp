@@ -46,6 +46,8 @@ class MainTapeSensor: public BaseSensor {
         void ignore_left_sensors();
         void ignore_right_sensors();
 
+        void reset_thresholds();
+
     private:
 
         //QrdSensor left_qrd;

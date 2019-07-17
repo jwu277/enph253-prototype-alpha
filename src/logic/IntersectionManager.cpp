@@ -5,9 +5,9 @@
 #include "logic/IntersectionManager.hpp"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 800
+#define DELAY_TIME 200
 
-double last_intersection_time=0;
+long last_intersection_time = millis();
 
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
@@ -41,12 +41,14 @@ void IntersectionManager::update() {
         }
         pwm_start(PA_8, 1000000, 10, 10, 0);
 
-        this->handle_intersection();
-        double new_time = millis();
-        if(last_intersection_time- new_time<DELAY_TIME)
-            this->intersection_count++;
+        //
+        long new_time = millis();
+        if(new_time - last_intersection_time >= DELAY_TIME) {
+            this->handle_intersection();
+            this->intersection_count++;   
             last_intersection_time = new_time;
             // Serial.println(last_intersection_time-new_time);
+        }
 
 
     }
@@ -73,13 +75,15 @@ bool IntersectionManager::at_y_intersection() {
 
     // duplicate end elements
     qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
-    qrds_status.insert(qrds_status.end(), *qrds_status.end());
-    qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
-    qrds_status.insert(qrds_status.end(), *qrds_status.end());
+    vector<bool>::iterator it = qrds_status.end();
+    advance(it, -1);
+    qrds_status.push_back(*it);
+    // qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
+    // qrds_status.insert(qrds_status.end(), *qrds_status.end());
 
     bool cond = false;
 
-    vector<bool>::iterator it = qrds_status.begin();
+    it = qrds_status.begin();
 
     // Search for two blacks
     int count = 0;
@@ -114,7 +118,27 @@ bool IntersectionManager::at_y_intersection() {
         }
     }
 
-    return cond;
+    it = qrds_status.begin();
+    bool val1 = *it;
+    advance(it, 2);
+    bool val2 = *it;
+
+    it = qrds_status.end();
+    bool val3 = *it;
+    advance(it, -2);
+    bool val4 = *it;
+
+    /*
+    it = qrds_status.begin();
+    for (; it != qrds_status.end(); it++) {
+        Serial.print(*it ? "1" : "0");
+        Serial.print("     ");
+    }
+    Serial.println();*/
+
+    bool cond2 = (val1 && val2) || (val3 && val4);
+
+    return cond || cond2;
 
 }
 
@@ -122,7 +146,12 @@ bool IntersectionManager::at_t_intersection() {
     
     vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
 
-    vector<bool>::iterator it = qrds_status.begin();
+    qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
+    vector<bool>::iterator it = qrds_status.end();
+    advance(it, -1);
+    qrds_status.push_back(*it);
+
+    it = qrds_status.begin();
 
     bool cond = false;
 
@@ -159,22 +188,41 @@ void IntersectionManager::handle_intersection() {
 
     switch (this->intersection_count) {
         case 0:
-            this->drive_system->update(0.95, 0.80);
+            // this->drive_system->update(0.95, 0.80);
+            // this->drive_system->actuate();
+            // delay(400);
+            // this->drive_system->update(0.0, 0.0);
+            // this->drive_system->actuate();
+            // delay(500);
+            // // this->drive_system->update(0.85, -2.3);
+            // // this->drive_system->actuate();
+            // // delay(800);
+            // // this->drive_system->update(0.95, 0.95);
+            // // this->drive_system->actuate();
+            // // delay(200);
+            // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            // this->drive_system->update(0.0, 0.0);
+            // this->drive_system->actuate();
+            // delay(50000000);
+            // this->drive_system->update(0.8, 0.8);
+            // this->drive_system->actuate();
+            // delay(300);
+            this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(400);
-            this->drive_system->update(0.0, 0.0);
+            this->drive_system->update(0.85, 0.5);
             this->drive_system->actuate();
-            delay(500);
-            // this->drive_system->update(0.85, -2.3);
-            // this->drive_system->actuate();
-            // delay(800);
-            // this->drive_system->update(0.95, 0.95);
-            // this->drive_system->actuate();
-            // delay(200);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
-            this->drive_system->update(0.0, 0.0);
+            delay(300);
+            this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
-            delay(50000000);
+            delay(300);
+            this->drive_system->update(0.85, 0.85);
+            this->drive_system->actuate();
+            delay(200);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(300);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
         // case 1:
             // cheap disable/debounce
@@ -191,17 +239,17 @@ void IntersectionManager::handle_intersection() {
             break;
         */
         case 1:
-            this->drive_system->update(0.8, 0.8);
+            this->drive_system->update(0.7, 0.85);
             this->drive_system->actuate();
             delay(300);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
             // this->tape_sensor->ignore_right_sensors();
             break;
         case 2:
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
-            delay(250000);
+            delay(5000);
             break;
     }
 
