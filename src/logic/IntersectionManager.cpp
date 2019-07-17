@@ -22,6 +22,12 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
 }
 
+//TODO make function to wiggle left and right to get clean lock on
+void wiggle() {
+
+
+}
+
 void IntersectionManager::update() {
 
     // todo: organize into function
@@ -252,19 +258,23 @@ void IntersectionManager::handle_intersection() {
             delay(500);
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
-            delay(100);
-            this->drive_system->update(0.0, 0.0);
+            this->tape_sensor->update();
+            while (!this->at_t_intersection()) {
+                this->tape_sensor->update();
+                delay(1);
+            }
+            this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(500);
             this->drive_system->update(-2.8, -0.1);
             this->drive_system->actuate();
-            delay(400);
+            delay(350);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
             this->drive_system->update(-2.8, -0.1);
             this->drive_system->actuate();
-            delay(450);
+            delay(350);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
@@ -273,6 +283,83 @@ void IntersectionManager::handle_intersection() {
             delay(800);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
+            // wiggle();
+
+            //wiggle here
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(0.80, -0.1);
+            this->drive_system->actuate();
+            delay(50);
+            this->drive_system->update(-0.1, 0.80);
+            this->drive_system->actuate();
+            delay(50);
+            // end wiggle
+
             delay(2000); //TODO get rock here
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
@@ -282,7 +369,7 @@ void IntersectionManager::handle_intersection() {
             delay(400);
             this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             break;
-        case 4:
+        //case 4:
             // this->drive_system->update(0.7, 0.85);
             // this->drive_system->actuate();
             // delay(300);
@@ -290,17 +377,32 @@ void IntersectionManager::handle_intersection() {
         case 3:
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
-            delay(800);
-            this->drive_system->update(-0.1, -2.8);
+            delay(500);
+            this->drive_system->update(0.85, 0.85);
             this->drive_system->actuate();
-            delay(450);
-            this->drive_system->update(0.85, -0.1);
-            this->drive_system->actuate();
-            delay(200);
+            delay(400);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
-            delay(2000); //TODO get rock here
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            delay(300);
+            this->drive_system->update(0.85, -2.8);
+            this->drive_system->actuate();
+            delay(900);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(300);
+            // this->drive_system->update(-0.1, -2.8);
+            // this->drive_system->actuate();
+            // delay(900);
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(300);
+            this->drive_system->update(0.85, 0.85);
+            this->drive_system->actuate();
+            delay(900);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(600);
+            delay(2000); //TODO drop rock here
             break;
             
     }
