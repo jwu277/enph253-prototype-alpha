@@ -249,7 +249,31 @@ void IntersectionManager::handle_intersection() {
         case 2:
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
-            delay(5000);
+            delay(500);
+            this->drive_system->update(-2.8, -2.8);
+            this->drive_system->actuate();
+            delay(100);
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(500);
+            this->drive_system->update(-2.8, -0.1);
+            this->drive_system->actuate();
+            delay(400);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(300);
+            this->drive_system->update(-2.8, -0.1);
+            this->drive_system->actuate();
+            delay(450);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(300);
+            this->drive_system->update(0.80, 0.80);
+            this->drive_system->actuate();
+            delay(800);
+            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->actuate();
+            delay(300000);
             break;
     }
 
