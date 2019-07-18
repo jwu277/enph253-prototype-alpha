@@ -358,6 +358,11 @@ void test_hardware() {
         drive_system.actuate();
         delay(300);
 
+        moveZToExtreme(EXTEND);
+        homeY(true);
+        homeY(false);
+        moveZToExtreme(HOME);
+
         delay(800);
 
     }
