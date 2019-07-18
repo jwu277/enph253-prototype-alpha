@@ -116,25 +116,26 @@ void setup() {
     pwm_start(PA_8, 1000000, 10, 0, 1);
 
     // Upper assembly
-    attachInterrupt(ZHOME, zHomeISR, RISING);
-    attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
-    attachInterrupt(YHOME, yHomeISR, RISING);
-    attachInterrupt(YFULLEXT, yFullExtISR, RISING);
-    attachInterrupt(CLAWPB, clawPBISR, RISING);
-    attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
+    //
+    // attachInterrupt(ZHOME, zHomeISR, RISING);
+    // attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    // attachInterrupt(YHOME, yHomeISR, RISING);
+    // attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    // attachInterrupt(CLAWPB, clawPBISR, RISING);
+    // attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
 
-    //stepper
-    pinMode(CLAWSERVO, OUTPUT);
-    pinMode(YSERVO, OUTPUT);
-    pinMode(STEPPERCLK, OUTPUT);
-    pinMode(STEPPERSLEEP, OUTPUT);
-    pinMode(STEPPERDIR, OUTPUT);
-    pinMode(STEPPERENABLE, OUTPUT);
+    // //stepper
+    // pinMode(CLAWSERVO, OUTPUT);
+    // pinMode(YSERVO, OUTPUT);
+    // pinMode(STEPPERCLK, OUTPUT);
+    // pinMode(STEPPERSLEEP, OUTPUT);
+    // pinMode(STEPPERDIR, OUTPUT);
+    // pinMode(STEPPERENABLE, OUTPUT);
 
-    digitalWrite(STEPPERENABLE, LOW);
-    digitalWrite(STEPPERSLEEP, HIGH);
-    digitalWrite(STEPPERDIR, UP);
-    digitalWrite(STEPPERCLK, LOW);
+    // digitalWrite(STEPPERENABLE, LOW);
+    // digitalWrite(STEPPERSLEEP, HIGH);
+    // digitalWrite(STEPPERDIR, UP);
+    // digitalWrite(STEPPERCLK, LOW);
 
 }
 
