@@ -12,6 +12,9 @@
 // Control/Logic/Computation Classes
 #include "logic/IntersectionManager.hpp"
 
+// Upper assembly (TODO: organize)
+#include "claw_system.h"
+
 // Constants
 #define PWM_CLK_FREQ 10000000
 #define PWM_PERIOD 1000
@@ -111,6 +114,27 @@ void setup() {
 
     pwm_start(PB_4, 1000000, 10, 0, 1);
     pwm_start(PA_8, 1000000, 10, 0, 1);
+
+    // Upper assembly
+    attachInterrupt(ZHOME, zHomeISR, RISING);
+    attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    attachInterrupt(YHOME, yHomeISR, RISING);
+    attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    attachInterrupt(CLAWPB, clawPBISR, RISING);
+    attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
+
+    //stepper
+    pinMode(CLAWSERVO, OUTPUT);
+    pinMode(YSERVO, OUTPUT);
+    pinMode(STEPPERCLK, OUTPUT);
+    pinMode(STEPPERSLEEP, OUTPUT);
+    pinMode(STEPPERDIR, OUTPUT);
+    pinMode(STEPPERENABLE, OUTPUT);
+
+    digitalWrite(STEPPERENABLE, LOW);
+    digitalWrite(STEPPERSLEEP, HIGH);
+    digitalWrite(STEPPERDIR, UP);
+    digitalWrite(STEPPERCLK, LOW);
 
 }
 
