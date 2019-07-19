@@ -21,6 +21,7 @@ QrdSensor::QrdSensor(PinName pin, tuple<int, int> thresholds) {
 }
 
 void QrdSensor::init() {
+    // TODO: change to INPUT (analog)
     pinMode(pin, INPUT_PULLUP);
 }
 
