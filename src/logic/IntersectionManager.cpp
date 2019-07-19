@@ -40,14 +40,14 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     if (this->at_t_intersection()||this->at_y_intersection()) {
-
-        if (this->intersection_count % 2 == 0){
-            pwm_start(PB_4, 1000000, 10, 10, 0);
-        }
-        else {
-            pwm_start(PB_4, 1000000, 10, 0, 0);
-        }
-        pwm_start(PA_8, 1000000, 10, 10, 0);
+        
+        // if (this->intersection_count % 2 == 0){
+        //     pwm_start(PB_4, 1000000, 10, 10, 0);
+        // }
+        // else {
+        //     pwm_start(PB_4, 1000000, 10, 0, 0);
+        // }
+        // pwm_start(PA_8, 1000000, 10, 10, 0);
 
         //
         long new_time = millis();
@@ -436,7 +436,7 @@ void IntersectionManager::handle_intersection() {
             // end wiggle
 
             delay(2000); //TODO get rock here
-            //grabCrystal();
+            grabCrystal();
 
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();

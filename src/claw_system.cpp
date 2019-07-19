@@ -199,13 +199,15 @@ void grabCrystal() {
   digitalWrite(STEPPERENABLE, LOW);
   homeY(true);
   moveZToExtreme(EXTEND);
-  moveY(100);
+  moveY(150);
   findTopOfPillar();
   closeClaw();
   moveZToExtreme(EXTEND);
   homeY(true);
   moveZToExtreme(HOME);
-  openClaw();
+  // openClaw();  
+  digitalWrite(STEPPERENABLE, HIGH);
+
 }
 
 void findTopOfPillar() {
