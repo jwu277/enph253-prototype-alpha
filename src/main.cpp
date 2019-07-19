@@ -119,30 +119,36 @@ void setup() {
     pwm_start(PA_8, 1000000, 10, 0, 1);
 
     // Upper assembly
-    //
-    // attachInterrupt(ZHOME, zHomeISR, RISING);
-    // attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
-    // attachInterrupt(YHOME, yHomeISR, RISING);
-    // attachInterrupt(YFULLEXT, yFullExtISR, RISING);
-    // attachInterrupt(CLAWPB, clawPBISR, RISING);
-    // attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
+    
+    attachInterrupt(ZHOME, zHomeISR, RISING);
+    attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    attachInterrupt(YHOME, yHomeISR, RISING);
+    attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    attachInterrupt(CLAWPB, clawPBISR, RISING);
+    attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
 
-    // //stepper
-    // pinMode(CLAWSERVO, OUTPUT);
-    // pinMode(YSERVO, OUTPUT);
-    // pinMode(STEPPERCLK, OUTPUT);
-    // pinMode(STEPPERSLEEP, OUTPUT);
-    // pinMode(STEPPERDIR, OUTPUT);
-    // pinMode(STEPPERENABLE, OUTPUT);
+    //stepper
+    pinMode(CLAWSERVO, OUTPUT);
+    pinMode(YSERVO, OUTPUT);
+    pinMode(STEPPERCLK, OUTPUT);
+    pinMode(STEPPERSLEEP, OUTPUT);
+    pinMode(STEPPERDIR, OUTPUT);
+    pinMode(STEPPERENABLE, OUTPUT);
+    pinMode(ZFULLEXT, INPUT);
+    pinMode(ZHOME, INPUT);
+    pinMode(YHOME, INPUT);
+    pinMode(YFULLEXT, INPUT);
+    pinMode(CLAWPB, INPUT);
+    pinMode(CLAWFLOORPB, INPUT);
 
-    // digitalWrite(STEPPERENABLE, LOW);
-    // digitalWrite(STEPPERSLEEP, HIGH);
-    // digitalWrite(STEPPERDIR, UP);
-    // digitalWrite(STEPPERCLK, LOW);
+    digitalWrite(STEPPERENABLE, LOW);
+    digitalWrite(STEPPERSLEEP, HIGH);
+    digitalWrite(STEPPERDIR, UP);
+    digitalWrite(STEPPERCLK, LOW);
 
     
     // Hardware test
-    test_hardware();
+    //test_hardware();
 
 }
 
@@ -177,7 +183,7 @@ void loop() {
         time = millis();
     }*/
     //Serial.println("CANCER!");
-    /*
+    
     Serial.print(analogRead(PA_1));
     Serial.print("       ");
     Serial.print(analogRead(PA_3));
@@ -193,7 +199,7 @@ void loop() {
     Serial.print(analogRead(PA_0));
     Serial.print("       ");
     Serial.print(analogRead(PA_2));
-    Serial.println();*/
+    Serial.println();
 
     // TODO: incorporate interrupts
 
@@ -261,7 +267,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    intersection_manager.update();
+    //intersection_manager.update();
 //*pid_input
     
     if (tape_sensor.is_far_left()) {

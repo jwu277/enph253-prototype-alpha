@@ -435,7 +435,9 @@ void IntersectionManager::handle_intersection() {
             delay(50);
             // end wiggle
 
-            delay(2000); //TODO get rock here
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+
             grabCrystal();
 
             this->drive_system->update(-2.8, -2.8);
@@ -551,6 +553,10 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(-0.1, 0.80);
             this->drive_system->actuate();
             delay(50);
+
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+
             delay(2000); //TODO drop rock here
             break;
             
