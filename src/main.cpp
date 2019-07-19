@@ -12,6 +12,9 @@
 // Control/Logic/Computation Classes
 #include "logic/IntersectionManager.hpp"
 
+// Upper assembly (TODO: organize)
+#include "claw_system.h"
+
 // Constants
 #define PWM_CLK_FREQ 10000000
 #define PWM_PERIOD 1000
@@ -39,6 +42,9 @@ void run_actuators();
 
 // QRD Tape Sensor System
 // (on_tape, on_white)
+
+// Testing only
+void test_hardware();
 
 // TODO
 
@@ -111,6 +117,32 @@ void setup() {
 
     pwm_start(PB_4, 1000000, 10, 0, 1);
     pwm_start(PA_8, 1000000, 10, 0, 1);
+
+    // Upper assembly
+    //
+    // attachInterrupt(ZHOME, zHomeISR, RISING);
+    // attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    // attachInterrupt(YHOME, yHomeISR, RISING);
+    // attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    // attachInterrupt(CLAWPB, clawPBISR, RISING);
+    // attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
+
+    // //stepper
+    // pinMode(CLAWSERVO, OUTPUT);
+    // pinMode(YSERVO, OUTPUT);
+    // pinMode(STEPPERCLK, OUTPUT);
+    // pinMode(STEPPERSLEEP, OUTPUT);
+    // pinMode(STEPPERDIR, OUTPUT);
+    // pinMode(STEPPERENABLE, OUTPUT);
+
+    // digitalWrite(STEPPERENABLE, LOW);
+    // digitalWrite(STEPPERSLEEP, HIGH);
+    // digitalWrite(STEPPERDIR, UP);
+    // digitalWrite(STEPPERCLK, LOW);
+
+    
+    // Hardware test
+    test_hardware();
 
 }
 
@@ -252,4 +284,86 @@ void run_actuators() {
 
     drive_system.actuate();
 
+}
+
+// Just to test
+void test_hardware() {
+    // Only runs this unless commented out
+    while (true) {
+
+        // 1. Blink LED 3 times
+        pwm_start(PB_4, 1000000, 10, 10, 0);
+        delay(300);
+        pwm_start(PB_4, 1000000, 10, 0, 0);
+        delay(300);
+        pwm_start(PB_4, 1000000, 10, 10, 0);
+        delay(300);
+        pwm_start(PB_4, 1000000, 10, 0, 0);
+        delay(300);
+        pwm_start(PB_4, 1000000, 10, 10, 0);
+        delay(300);
+        pwm_start(PB_4, 1000000, 10, 0, 0);
+        delay(300);
+
+        // 2. Check that QRDs are white
+        if (fmax(fmax(fmax(fmax(fmax(fmax(fmax(analogRead(PA_1),
+            analogRead(PA_3)), analogRead(PA_7)), analogRead(PA_6)),
+            analogRead(PA_5)), analogRead(PA_4)), analogRead(PA_0)),
+            analogRead(PA_2)) >= 150) {
+            
+            pwm_start(PB_4, 1000000, 10, 10, 0);
+
+        }
+        else {
+            pwm_start(PB_4, 1000000, 10, 0, 0);
+        }
+
+        // Keep LED in this state until test reuns
+
+        // 3. Run motors
+        drive_system.update(0.9, 0.4); // Right forward
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(300);
+        drive_system.update(-0.9, -0.4); // Right reverse
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(300);
+        drive_system.update(0.4, 0.9); // Left forward
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(300);
+        drive_system.update(-0.4, -0.9); // Left reverse
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(300);
+        drive_system.update(0.85, 0.85); // Straight forward
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(200);
+        drive_system.update(-0.85, -0.85); // Straight reverse
+        drive_system.actuate();
+        delay(400);
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(300);
+
+        moveZToExtreme(EXTEND);
+        homeY(true);
+        homeY(false);
+        moveZToExtreme(HOME);
+
+        delay(800);
+
+    }
 }

@@ -4,6 +4,8 @@
 #include "actuators/DriveSystem.hpp"
 #include "logic/IntersectionManager.hpp"
 
+#include "claw_system.h"
+
 #define TURN_COUNTER_MAX 100
 #define DELAY_TIME 200
 
@@ -434,6 +436,8 @@ void IntersectionManager::handle_intersection() {
             // end wiggle
 
             delay(2000); //TODO get rock here
+            //grabCrystal();
+
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
             delay(400);
