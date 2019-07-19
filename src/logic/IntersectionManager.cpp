@@ -258,15 +258,16 @@ void IntersectionManager::handle_intersection() {
             delay(500);
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
-            this->tape_sensor->update();
-            while (!this->at_t_intersection()) {
-                this->tape_sensor->update();
-                delay(1);
-            }
+            delay(400);
+            // this->tape_sensor->update();
+            // while (!this->at_t_intersection()) {
+            //     this->tape_sensor->update();
+            //     delay(1);
+            // }
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(500);
-            this->drive_system->update(-2.8, -0.1);
+            this->drive_system->update(-2.8, 0.70);
             this->drive_system->actuate();
             delay(350);
             this->drive_system->update(-0.1, -0.1);
@@ -274,7 +275,7 @@ void IntersectionManager::handle_intersection() {
             delay(300);
             this->drive_system->update(-2.8, -0.1);
             this->drive_system->actuate();
-            delay(450);
+            delay(650);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);

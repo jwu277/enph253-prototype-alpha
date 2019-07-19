@@ -3,7 +3,7 @@
 #include "actuators/DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define BASE_DRIVE 0.90
+#define BASE_DRIVE 0.84
 
 #define TURN_LOW 0.5
 #define TURN_HIGH 0.98
