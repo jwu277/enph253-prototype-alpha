@@ -92,8 +92,8 @@ void setup() {
 
     Serial.begin(9600);
 
-    Serial.print(kp, 5);
-    Serial.print(kd, 5);
+    // Serial.print(kp, 5);
+    // Serial.print(kd, 5);
 
     // p 3.51562 d 0.00000
     //3.49609 3730.46875
@@ -114,9 +114,6 @@ void setup() {
     init_sensors();
     init_actuators();
     init_logic();
-
-    pwm_start(PB_4, 1000000, 10, 0, 1);
-    pwm_start(PA_8, 1000000, 10, 0, 1);
 
     // Upper assembly
     
@@ -146,9 +143,23 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
+    // pinMode(PA_1, INPUT);
+    // pinMode(PA_3, INPUT);
+    // pinMode(PA_7, INPUT);
+    // pinMode(PA_6, INPUT);
+    // pinMode(PA_5, INPUT);
+    // pinMode(PA_4, INPUT);
+    // pinMode(PA_0, INPUT);
+    // pinMode(PA_2, INPUT);
+
+    //
     
     // Hardware test
     //test_hardware();
+
+    // drive_system.update(0.85, 0.85);
+    // drive_system.actuate();
+    // while(1);
 
 }
 
@@ -177,29 +188,30 @@ void init_logic() {
 //long time;
 
 void loop() {
-
+    
     /*
     if (foo == 0) {
         time = millis();
     }*/
     //Serial.println("CANCER!");
     
-    Serial.print(analogRead(PA_1));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_3));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_7));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_6));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_5));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_4));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_0));
-    Serial.print("       ");
-    Serial.print(analogRead(PA_2));
-    Serial.println();
+    // Serial.print(analogRead(PA1));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA3));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA7));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA6));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA5));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA4));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA0));
+    // Serial.print("       ");
+    // Serial.print(analogRead(PA2));
+    // Serial.print("       ");
+    // Serial.println();
 
     // TODO: incorporate interrupts
 
@@ -267,7 +279,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    //intersection_manager.update();
+    intersection_manager.update();
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
@@ -298,18 +310,20 @@ void test_hardware() {
     while (true) {
 
         // 1. Blink LED 3 times
-        pwm_start(PB_4, 1000000, 10, 10, 0);
-        delay(300);
-        pwm_start(PB_4, 1000000, 10, 0, 0);
-        delay(300);
-        pwm_start(PB_4, 1000000, 10, 10, 0);
-        delay(300);
-        pwm_start(PB_4, 1000000, 10, 0, 0);
-        delay(300);
-        pwm_start(PB_4, 1000000, 10, 10, 0);
-        delay(300);
-        pwm_start(PB_4, 1000000, 10, 0, 0);
-        delay(300);
+        // pwm_start(PB_4, 1000000, 10, 10, 0);
+        // delay(300);
+        // pwm_start(PB_4, 1000000, 10, 0, 0);
+        // delay(300);
+        // pwm_start(PB_4, 1000000, 10, 10, 0);
+        // delay(300);
+        // pwm_start(PB_4, 1000000, 10, 0, 0);
+        // delay(300);
+        // pwm_start(PB_4, 1000000, 10, 10, 0);
+        // delay(300);
+        // pwm_start(PB_4, 1000000, 10, 0, 0);
+        // delay(300);
+
+        delay(1500);
 
         // 2. Check that QRDs are white
         if (fmax(fmax(fmax(fmax(fmax(fmax(fmax(analogRead(PA_1),
@@ -317,11 +331,14 @@ void test_hardware() {
             analogRead(PA_5)), analogRead(PA_4)), analogRead(PA_0)),
             analogRead(PA_2)) >= 150) {
             
-            pwm_start(PB_4, 1000000, 10, 10, 0);
+            //pwm_start(PB_4, 1000000, 10, 10, 0);
+
+            Serial.println("bad");
 
         }
         else {
-            pwm_start(PB_4, 1000000, 10, 0, 0);
+            //pwm_start(PB_4, 1000000, 10, 0, 0);
+            Serial.println("NICE!");
         }
 
         // Keep LED in this state until test reuns
@@ -368,8 +385,6 @@ void test_hardware() {
         homeY(true);
         homeY(false);
         moveZToExtreme(HOME);
-
-        delay(800);
 
     }
 }

@@ -20,7 +20,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 0;
+    this->intersection_count = 1;
 
 }
 
@@ -40,6 +40,8 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     if (this->at_t_intersection()||this->at_y_intersection()) {
+
+        //Serial.print("YASSS");
         
         // if (this->intersection_count % 2 == 0){
         //     pwm_start(PB_4, 1000000, 10, 10, 0);
@@ -50,10 +52,11 @@ void IntersectionManager::update() {
         // pwm_start(PA_8, 1000000, 10, 10, 0);
 
         //
+        // Serial.println("INTERSECTION!");
         long new_time = millis();
         if(new_time - last_intersection_time >= DELAY_TIME) {
-            this->handle_intersection();
-            this->intersection_count++;   
+            //this->handle_intersection();
+            this->intersection_count++;
             last_intersection_time = new_time;
             // Serial.println(last_intersection_time-new_time);
         }
@@ -61,7 +64,8 @@ void IntersectionManager::update() {
 
     }
     else {
-        pwm_start(PA_8, 1000000, 10, 0, 0);
+        //Serial.print("N");
+        //pwm_start(PA_8, 1000000, 10, 0, 0);
     }
     /*
     if (this->at_t_intersection()) {
@@ -247,10 +251,10 @@ void IntersectionManager::handle_intersection() {
             break;
         */
         case 1:
-            this->drive_system->update(0.7, 0.85);
+            this->drive_system->update(0.70, 0.85);
             this->drive_system->actuate();
             delay(300);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
             // this->tape_sensor->ignore_right_sensors();
             break;

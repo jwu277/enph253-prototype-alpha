@@ -8,7 +8,7 @@ volatile bool yIsHome = digitalRead(YHOME);
 volatile bool zIsExtended = digitalRead(ZFULLEXT);
 volatile bool yIsExtended = digitalRead(YFULLEXT);
 volatile bool clawPBPressed = digitalRead(CLAWPB);
-volatile bool clawBasePBPressed = digitalRead(CLAWFLOORPB);
+volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
 volatile byte motTimeControl;   //a byte consisting of flags for the timerISR to use in processing
@@ -199,13 +199,14 @@ void grabCrystal() {
   digitalWrite(STEPPERENABLE, LOW);
   homeY(true);
   moveZToExtreme(EXTEND);
-  moveY(150);
+  openClaw();
+  moveY(184);
   findTopOfPillar();
   closeClaw();
   moveZToExtreme(EXTEND);
   homeY(true);
   moveZToExtreme(HOME);
-  // openClaw();  
+  openClaw();  
   digitalWrite(STEPPERENABLE, HIGH);
 
 }
