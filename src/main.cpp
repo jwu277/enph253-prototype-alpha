@@ -33,6 +33,9 @@ void update_sensors();
 void compute();
 void run_actuators();
 
+// Interrupt
+void hardwareISR();
+
 // Sensors
 MainTapeSensor main_tape_sensor = MainTapeSensor(PA_7, PA_6);
 SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
@@ -50,6 +53,8 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 
 IntersectionManager intersection_manager = IntersectionManager(
     &main_tape_sensor, &side_tape_sensor, &drive_system);
+
+boolean testFlag = HIGH;
 
 void setup() {
 
@@ -77,6 +82,20 @@ void setup() {
 
     pwm_start(PA_0, 1000000, 10, 0, 1);
 
+
+    pinMode(PB_6, OUTPUT);
+    digitalWrite(PB_6, testFlag);
+
+    attachInterrupt(PB_12, hardwareISR, RISING);
+
+    while(true) {
+        
+    }
+}
+
+void hardwareISR() {
+    digitalWrite(PB_6,!testFlag);
+    testFlag = !testFlag;
 }
 
 void init_sensors() {
