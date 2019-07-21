@@ -64,3 +64,5 @@ void findTopOfPillar();
 void grabCrystal();
 void enableStepper();
 void disableStepper();
+void moveZSteps(int, bool);
+int mmToSteps(int);

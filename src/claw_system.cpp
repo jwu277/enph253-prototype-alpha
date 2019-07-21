@@ -3,11 +3,11 @@
 #include "claw_system.h"
 
 //crane pushbutton booleans
-volatile bool zIsHome = digitalRead(ZHOME);
-volatile bool yIsHome = digitalRead(YHOME);
-volatile bool zIsExtended = digitalRead(ZFULLEXT);
-volatile bool yIsExtended = digitalRead(YFULLEXT);
-volatile bool clawPBPressed = digitalRead(CLAWPB);
+volatile bool zIsHome = 0;
+volatile bool yIsHome = 0;
+volatile bool zIsExtended = 0;
+volatile bool yIsExtended = 0;
+volatile bool clawPBPressed = 0;
 volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
@@ -217,12 +217,11 @@ void findTopOfPillar() {
   while (!clawBasePBPressed) {
     stepperPulse();
   }
+  clawBasePBPressed = false;
 }
 
 void moveZToExtreme(bool home) {
   //set the home flags to false to allow for the positive edge of the interrupts to cause a rising flag
-  zIsHome = false;
-  zIsExtended = false;
 
   if (home == true) {
     if (digitalRead(ZHOME)) return; //if it is sensed that z is home, quit this protocal since a rising edge interrupt can not occur
@@ -230,12 +229,14 @@ void moveZToExtreme(bool home) {
     while(!zIsHome) {
       stepperPulse();
     }
+    zIsHome = false;  //reset the flag
   } else {
     if (digitalRead(ZFULLEXT)) return; //if it is sensed that z is extended, quit this protocal since a rising edge interrupt can not occur
     digitalWrite(STEPPERDIR, HIGH);
     while(!zIsExtended) {
       stepperPulse();
     }
+    zIsExtended = false;  //reset the flag
   }
 }
 
@@ -259,3 +260,35 @@ void stepperPulse() {
   digitalWrite(STEPPERCLK, LOW);
   delayMicroseconds(1800);
 }
+
+//moves the z axis for "steps" steps
+void moveZSteps(int steps, bool dir) {
+  if (dir == UP) {
+    changeStepperDir(UP);
+    for (int i = 0; i < steps; i++) {
+      if (zIsExtended) { 
+        zIsExtended = false;
+        return;
+      }
+      stepperPulse();
+    }
+
+  } else {
+    changeStepperDir(DOWN);
+    for (int i = 0; i < steps; i++) {
+      if (zIsHome) { 
+        zIsHome = false;
+        return;
+      }
+      stepperPulse();
+    }
+  }
+}
+
+int mmToSteps(int mm) {
+  float r = 10; //radius of belt holder in mm
+  float stepsPermm = (float) 200 / (2 * 3.14159 * r); //200 stepsPerrotation / (lenghtPerrotation) gives steps per length mm
+  return (int) ((float) mm * stepsPermm);
+}
+
+
