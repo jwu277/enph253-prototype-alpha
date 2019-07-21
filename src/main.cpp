@@ -188,6 +188,8 @@ void init_logic() {
 //long time;
 
 void loop() {
+
+    //grabCrystal();
     
     /*
     if (foo == 0) {

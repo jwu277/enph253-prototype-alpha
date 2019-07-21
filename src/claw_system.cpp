@@ -3,11 +3,11 @@
 #include "claw_system.h"
 
 //crane pushbutton booleans
-volatile bool zIsHome = digitalRead(ZHOME);
-volatile bool yIsHome = digitalRead(YHOME);
-volatile bool zIsExtended = digitalRead(ZFULLEXT);
-volatile bool yIsExtended = digitalRead(YFULLEXT);
-volatile bool clawPBPressed = digitalRead(CLAWPB);
+volatile bool zIsHome = 0;
+volatile bool yIsHome = 0;
+volatile bool zIsExtended = 0;
+volatile bool yIsExtended = 0;
+volatile bool clawPBPressed = 0;
 volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
@@ -212,11 +212,19 @@ void grabCrystal() {
 }
 
 void findTopOfPillar() {
-  if (digitalRead(CLAWFLOORPB)) return;
-  changeStepperDir(DOWN);
-  while (!clawBasePBPressed) {
-    stepperPulse();
-  }
+
+    clawBasePBPressed = 0;
+
+    if (digitalRead(CLAWFLOORPB)) {
+        return;
+    }
+
+    changeStepperDir(DOWN);
+
+    while (!clawBasePBPressed) {
+        stepperPulse();
+    }
+
 }
 
 void moveZToExtreme(bool home) {

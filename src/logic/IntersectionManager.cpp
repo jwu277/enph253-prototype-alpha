@@ -55,7 +55,7 @@ void IntersectionManager::update() {
         // Serial.println("INTERSECTION!");
         long new_time = millis();
         if(new_time - last_intersection_time >= DELAY_TIME) {
-            //this->handle_intersection();
+            this->handle_intersection();
             this->intersection_count++;
             last_intersection_time = new_time;
             // Serial.println(last_intersection_time-new_time);
@@ -251,7 +251,7 @@ void IntersectionManager::handle_intersection() {
             break;
         */
         case 1:
-            this->drive_system->update(0.70, 0.85);
+            this->drive_system->update(0.85, 0.70);
             this->drive_system->actuate();
             delay(300);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
@@ -273,15 +273,15 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(500);
-            this->drive_system->update(-2.8, 0.70);
+            this->drive_system->update(0.70, -2.8);
             this->drive_system->actuate();
             delay(350);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
-            this->drive_system->update(-2.8, -0.1);
-            this->drive_system->actuate();
-            delay(650);
+            // this->drive_system->update(-0.1, -2.8);
+            // this->drive_system->actuate();
+            // delay(650);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
@@ -443,6 +443,8 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
 
             grabCrystal();
+
+            delay(69420);
 
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
