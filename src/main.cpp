@@ -155,7 +155,7 @@ void setup() {
     //
     
     // Hardware test
-    //test_hardware();
+    test_hardware();
 
     // drive_system.update(0.85, 0.85);
     // drive_system.actuate();
@@ -350,37 +350,37 @@ void test_hardware() {
         // 3. Run motors
         drive_system.update(0.9, 0.4); // Right forward
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
         delay(300);
-        drive_system.update(-0.9, -0.4); // Right reverse
+        drive_system.update(-2.7, -1.2); // Right reverse
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
         delay(300);
         drive_system.update(0.4, 0.9); // Left forward
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
         delay(300);
-        drive_system.update(-0.4, -0.9); // Left reverse
+        drive_system.update(-1.2, -2.7); // Left reverse
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
         delay(300);
         drive_system.update(0.85, 0.85); // Straight forward
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
-        delay(200);
-        drive_system.update(-0.85, -0.85); // Straight reverse
+        delay(300);
+        drive_system.update(-2.5, -2.5); // Straight reverse
         drive_system.actuate();
-        delay(400);
+        delay(1000);
         drive_system.update(0.0, 0.0);
         drive_system.actuate();
         delay(300);
