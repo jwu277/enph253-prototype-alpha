@@ -5,8 +5,8 @@
 #define ZFULLEXT PB4
 #define YHOME PA8
 #define YFULLEXT PB3
-#define CLAWPB PB14
-#define CLAWFLOORPB PB13
+#define CLAWPB PB13
+#define CLAWFLOORPB PB14
 
 //Servos
 #define CLAWSERVO PB1
@@ -66,3 +66,4 @@ void enableStepper();
 void disableStepper();
 void moveZSteps(int, bool);
 int mmToSteps(int);
+void moveYUntilClawPressed();

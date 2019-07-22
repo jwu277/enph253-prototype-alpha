@@ -20,7 +20,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 1;
+    this->intersection_count = 3;
 
 }
 
@@ -444,8 +444,6 @@ void IntersectionManager::handle_intersection() {
 
             grabCrystal();
 
-            delay(69420);
-
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
             delay(400);
@@ -469,9 +467,9 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
-            this->drive_system->update(0.85, -2.8);
+            this->drive_system->update(-2.8, 0.85);
             this->drive_system->actuate();
-            delay(900);
+            delay(950);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
@@ -487,83 +485,82 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(600);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(0.80, -0.1);
-            this->drive_system->actuate();
-            delay(50);
-            this->drive_system->update(-0.1, 0.80);
-            this->drive_system->actuate();
-            delay(50);
+
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            // this->drive_system->update(-0.1, -0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(0.80, -0.1);
+            // this->drive_system->actuate();
+            // delay(50);
+            // this->drive_system->update(-0.1, 0.80);
+            // this->drive_system->actuate();
+            // delay(50);
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
 
-            delay(2000); //TODO drop rock here
+            //delay(2000); //TODO drop rock here
             break;
             
     }

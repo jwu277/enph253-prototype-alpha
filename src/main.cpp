@@ -161,6 +161,10 @@ void setup() {
     // drive_system.actuate();
     // while(1);
 
+    // delay(3000);
+    // grabCrystal();
+    // delay(69420);
+
 }
 
 void init_sensors() {
@@ -188,8 +192,6 @@ void init_logic() {
 //long time;
 
 void loop() {
-
-    //grabCrystal();
     
     /*
     if (foo == 0) {
