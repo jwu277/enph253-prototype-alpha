@@ -283,7 +283,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    intersection_manager.update();
+    //intersection_manager.update();
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
