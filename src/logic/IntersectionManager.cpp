@@ -11,6 +11,8 @@
 
 long last_intersection_time = millis();
 
+long gauntlet_timer;
+
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     DriveSystem* drive_system) {
@@ -20,7 +22,9 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 3;
+    this->intersection_count = 0;
+
+    this->gauntlet_state = 0;
 
 }
 
@@ -32,11 +36,17 @@ void wiggle() {
 
 void IntersectionManager::update() {
 
+    // temp: handle gauntlet
+    if (this->intersection_count >= 4) {
+        this->handle_gauntlet();
+    } 
+
     // todo: organize into function
     // unignore
+    /*
     if (fabs(*this->tape_sensor->get_x_ptr()) <= 0.2) {
         this->tape_sensor->init_sensor_weights();
-    }
+    }*/
 
     // TEMP: for now
     if (this->at_t_intersection()||this->at_y_intersection()) {
@@ -557,9 +567,6 @@ void IntersectionManager::handle_intersection() {
             // this->drive_system->actuate();
             // delay(50);
 
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-
             //delay(2000); //TODO drop rock here
             break;
             
@@ -635,3 +642,40 @@ void IntersectionManager::increment_turn_counter() {
 
 }
 */
+
+void IntersectionManager::handle_gauntlet() {
+
+    switch(this->gauntlet_state) {
+
+        case 0:
+            
+            if (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
+                this->gauntlet_state++;
+                gauntlet_timer = millis();
+            }
+
+            break;
+
+        case 1:
+            
+            // keep pid going for ____ milliseconds and then increment to next state
+            if (millis() - gauntlet_timer >= 1500) {
+
+                this->gauntlet_state++;
+
+                // Go backwards now
+                
+
+            }
+
+            break;
+
+        case 2:
+            // temp
+            // move into position + grab
+            this->gauntlet_state++;
+            break;
+        
+    }
+
+}
