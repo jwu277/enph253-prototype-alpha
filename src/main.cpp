@@ -179,25 +179,25 @@ void setup() {
 
     //grabCrystal();
 
-    // while (1) {
-    //     Serial.print(analogRead(PA7));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA6));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA3));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA2));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA1));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA0));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA4));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA5));
-    //     Serial.print("       ");
-    //     Serial.println();
-    // }
+    while (1) {
+        Serial.print(analogRead(PA6));
+        Serial.print("       ");
+        Serial.print(analogRead(PA5));
+        Serial.print("       ");
+        Serial.print(analogRead(PA3));
+        Serial.print("       ");
+        Serial.print(analogRead(PA2));
+        Serial.print("       ");
+        Serial.print(analogRead(PA1));
+        Serial.print("       ");
+        Serial.print(analogRead(PA0));
+        Serial.print("       ");
+        Serial.print(analogRead(PA4));
+        Serial.print("       ");
+        Serial.print(analogRead(PA7));
+        Serial.print("       ");
+        Serial.println();
+    }
 
     // drive_system.update(1.0, 1.0);
     // drive_system.actuate();

@@ -19,11 +19,11 @@ using namespace std;
 // Constructor
 MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     vector<tuple<int, int>> calibration, vector<double> weights)
-    : qrd0(QrdSensor(PA_7, make_tuple(50, 450))),
-    qrd1(QrdSensor(PA_6, make_tuple(50, 450))), qrd2(QrdSensor(PA_3, make_tuple(50, 450))),
+    : qrd0(QrdSensor(PA_6, make_tuple(50, 450))),
+    qrd1(QrdSensor(PA_5, make_tuple(50, 450))), qrd2(QrdSensor(PA_3, make_tuple(50, 450))),
     qrd3(QrdSensor(PA_2, make_tuple(50, 450))), qrd4(QrdSensor(PA_1, make_tuple(50, 450))),
     qrd5(QrdSensor(PA_0, make_tuple(50, 450))), qrd6(QrdSensor(PA_4, make_tuple(50, 450))),
-    qrd7(QrdSensor(PA_5, make_tuple(50, 450))) {
+    qrd7(QrdSensor(PA_7, make_tuple(50, 450))) {
 
     this->create_qrds(pins, calibration);
 
@@ -107,6 +107,13 @@ void MainTapeSensor::update_state() {
    this->x += this->qrd4.get_read() * this->qrd4_weight;
    this->x += this->qrd5.get_read() * this->qrd5_weight;
    this->x += this->qrd6.get_read() * this->qrd6_weight;
+
+   if (this->qrd1.is_on() && !this->qrd2.is_on()) {
+       this->x = 2 * this->qrd1.get_read() * this->qrd1_weight;
+   }
+   else if (this->qrd6.is_on() && !this->qrd5.is_on()) {
+       this->x = 2 * this->qrd6.get_read() * this->qrd6_weight;
+   }
 
    if (this->x > 0) {
        this->state = RIGHT;
