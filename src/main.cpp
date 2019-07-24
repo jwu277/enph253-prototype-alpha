@@ -83,10 +83,10 @@ void setup() {
     // pinMode(PA_1, INPUT);
     // pinMode(PA_2, INPUT);
 
-     double kp = (0.4 * analogRead(PA_6)) / 1024;
-     double kd = (100.0 * analogRead(PA_7)) / 1024;
-    // double kp = 0.01602;
-    // double kd = 24.51172;
+    //  double kp = (0.4 * analogRead(PA_6)) / 1024;
+    //  double kd = (100.0 * analogRead(PA_7)) / 1024;
+    double kp = 0.10977;
+    double kd = 0.0;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
@@ -334,7 +334,7 @@ void compute() {
     //Serial.print(pid_output, 4);
     //Serial.println();
 
-    //intersection_manager.update();
+    intersection_manager.update();
 //*pid_input
     
     if (tape_sensor.is_far_left()) {

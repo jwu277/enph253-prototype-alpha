@@ -210,6 +210,10 @@ void IntersectionManager::handle_intersection() {
 
     switch (this->intersection_count) {
         case 0:
+            // temp: stop
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(69420);
             // this->drive_system->update(0.95, 0.80);
             // this->drive_system->actuate();
             // delay(400);
