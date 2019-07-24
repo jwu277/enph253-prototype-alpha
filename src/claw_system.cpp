@@ -42,6 +42,7 @@ void zFullExtISR()
 
 void yHomeISR()
 {
+    //Serial.println("yHomeISR");
     if (yStatus == MOVING_BK)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -55,6 +56,7 @@ void yHomeISR()
 
 void yFullExtISR()
 {
+    //Serial.println("yFullExtISR");
     if (yStatus == MOVING_FWD)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -68,11 +70,13 @@ void yFullExtISR()
 
 void clawPBISR()
 {
+    //Serial.println("clawPBISR");
     clawPBPressed = true;
 }
 
 void clawFloorPBISR()
 {
+    //Serial.println("clawFloorPBISR");
     clawBasePBPressed = true;
 }
 
@@ -113,7 +117,7 @@ void closeClaw()
         clawStatus = MOVING_BK;
         // Serial.println("PWM to open claw started");
 
-        delay(2000);
+        delay(2500);
 
         pwm_stop(CLAW_SERVO_PWM_NAME);
     }
@@ -236,8 +240,11 @@ void moveYUntilClawPressed()
 void grabCrystal()
 {
     digitalWrite(STEPPERENABLE, LOW);
-    homeY(true);
+    //homeY(true);
     moveZToExtreme(EXTEND);
+    // while(1) {
+    //     Serial.println("running");
+    // }
     openClaw();
     moveY(200);
     findTopOfPillar();
@@ -283,11 +290,17 @@ void moveZToExtreme(bool home)
     }
     else
     {
-        if (digitalRead(ZFULLEXT))
-            return; //if it is sensed that z is extended, quit this protocal since a rising edge interrupt can not occur
+        // if (digitalRead(ZFULLEXT)) {
+        //     while (1) {
+        //         Serial.println("FUCK");
+        //         delay(10);
+        //     }
+        //     return; //if it is sensed that z is extended, quit this protocal since a rising edge interrupt can not occur
+        // }
         digitalWrite(STEPPERDIR, HIGH);
         while (!zIsExtended)
         {
+            //Serial.println("HI");
             stepperPulse();
         }
         zIsExtended = false; //reset the flag
@@ -316,7 +329,7 @@ void stepperPulse()
     digitalWrite(STEPPERCLK, HIGH);
     delayMicroseconds(1);
     digitalWrite(STEPPERCLK, LOW);
-    delayMicroseconds(1800);
+    delayMicroseconds(2600);
 }
 
 //moves the z axis for "steps" steps

@@ -494,7 +494,10 @@ void IntersectionManager::handle_intersection() {
             delay(900);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
-            delay(600);
+            delay(200);
+
+            // raise z
+            moveZToExtreme(false);
 
             this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             // this->drive_system->update(-0.1, -0.80);

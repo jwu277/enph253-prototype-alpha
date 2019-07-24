@@ -138,7 +138,7 @@ void setup() {
     pinMode(CLAWPB, INPUT);
     pinMode(CLAWFLOORPB, INPUT);
 
-    digitalWrite(STEPPERENABLE, LOW);
+    digitalWrite(STEPPERENABLE, HIGH);
     digitalWrite(STEPPERSLEEP, HIGH);
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
@@ -155,15 +155,46 @@ void setup() {
     //
     
     // Hardware test
-    test_hardware();
+    //test_hardware();
 
     // drive_system.update(0.85, 0.85);
     // drive_system.actuate();
     // while(1);
 
-    // delay(3000);
-    // grabCrystal();
-    // delay(69420);
+       //grabCrystal();
+
+    // homeY(true);
+    // homeY(false);
+    // while(1);
+
+    digitalWrite(STEPPERENABLE, LOW);
+    // while(1) {
+    //     Serial.println("FOO");
+    // }
+
+    //delay(2000);
+
+    // moveZToExtreme(EXTEND);
+    // moveZToExtreme(HOME);
+
+    grabCrystal();
+
+    while(1) {
+        Serial.println("running1");
+    }
+
+    while (1) {
+        stepperPulse();
+        delay(10);
+    }
+
+    //grabCrystal();
+
+    while(1) {
+        Serial.println("code is running");
+        delay(10);
+    }
+    
 
 }
 
