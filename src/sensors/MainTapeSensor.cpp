@@ -183,15 +183,17 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 
 void MainTapeSensor::init_sensor_weights() {
 
-    this->qrd1_weight = 1.5;
-    this->qrd2_weight = 1.0;
-    this->qrd3_weight = 0.5;
-    this->qrd4_weight = -0.5;
-    this->qrd5_weight = -1.0;
-    this->qrd6_weight = -1.5;
+    this->qrd1_weight = 3.0;
+    this->qrd2_weight = 2.0;
+    this->qrd3_weight = 1.0;
+    this->qrd4_weight = -1.0;
+    this->qrd5_weight = -2.0;
+    this->qrd6_weight = -3.0;
 
 }
 
+
+// Currently ignore sensor functions are NIU
 void MainTapeSensor::ignore_left_sensors() {
     this->qrd1_weight = 0.0;
     this->qrd2_weight = 0.0;

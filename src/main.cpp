@@ -206,14 +206,14 @@ void setup() {
     //     Serial.println("run2");
     // }
 
-    while (1) {
+    // while (1) {
 
-        drive_system.update(-3.0, -2.7);
-        drive_system.actuate();
+    //     drive_system.update(-3.0, -2.7);
+    //     drive_system.actuate();
 
-        delay(1000);
+    //     delay(1000);
 
-    }
+    // }
 
     // while(1) {
     //     Serial.println("running3");
@@ -265,24 +265,6 @@ void loop() {
         time = millis();
     }*/
     //Serial.println("CANCER!");
-    
-    // Serial.print(analogRead(PA1));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA3));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA7));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA6));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA5));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA4));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA0));
-    // Serial.print("       ");
-    // Serial.print(analogRead(PA2));
-    // Serial.print("       ");
-    // Serial.println();
 
     // TODO: incorporate interrupts
 
