@@ -22,7 +22,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.01
+#define KI 0.02
 
 using namespace std;
 
@@ -83,17 +83,19 @@ void setup() {
     // pinMode(PA_1, INPUT);
     // pinMode(PA_2, INPUT);
 
-    //  double kp = (0.1 * analogRead(PA_1)) / 1024;
-    //  double kd = (100.0 * analogRead(PA_2)) / 1024;
-    double kp = 0.01602;
-    double kd = 24.51172;
+     double kp = (0.4 * analogRead(PA_6)) / 1024;
+     double kd = (100.0 * analogRead(PA_7)) / 1024;
+    // double kp = 0.01602;
+    // double kd = 24.51172;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
     Serial.begin(9600);
 
-    // Serial.print(kp, 5);
-    // Serial.print(kd, 5);
+    Serial.print(kp, 5);
+    Serial.print("  ");
+    Serial.print(kd, 5);
+    Serial.println();
 
     // p 3.51562 d 0.00000
     //3.49609 3730.46875
@@ -179,25 +181,25 @@ void setup() {
 
     //grabCrystal();
 
-    while (1) {
-        Serial.print(analogRead(PA6));
-        Serial.print("       ");
-        Serial.print(analogRead(PA5));
-        Serial.print("       ");
-        Serial.print(analogRead(PA3));
-        Serial.print("       ");
-        Serial.print(analogRead(PA2));
-        Serial.print("       ");
-        Serial.print(analogRead(PA1));
-        Serial.print("       ");
-        Serial.print(analogRead(PA0));
-        Serial.print("       ");
-        Serial.print(analogRead(PA4));
-        Serial.print("       ");
-        Serial.print(analogRead(PA7));
-        Serial.print("       ");
-        Serial.println();
-    }
+    // while (1) {
+    //     Serial.print(analogRead(PA6));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA5));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA3));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA2));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA1));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA0));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA4));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA7));
+    //     Serial.print("       ");
+    //     Serial.println();
+    // }
 
     // drive_system.update(1.0, 1.0);
     // drive_system.actuate();
@@ -336,7 +338,7 @@ void compute() {
 //*pid_input
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.70+pid_output*1.1, -2.7);
+        drive_system.update(0.74+pid_output*1.1, -2.9);
         //pwm_start(PA_0, 1000000, 10, 10, 0);
     }
     else {
@@ -344,7 +346,7 @@ void compute() {
     }
 
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.7, 0.72-pid_output*1.1);
+        drive_system.update(-2.9, 0.76-pid_output*1.1);
     }
    
     
