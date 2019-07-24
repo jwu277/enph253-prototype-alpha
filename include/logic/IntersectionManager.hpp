@@ -33,6 +33,8 @@ class IntersectionManager {
         // temp function?
         void handle_gauntlet();
 
+        void place_stone();
+
     public:
 
         // Constructor

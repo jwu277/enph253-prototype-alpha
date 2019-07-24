@@ -9,9 +9,9 @@
 #define TURN_COUNTER_MAX 100
 #define DELAY_TIME 200
 
-long last_intersection_time = millis();
+unsigned long last_intersection_time = millis();
 
-long gauntlet_timer;
+unsigned long gauntlet_timer;
 
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
@@ -63,7 +63,7 @@ void IntersectionManager::update() {
 
         //
         // Serial.println("INTERSECTION!");
-        long new_time = millis();
+        unsigned long new_time = millis();
         if(new_time - last_intersection_time >= DELAY_TIME) {
             this->handle_intersection();
             this->intersection_count++;
@@ -663,8 +663,8 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->gauntlet_state++;
 
-                // Go backwards now
-                
+                // Set timer for backwards mode
+                gauntlet_timer = millis();
 
             }
 
@@ -673,9 +673,28 @@ void IntersectionManager::handle_gauntlet() {
         case 2:
             // temp
             // move into position + grab
+            
+            if (millis() - gauntlet_timer >= 1500) {
+
+                this->gauntlet_state++;
+
+            }
+            else {
+                this->drive_system->update(-2.5, -2.5);
+            }
+
+            break;
+        
+        case 3:
+            // do gauntlet stuff
+            this->place_stone();
             this->gauntlet_state++;
             break;
         
     }
 
+}
+
+void IntersectionManager::place_stone() {
+    // todo
 }
