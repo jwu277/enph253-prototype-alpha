@@ -94,7 +94,7 @@ void openClaw()
         clawStatus = MOVING_FWD;
         //Serial.println("PWM to open claw started");
 
-        delay(2000);
+        delay(1000);
 
         pwm_stop(CLAW_SERVO_PWM_NAME);
     }
@@ -117,7 +117,7 @@ void closeClaw()
         clawStatus = MOVING_BK;
         // Serial.println("PWM to open claw started");
 
-        delay(2500);
+        delay(1500);
 
         pwm_stop(CLAW_SERVO_PWM_NAME);
     }
@@ -246,7 +246,7 @@ void grabCrystal()
     //     Serial.println("running");
     // }
     openClaw();
-    moveY(200);
+    moveY(100);
     findTopOfPillar();
     moveYUntilClawPressed();
     closeClaw();

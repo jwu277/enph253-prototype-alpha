@@ -80,8 +80,8 @@ IntersectionManager intersection_manager = IntersectionManager(
 
 void setup() {
 
-    pinMode(PA_1, INPUT);
-    pinMode(PA_2, INPUT);
+    // pinMode(PA_1, INPUT);
+    // pinMode(PA_2, INPUT);
 
     //  double kp = (0.1 * analogRead(PA_1)) / 1024;
     //  double kd = (100.0 * analogRead(PA_2)) / 1024;
@@ -177,23 +177,43 @@ void setup() {
     // moveZToExtreme(EXTEND);
     // moveZToExtreme(HOME);
 
-    grabCrystal();
-
-    while(1) {
-        Serial.println("running1");
-    }
-
-    while (1) {
-        stepperPulse();
-        delay(10);
-    }
-
     //grabCrystal();
 
-    while(1) {
-        Serial.println("code is running");
-        delay(10);
+    while (1) {
+        Serial.print(analogRead(PA7));
+        Serial.print("       ");
+        Serial.print(analogRead(PA6));
+        Serial.print("       ");
+        Serial.print(analogRead(PA3));
+        Serial.print("       ");
+        Serial.print(analogRead(PA2));
+        Serial.print("       ");
+        Serial.print(analogRead(PA1));
+        Serial.print("       ");
+        Serial.print(analogRead(PA0));
+        Serial.print("       ");
+        Serial.print(analogRead(PA4));
+        Serial.print("       ");
+        Serial.print(analogRead(PA5));
+        Serial.print("       ");
+        Serial.println();
     }
+
+    // while(1) {
+    //     Serial.println("running3");
+    // }
+
+    // while (1) {
+    //     stepperPulse();
+    //     delay(10);
+    // }
+
+    // //grabCrystal();
+
+    // while(1) {
+    //     Serial.println("code is running");
+    //     delay(10);
+    // }
     
 
 }
