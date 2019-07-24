@@ -64,7 +64,7 @@ MainTapeSensor tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weigh
 //SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
 
 // Actuators
-DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_8, PB_9, PWM_CLK_FREQ, PWM_PERIOD);
+DriveSystem drive_system = DriveSystem(PB_9, PB_8, PB_6, PB_7, PWM_CLK_FREQ, PWM_PERIOD);
 
 // Control/Logic/Computation
 
@@ -179,24 +179,40 @@ void setup() {
 
     //grabCrystal();
 
+    // while (1) {
+    //     Serial.print(analogRead(PA7));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA6));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA3));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA2));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA1));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA0));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA4));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA5));
+    //     Serial.print("       ");
+    //     Serial.println();
+    // }
+
+    // drive_system.update(1.0, 1.0);
+    // drive_system.actuate();
+
+    // while (1) {
+    //     Serial.println("run2");
+    // }
+
     while (1) {
-        Serial.print(analogRead(PA7));
-        Serial.print("       ");
-        Serial.print(analogRead(PA6));
-        Serial.print("       ");
-        Serial.print(analogRead(PA3));
-        Serial.print("       ");
-        Serial.print(analogRead(PA2));
-        Serial.print("       ");
-        Serial.print(analogRead(PA1));
-        Serial.print("       ");
-        Serial.print(analogRead(PA0));
-        Serial.print("       ");
-        Serial.print(analogRead(PA4));
-        Serial.print("       ");
-        Serial.print(analogRead(PA5));
-        Serial.print("       ");
-        Serial.println();
+
+        drive_system.update(-3.0, -2.7);
+        drive_system.actuate();
+
+        delay(1000);
+
     }
 
     // while(1) {
