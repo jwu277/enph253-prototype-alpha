@@ -263,22 +263,15 @@ void IntersectionManager::handle_intersection() {
         */
         case 1:
 
-            // temp stop
-            this->drive_system->update(0.0, 0.0);
+            this->drive_system->update(0.94, 0.98);
             this->drive_system->actuate();
-            delay(69420);
-
-            this->drive_system->update(0.85, 0.70);
-            this->drive_system->actuate();
-            delay(300);
+            delay(100);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-
-            // this->tape_sensor->ignore_right_sensors();
             break;
         case 2:
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
-            delay(500);
+            delay(69696969);
             this->drive_system->update(-2.8, -2.8);
             this->drive_system->actuate();
             delay(400);
