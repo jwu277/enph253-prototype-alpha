@@ -278,6 +278,7 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(0.86, 0.86);
             this->drive_system->actuate();
             delay(300);
+            grabCrystal();
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(6969696);

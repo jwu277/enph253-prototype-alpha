@@ -246,7 +246,7 @@ void grabCrystal()
     //     Serial.println("running");
     // }
     openClaw();
-    moveY(100);
+    moveY(55);
     findTopOfPillar();
     moveYUntilClawPressed();
     closeClaw();
