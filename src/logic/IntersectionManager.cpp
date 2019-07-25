@@ -22,7 +22,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 0;
+    this->intersection_count = 2;
 
     this->gauntlet_state = 0;
 
@@ -38,19 +38,12 @@ void IntersectionManager::update() {
 
     // temp: handle gauntlet
     // TODO: manage intersection increments
-    if (this->intersection_count >= 5) {
+    if (this->intersection_count == 7) {
         this->handle_gauntlet();
     } 
 
-    // todo: organize into function
-    // unignore
-    /*
-    if (fabs(*this->tape_sensor->get_x_ptr()) <= 0.2) {
-        this->tape_sensor->init_sensor_weights();
-    }*/
-
     // TEMP: for now
-    if (this->at_t_intersection()||this->at_y_intersection()) {
+    else if (this->at_t_intersection()||this->at_y_intersection()) {
 
         //Serial.print("YASSS");
         
@@ -74,10 +67,12 @@ void IntersectionManager::update() {
 
 
     }
-    else {
-        //Serial.print("N");
-        //pwm_start(PA_8, 1000000, 10, 0, 0);
-    }
+    // todo: organize into function
+    // unignore
+    /*
+    if (fabs(*this->tape_sensor->get_x_ptr()) <= 0.2) {
+        this->tape_sensor->init_sensor_weights();
+    }*/
     /*
     if (this->at_t_intersection()) {
 
@@ -268,16 +263,22 @@ void IntersectionManager::handle_intersection() {
             delay(100);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
+
         case 2:
-            this->drive_system->update(-3.0, -3.0);
-            this->drive_system->actuate();
-            delay(100);
-            this->drive_system->update(0.98, -3.0);
-            this->drive_system->actuate();
-            delay(600);
-            this->drive_system->update(0.86, 0.86);
+
+            this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(300);
+
+            this->drive_system->update(-3.0, -3.0);
+            this->drive_system->actuate();
+            delay(400);
+            this->drive_system->update(0.93, -3.0);
+            this->drive_system->actuate();
+            delay(280);
+            this->drive_system->update(0.86, 0.86);
+            this->drive_system->actuate();
+            delay(350);
 
             for (int i = 0; i < 16; i++) {
                 this->drive_system->update(0.93, -0.1);
@@ -291,6 +292,76 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(300);
+
+            // this->drive_system->update(-0.88 / 0.3, -0.88 / 0.3);
+            // this->drive_system->actuate();
+            // delay(500);
+
+            // this->drive_system->update(0.0, 0.0);
+            // this->drive_system->actuate();
+            // delay(300);
+
+            // this->drive_system->update(0.88, 0.88);
+            // this->drive_system->actuate();
+            // delay(600);
+
+            //  for (int i = 0; i < 22; i++) {
+            //     this->drive_system->update(0.91, -0.1);
+            //     this->drive_system->actuate();
+            //     delay(50);
+            //     this->drive_system->update(-0.1, 0.91);
+            //     this->drive_system->actuate();
+            //     delay(50);
+            // }
+
+            grabCrystal();
+            openClaw();
+            // this->drive_system->update(-0.1, -2.8);
+            // this->drive_system->actuate();
+            // delay(650);
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(300);
+            this->drive_system->update(-3.0, -3.0);
+            this->drive_system->actuate();
+            delay(300);
+            this->drive_system->update(-3.0, .98);
+            this->drive_system->actuate();
+            delay(300);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+         
+            break;
+        
+        case 3:
+
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(300);
+
+            this->drive_system->update(-3.0, -3.0);
+            this->drive_system->actuate();
+            delay(400);
+            this->drive_system->update(0.93, -3.0);
+            this->drive_system->actuate();
+            delay(280);
+            this->drive_system->update(0.86, 0.86);
+            this->drive_system->actuate();
+            delay(350);
+
+
+            for (int i = 0; i < 16; i++) {
+                this->drive_system->update(0.93, -0.1);
+                this->drive_system->actuate();
+                delay(120);
+                this->drive_system->update(-0.1, 0.93);
+                this->drive_system->actuate();
+                delay(120);
+            }
+
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(696966);
 
             // this->drive_system->update(-0.88 / 0.3, -0.88 / 0.3);
             // this->drive_system->actuate();
@@ -334,8 +405,16 @@ void IntersectionManager::handle_intersection() {
 
             break;
             
-        case 3:
+        case 4:
 
+            break;
+        
+        case 5:
+
+            break;
+
+        // Gauntlet here
+        case 6:
             break;
 
             //delay(2000); //TODO drop rock here
@@ -465,7 +544,9 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
-                delay(550);
+                delay(900);
+
+                this->drive_system->set_speed_add(-0.06);
 
                 gauntlet_timer = millis();
 
@@ -475,35 +556,39 @@ void IntersectionManager::handle_gauntlet() {
             }
 
             break;
+        
+        // case 2:
+            
+        //     // keep pid going for ____ milliseconds and then increment to next state
+        //     if (millis() - gauntlet_timer >= 1600) {
+
+        //         this->gauntlet_state++;
+
+        //         this->drive_system->update(0.0, 0.0);
+        //         this->drive_system->actuate();
+        //         delay(400);
+
+        //         this->drive_system->update(-3.0, -3.0);
+        //         this->drive_system->actuate();
+        //         delay(550);
+
+        //         //this->drive_system->set_speed_add(-0.06);
+
+        //         gauntlet_timer = millis();
+
+        //         // Set timer for backwards mode
+        //         //gauntlet_timer = millis();
+
+        //     }
+
+        //     break;
 
         case 2:
             
             // keep pid going for ____ milliseconds and then increment to next state
             if (millis() - gauntlet_timer >= 1600) {
 
-                this->gauntlet_state++;
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(400);
-
-                this->drive_system->update(-3.0, -3.0);
-                this->drive_system->actuate();
-                delay(550);
-
-                gauntlet_timer = millis();
-
-                // Set timer for backwards mode
-                //gauntlet_timer = millis();
-
-            }
-
-            break;
-
-        case 3:
-            
-            // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1600) {
+                this->drive_system->set_speed_add(0.0);
 
                 this->gauntlet_state++;
 
@@ -526,7 +611,9 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
-                delay(600);
+                delay(400);
+
+                closeClaw();
 
                 digitalWrite(STEPPERENABLE, LOW);
                 moveZToExtreme(EXTEND);
@@ -539,11 +626,71 @@ void IntersectionManager::handle_gauntlet() {
                 homeY(true);
                 moveZToExtreme(HOME);
                 digitalWrite(STEPPERENABLE, HIGH);
-                
-                delay(69420);
+
+                this->drive_system->update(0.94, 0.94);
+                this->drive_system->actuate();
+                delay(400);
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(200);
+
+                this->drive_system->update(-3.0, -3.0);
+                this->drive_system->actuate();
+                delay(900);
+
+                this->drive_system->set_speed_add(-0.06);
 
                 // Set timer for backwards mode
-                //gauntlet_timer = millis();
+                gauntlet_timer = millis();
+
+            }
+
+            case 3:
+            
+            // keep pid going for ____ milliseconds and then increment to next state
+            if (millis() - gauntlet_timer >= 1600) {
+
+                this->drive_system->set_speed_add(0.0);
+
+                this->gauntlet_state++;
+
+                for (int i = 0; i < 16; i++) {
+                    this->drive_system->update(0.93, -0.1);
+                    this->drive_system->actuate();
+                    delay(120);
+                    this->drive_system->update(-0.1, 0.93);
+                    this->drive_system->actuate();
+                    delay(120);
+                }
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(500);
+
+                this->drive_system->update(0.88, -3.5);
+                this->drive_system->actuate();
+                delay(280);
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(400);
+
+                closeClaw();
+
+                digitalWrite(STEPPERENABLE, LOW);
+                moveZToExtreme(EXTEND);
+                homeY(false);
+                digitalWrite(STEPPERENABLE, HIGH);
+                delay(1000);
+                openClaw();
+                digitalWrite(STEPPERENABLE, LOW);
+                moveZToExtreme(EXTEND);
+                homeY(true);
+                moveZToExtreme(HOME);
+                digitalWrite(STEPPERENABLE, HIGH);
+
+                delay(69420);
 
             }
 

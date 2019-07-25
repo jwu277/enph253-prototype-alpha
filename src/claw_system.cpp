@@ -82,7 +82,7 @@ void clawFloorPBISR()
 
 void openClaw()
 {
-    if (!clawIsOpen)
+    if (1)//(!clawIsOpen)
     {
         //Serial.println("Opening claw");
         pwm_start(
@@ -94,7 +94,7 @@ void openClaw()
         clawStatus = MOVING_FWD;
         //Serial.println("PWM to open claw started");
 
-        delay(1000);
+        delay(1700);
 
         pwm_stop(CLAW_SERVO_PWM_NAME);
     }
@@ -104,7 +104,7 @@ void openClaw()
 
 void closeClaw()
 {
-    if (clawIsOpen)
+    if (1) //(clawIsOpen)
     {
         //Serial.println("Closing claw");
         pwm_start(
@@ -240,11 +240,7 @@ void moveYUntilClawPressed()
 void grabCrystal()
 {
     digitalWrite(STEPPERENABLE, LOW);
-    //homeY(true);
     moveZToExtreme(EXTEND);
-    // while(1) {
-    //     Serial.println("running");
-    // }
     moveY(47);
     openClaw();
     findTopOfPillar();
@@ -252,8 +248,9 @@ void grabCrystal()
     closeClaw();
     moveZToExtreme(EXTEND);
     homeY(true);
-    moveZToExtreme(HOME);
     digitalWrite(STEPPERENABLE, HIGH);
+    
+    delay(2000);//moveZToExtreme(HOME);freefall down
 }
 
 void findTopOfPillar()
@@ -328,7 +325,7 @@ void stepperPulse()
     digitalWrite(STEPPERCLK, HIGH);
     delayMicroseconds(1);
     digitalWrite(STEPPERCLK, LOW);
-    delayMicroseconds(2600);
+    delayMicroseconds(2200);
 }
 
 //moves the z axis for "steps" steps
