@@ -461,20 +461,7 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
-                delay(350);
-
-                for (int i = 0; i < 16; i++) {
-                    this->drive_system->update(0.93, -0.1);
-                    this->drive_system->actuate();
-                    delay(120);
-                    this->drive_system->update(-0.1, 0.93);
-                    this->drive_system->actuate();
-                    delay(120);
-                }
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(350);
+                delay(400);
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
@@ -496,6 +483,30 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->gauntlet_state++;
 
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(400);
+
+                this->drive_system->update(-3.0, -3.0);
+                this->drive_system->actuate();
+                delay(550);
+
+                gauntlet_timer = millis();
+
+                // Set timer for backwards mode
+                //gauntlet_timer = millis();
+
+            }
+
+            break;
+
+        case 3:
+            
+            // keep pid going for ____ milliseconds and then increment to next state
+            if (millis() - gauntlet_timer >= 1600) {
+
+                this->gauntlet_state++;
+
                 for (int i = 0; i < 16; i++) {
                     this->drive_system->update(0.93, -0.1);
                     this->drive_system->actuate();
@@ -511,7 +522,7 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(-3.5, 0.88);
                 this->drive_system->actuate();
-                delay(300);
+                delay(280);
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
