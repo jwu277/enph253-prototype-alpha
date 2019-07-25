@@ -253,7 +253,6 @@ void grabCrystal()
     moveZToExtreme(EXTEND);
     homeY(true);
     moveZToExtreme(HOME);
-    openClaw();
     digitalWrite(STEPPERENABLE, HIGH);
 }
 
