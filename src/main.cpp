@@ -145,6 +145,8 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
+    closeClaw();
+
     // pinMode(PA_1, INPUT);
     // pinMode(PA_3, INPUT);
     // pinMode(PA_7, INPUT);

@@ -269,51 +269,74 @@ void IntersectionManager::handle_intersection() {
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
         case 2:
-        this->drive_system->update(-3.0, -3.0);
+            this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
             delay(100);
             this->drive_system->update(0.98, -3.0);
             this->drive_system->actuate();
-            delay(480);
+            delay(600);
             this->drive_system->update(0.86, 0.86);
             this->drive_system->actuate();
             delay(300);
 
              for (int i = 0; i < 22; i++) {
-                    this->drive_system->update(0.91, -0.1);
-                    this->drive_system->actuate();
-                    delay(50);
-                    this->drive_system->update(-0.1, 0.91);
-                    this->drive_system->actuate();
-                    delay(50);
-                }
+                this->drive_system->update(0.93, -0.1);
+                this->drive_system->actuate();
+                delay(120);
+                this->drive_system->update(-0.1, 0.93);
+                this->drive_system->actuate();
+                delay(120);
+            }
+
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(300);
+
+            // this->drive_system->update(-0.88 / 0.3, -0.88 / 0.3);
+            // this->drive_system->actuate();
+            // delay(500);
+
+            // this->drive_system->update(0.0, 0.0);
+            // this->drive_system->actuate();
+            // delay(300);
+
+            // this->drive_system->update(0.88, 0.88);
+            // this->drive_system->actuate();
+            // delay(600);
+
+            //  for (int i = 0; i < 22; i++) {
+            //     this->drive_system->update(0.91, -0.1);
+            //     this->drive_system->actuate();
+            //     delay(50);
+            //     this->drive_system->update(-0.1, 0.91);
+            //     this->drive_system->actuate();
+            //     delay(50);
+            // }
+
             grabCrystal();
             // this->drive_system->update(-0.1, -2.8);
             // this->drive_system->actuate();
             // delay(650);
-            this->drive_system->update(-0.1, -0.1);
+            this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(300);
-            this->drive_system->update(-2.8, -2.8);
+            this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(450);
-             this->drive_system->update(0.86, -2.8);
+            delay(500);
+            this->drive_system->update(0.92, -3.0);
             this->drive_system->actuate();
-            delay(450);
-            this->drive_system->update(-0.1, -0.1);
+            delay(700);
+            this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
+            delay(500);
 
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
             break;
             
         case 3:
-        this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(69696969);
 
-
-            
+            break;
 
             //delay(2000); //TODO drop rock here
         // case 4:
