@@ -339,55 +339,32 @@ void IntersectionManager::handle_intersection() {
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
-            delay(696966);
-
-            // this->drive_system->update(-0.88 / 0.3, -0.88 / 0.3);
-            // this->drive_system->actuate();
-            // delay(500);
-
-            // this->drive_system->update(0.0, 0.0);
-            // this->drive_system->actuate();
-            // delay(300);
-
-            // this->drive_system->update(0.88, 0.88);
-            // this->drive_system->actuate();
-            // delay(600);
-
-            //  for (int i = 0; i < 22; i++) {
-            //     this->drive_system->update(0.91, -0.1);
-            //     this->drive_system->actuate();
-            //     delay(50);
-            //     this->drive_system->update(-0.1, 0.91);
-            //     this->drive_system->actuate();
-            //     delay(50);
-            // }
-
-            grabCrystal();
-            // this->drive_system->update(-0.1, -2.8);
-            // this->drive_system->actuate();
-            // delay(650);
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
             delay(300);
+
+            //TODO uncoment
+            // grabCrystal();
+            
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(350);
-            this->drive_system->update(0.92, -3.0);
+            delay(300);
+            this->drive_system->update(.98, -3.0);
             this->drive_system->actuate();
-            delay(550);
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(500);
-
+            delay(300);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
             break;
             
         case 4:
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(300);
 
             break;
         
         case 5:
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(300);
 
             break;
 
