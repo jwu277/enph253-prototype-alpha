@@ -279,7 +279,7 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
             delay(300);
 
-             for (int i = 0; i < 22; i++) {
+            for (int i = 0; i < 16; i++) {
                 this->drive_system->update(0.93, -0.1);
                 this->drive_system->actuate();
                 delay(120);
@@ -461,7 +461,20 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
-                delay(500);
+                delay(350);
+
+                for (int i = 0; i < 16; i++) {
+                    this->drive_system->update(0.93, -0.1);
+                    this->drive_system->actuate();
+                    delay(120);
+                    this->drive_system->update(-0.1, 0.93);
+                    this->drive_system->actuate();
+                    delay(120);
+                }
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(350);
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
@@ -483,13 +496,13 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->gauntlet_state++;
 
-                for (int i = 0; i < 22; i++) {
-                    this->drive_system->update(0.91, -0.1);
+                for (int i = 0; i < 16; i++) {
+                    this->drive_system->update(0.93, -0.1);
                     this->drive_system->actuate();
-                    delay(50);
-                    this->drive_system->update(-0.1, 0.91);
+                    delay(120);
+                    this->drive_system->update(-0.1, 0.93);
                     this->drive_system->actuate();
-                    delay(50);
+                    delay(120);
                 }
 
                 this->drive_system->update(0.0, 0.0);
