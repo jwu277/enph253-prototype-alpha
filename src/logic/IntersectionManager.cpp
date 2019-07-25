@@ -322,10 +322,10 @@ void IntersectionManager::handle_intersection() {
             delay(300);
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(500);
+            delay(350);
             this->drive_system->update(0.92, -3.0);
             this->drive_system->actuate();
-            delay(700);
+            delay(550);
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(500);
