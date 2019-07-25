@@ -293,32 +293,10 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
             delay(300);
 
-            // this->drive_system->update(-0.88 / 0.3, -0.88 / 0.3);
-            // this->drive_system->actuate();
-            // delay(500);
+            //TODO UCOMENT PLZZZZZ
+            // grabCrystal();
+            // openClaw();
 
-            // this->drive_system->update(0.0, 0.0);
-            // this->drive_system->actuate();
-            // delay(300);
-
-            // this->drive_system->update(0.88, 0.88);
-            // this->drive_system->actuate();
-            // delay(600);
-
-            //  for (int i = 0; i < 22; i++) {
-            //     this->drive_system->update(0.91, -0.1);
-            //     this->drive_system->actuate();
-            //     delay(50);
-            //     this->drive_system->update(-0.1, 0.91);
-            //     this->drive_system->actuate();
-            //     delay(50);
-            // }
-
-            grabCrystal();
-            openClaw();
-            // this->drive_system->update(-0.1, -2.8);
-            // this->drive_system->actuate();
-            // delay(650);
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(300);
