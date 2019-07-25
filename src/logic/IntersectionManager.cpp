@@ -210,10 +210,6 @@ void IntersectionManager::handle_intersection() {
 
     switch (this->intersection_count) {
         case 0:
-            // temp: stop
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(69420);
             // this->drive_system->update(0.95, 0.80);
             // this->drive_system->actuate();
             // delay(400);
@@ -236,19 +232,19 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(400);
-            this->drive_system->update(0.85, 0.5);
+            this->drive_system->update(-2.8, 0.98);
             this->drive_system->actuate();
-            delay(300);
+            delay(400);
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(300);
+            // this->drive_system->update(0.98, 0.98);
+            // this->drive_system->actuate();
+            // delay(200);
             this->drive_system->update(-0.1, -0.1);
             this->drive_system->actuate();
             delay(300);
-            this->drive_system->update(0.85, 0.85);
-            this->drive_system->actuate();
-            delay(200);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(300);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             break;
         // case 1:
             // cheap disable/debounce
@@ -265,6 +261,12 @@ void IntersectionManager::handle_intersection() {
             break;
         */
         case 1:
+
+            // temp stop
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
+            delay(69420);
+
             this->drive_system->update(0.85, 0.70);
             this->drive_system->actuate();
             delay(300);
