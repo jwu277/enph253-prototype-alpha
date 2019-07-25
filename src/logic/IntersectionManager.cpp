@@ -22,7 +22,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 3;
+    this->intersection_count = 0;
 
     this->gauntlet_state = 0;
 
