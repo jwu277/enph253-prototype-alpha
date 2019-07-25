@@ -15,6 +15,9 @@ class DriveSystem: public BaseActuator {
         DriveMotor left_motor;
         DriveMotor right_motor;
 
+        // to change BASE_DRIVE
+        double speed_add;
+
     public:
 
         // Constructor
@@ -41,6 +44,8 @@ class DriveSystem: public BaseActuator {
         void turn_right();
 
         void drive_forward();
+
+        void set_speed_add(double val);
 
 };
 

@@ -22,7 +22,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 0;
+    this->intersection_count = 3;
 
     this->gauntlet_state = 0;
 
@@ -37,7 +37,8 @@ void wiggle() {
 void IntersectionManager::update() {
 
     // temp: handle gauntlet
-    if (this->intersection_count >= 4) {
+    // TODO: manage intersection increments
+    if (this->intersection_count >= 5) {
         this->handle_gauntlet();
     } 
 
@@ -474,38 +475,42 @@ void IntersectionManager::handle_intersection() {
             // delay(300);
             // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
         case 3:
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(500);
-            this->drive_system->update(0.85, 0.85);
-            this->drive_system->actuate();
-            delay(400);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(300);
-            this->drive_system->update(-2.8, 0.85);
-            this->drive_system->actuate();
-            delay(950);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(300);
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(500);
+            // this->drive_system->update(0.98, 0.80);
+            // this->drive_system->actuate();
+            // delay(200);
+            // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            break;
+            
+
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(300);
+            // this->drive_system->update(-2.8, 0.85);
+            // this->drive_system->actuate();
+            // delay(950);
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(300);
             // this->drive_system->update(-0.1, -2.8);
             // this->drive_system->actuate();
             // delay(900);
             // this->drive_system->update(-0.1, -0.1);
             // this->drive_system->actuate();
             // delay(300);
-            this->drive_system->update(0.85, 0.85);
-            this->drive_system->actuate();
-            delay(900);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(200);
+            // this->drive_system->update(0.85, 0.85);
+            // this->drive_system->actuate();
+            // delay(900);
+            // this->drive_system->update(-0.1, -0.1);
+            // this->drive_system->actuate();
+            // delay(200);
 
             // raise z
-            moveZToExtreme(false);
+            // moveZToExtreme(false);
 
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            // this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             // this->drive_system->update(-0.1, -0.80);
             // this->drive_system->actuate();
             // delay(50);
@@ -577,8 +582,20 @@ void IntersectionManager::handle_intersection() {
             // delay(50);
 
             //delay(2000); //TODO drop rock here
-            break;
+        // case 4:
+
+        //     this->drive_system->update(0.0, 0.0);
+        //     this->drive_system->actuate();
+        //     delay(200);
             
+        //     this->drive_system->update(-0.80 / 0.3, 0.0);
+        //     this->drive_system->actuate();
+
+        //     while (!(this->tape_sensor->qrd2.is_on() || this->tape_sensor->qrd3.is_on())) {
+        //         this->tape_sensor->update();
+        //     }
+
+        //     break;
     }
 
     //right turn 
@@ -658,46 +675,97 @@ void IntersectionManager::handle_gauntlet() {
 
         case 0:
             
-            if (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
-                this->gauntlet_state++;
-                gauntlet_timer = millis();
+            this->drive_system->update(-1.0, -1.0);
+            this->drive_system->actuate();
+            delay(550);
+            
+            this->drive_system->update(-3.5, 0.0);
+            this->drive_system->actuate();
+
+            this->tape_sensor->update();
+            while (!(this->tape_sensor->qrd2.is_on() || this->tape_sensor->qrd3.is_on())) {
+                this->tape_sensor->update();
             }
+
+            gauntlet_timer = millis();
+
+            //this->drive_system->set_speed_add(-0.1);
+
+            this->gauntlet_state++;
 
             break;
 
         case 1:
             
             // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1500) {
+            if (millis() - gauntlet_timer >= 1600) {
 
                 this->gauntlet_state++;
 
-                // Set timer for backwards mode
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(500);
+
+                this->drive_system->update(-3.0, -3.0);
+                this->drive_system->actuate();
+                delay(550);
+
                 gauntlet_timer = millis();
+
+                // Set timer for backwards mode
+                //gauntlet_timer = millis();
 
             }
 
             break;
 
         case 2:
-            // temp
-            // move into position + grab
             
-            if (millis() - gauntlet_timer >= 1500) {
+            // keep pid going for ____ milliseconds and then increment to next state
+            if (millis() - gauntlet_timer >= 1600) {
 
                 this->gauntlet_state++;
 
-            }
-            else {
-                this->drive_system->update(-2.5, -2.5);
+                for (int i = 0; i < 22; i++) {
+                    this->drive_system->update(0.91, -0.1);
+                    this->drive_system->actuate();
+                    delay(50);
+                    this->drive_system->update(-0.1, 0.91);
+                    this->drive_system->actuate();
+                    delay(50);
+                }
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(500);
+
+                this->drive_system->update(-3.5, 0.88);
+                this->drive_system->actuate();
+                delay(300);
+
+                this->drive_system->update(0.0, 0.0);
+                this->drive_system->actuate();
+                delay(600);
+
+                digitalWrite(STEPPERENABLE, LOW);
+                moveZToExtreme(EXTEND);
+                homeY(false);
+                digitalWrite(STEPPERENABLE, HIGH);
+                delay(1000);
+                openClaw();
+                digitalWrite(STEPPERENABLE, LOW);
+                moveZToExtreme(EXTEND);
+                homeY(true);
+                moveZToExtreme(HOME);
+                digitalWrite(STEPPERENABLE, HIGH);
+                
+                delay(69420);
+
+                // Set timer for backwards mode
+                //gauntlet_timer = millis();
+
             }
 
-            break;
-        
-        case 3:
-            // do gauntlet stuff
-            this->place_stone();
-            this->gauntlet_state++;
             break;
         
     }

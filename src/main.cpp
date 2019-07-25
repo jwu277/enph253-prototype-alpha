@@ -169,7 +169,7 @@ void setup() {
     // homeY(false);
     // while(1);
 
-    digitalWrite(STEPPERENABLE, LOW);
+    // digitalWrite(STEPPERENABLE, LOW);
     // while(1) {
     //     Serial.println("FOO");
     // }

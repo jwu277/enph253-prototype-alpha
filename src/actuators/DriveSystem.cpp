@@ -15,6 +15,8 @@ DriveSystem::DriveSystem(PinName left_motor_forward, PinName left_motor_reverse,
     : left_motor(left_motor_forward, left_motor_reverse, pwm_clk_freq, pwm_period),
     right_motor(right_motor_forward, right_motor_reverse, pwm_clk_freq, pwm_period) {
 
+    this->speed_add = 0.0;
+
 }
 
 void DriveSystem::init() {
@@ -46,10 +48,10 @@ void DriveSystem::pid_update(double diff) {
     //this->update(0.8, 1.0);
 
     if (diff >= 0) {
-        this->update(BASE_DRIVE - diff, BASE_DRIVE + diff * 0.3);
+        this->update(BASE_DRIVE - diff + this->speed_add, BASE_DRIVE + diff * 0.3 + this->speed_add);
     }
     else {
-        this->update(BASE_DRIVE - diff * 0.3, BASE_DRIVE + diff);
+        this->update(BASE_DRIVE - diff * 0.3 + this->speed_add, BASE_DRIVE + diff + this->speed_add);
     }
 
 }
@@ -69,4 +71,8 @@ void DriveSystem::turn_right() {
 
 void DriveSystem::drive_forward() {
     this->update(BASE_DRIVE, BASE_DRIVE);
+}
+
+void DriveSystem::set_speed_add(double val) {
+    this->speed_add = val;
 }
