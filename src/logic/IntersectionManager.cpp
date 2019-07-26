@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <bitset> 
 
 #include "sensors/MainTapeSensor.hpp"
 #include "actuators/DriveSystem.hpp"
@@ -9,7 +10,13 @@
 #define TURN_COUNTER_MAX 100
 #define DELAY_TIME 200
 
+// latest to oldest in time latest QRD Values
+std::bitset<16> t_0_values;
+std::bitset<16> t_1_values;
+std::bitset<16> t_2_values;
+
 unsigned long last_intersection_time = millis();
+
 
 unsigned long gauntlet_timer;
 
