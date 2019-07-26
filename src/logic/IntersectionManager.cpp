@@ -22,7 +22,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 2;
+    this->intersection_count = 0;
 
     this->gauntlet_state = 0;
 
@@ -590,39 +590,6 @@ void IntersectionManager::handle_gauntlet() {
                 this->drive_system->actuate();
                 delay(200);
 
-                this->drive_system->update(-3.0, -3.0);
-                this->drive_system->actuate();
-                delay(900);
-
-                this->drive_system->set_speed_add(-0.06);
-
-                // Set timer for backwards mode
-                gauntlet_timer = millis();
-
-            }
-
-            case 3:
-            
-            // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1600) {
-
-                this->drive_system->set_speed_add(0.0);
-
-                this->gauntlet_state++;
-
-                for (int i = 0; i < 16; i++) {
-                    this->drive_system->update(0.93, -0.1);
-                    this->drive_system->actuate();
-                    delay(120);
-                    this->drive_system->update(-0.1, 0.93);
-                    this->drive_system->actuate();
-                    delay(120);
-                }
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(500);
-
                 this->drive_system->update(0.88, -3.5);
                 this->drive_system->actuate();
                 delay(280);
@@ -636,7 +603,12 @@ void IntersectionManager::handle_gauntlet() {
                 digitalWrite(STEPPERENABLE, LOW);
                 moveZToExtreme(EXTEND);
                 homeY(false);
+                digitalWrite(STEPPERDIR, DOWN);
+                for(int i = 0; i < 100; i++) {
+                    stepperPulse();
+                }
                 digitalWrite(STEPPERENABLE, HIGH);
+
                 delay(1000);
                 openClaw();
                 digitalWrite(STEPPERENABLE, LOW);
