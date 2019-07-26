@@ -61,7 +61,6 @@ vector<tuple<int, int>> qrd_calibration = {
 vector<double> qrd_weights = {-1.5, -0.5, 0.5, 1.5}; // TODO
 
 MainTapeSensor tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weights);
-//SideTapeSensor side_tape_sensor = SideTapeSensor(PA_5, PA_4); // TODO: pins
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_9, PB_8, PB_6, PB_7, PWM_CLK_FREQ, PWM_PERIOD);
@@ -80,9 +79,7 @@ IntersectionManager intersection_manager = IntersectionManager(
 
 void setup() {
 
-    // pinMode(PA_1, INPUT);
-    // pinMode(PA_2, INPUT);
-
+    //TUNING PID
     //  double kp = (0.4 * analogRead(PA_6)) / 1024;
     //  double kd = (100.0 * analogRead(PA_7)) / 1024;
     double kp = 0.10977;
@@ -100,18 +97,6 @@ void setup() {
     // p 3.51562 d 0.00000
     //3.49609 3730.46875
     // p 0.01602 d 24.51172
-
-    /*
-    Serial.begin(9600);
-
-    Serial.print("kp: ");
-    Serial.print(kp, 3);
-    Serial.println();
-
-    Serial.print("kd: ");
-    Serial.print(kd, 3);
-    Serial.println();
-    */
 
     init_sensors();
     init_actuators();
@@ -156,32 +141,8 @@ void setup() {
     // pinMode(PA_0, INPUT);
     // pinMode(PA_2, INPUT);
 
-    //
-    
     // Hardware test
     //test_hardware();
-
-    // drive_system.update(0.85, 0.85);
-    // drive_system.actuate();
-    // while(1);
-
-       //grabCrystal();
-
-    // homeY(true);
-    // homeY(false);
-    // while(1);
-
-    // digitalWrite(STEPPERENABLE, LOW);
-    // while(1) {
-    //     Serial.println("FOO");
-    // }
-
-    //delay(2000);
-
-    // moveZToExtreme(EXTEND);
-    // moveZToExtreme(HOME);
-
-    //grabCrystal();
 
     // while (1) {
     //     Serial.print(analogRead(PA6));
@@ -202,76 +163,25 @@ void setup() {
     //     Serial.print("       ");
     //     Serial.println();
     // }
-
-    // drive_system.update(1.0, 1.0);
-    // drive_system.actuate();
-
-    // while (1) {
-    //     Serial.println("run2");
-    // }
-
-    // while (1) {
-
-    //     drive_system.update(-3.0, -2.7);
-    //     drive_system.actuate();
-
-    //     delay(1000);
-
-    // }
-
-    // while(1) {
-    //     Serial.println("running3");
-    // }
-
-    // while (1) {
-    //     stepperPulse();
-    //     delay(10);
-    // }
-
-    // //grabCrystal();
-
-    // while(1) {
-    //     Serial.println("code is running");
-    //     delay(10);
-    // }
     
 
 }
 
 void init_sensors() {
-
     tape_sensor.init();
-    //side_tape_sensor.init();
-
 }
 
 void init_actuators() {
-
     drive_system.init();
-
 }
 
 void init_logic() {
-
     // PID
     drive_pid.SetOutputLimits(-2.0, 2.0);
     drive_pid.SetMode(AUTOMATIC);
-
 }
 
-//int foo = 0;
-//long time;
-
 void loop() {
-    
-    /*
-    if (foo == 0) {
-        time = millis();
-    }*/
-    //Serial.println("CANCER!");
-
-    // TODO: incorporate interrupts
-
     // 1. Read new data from sensors
     update_sensors();
 
@@ -281,46 +191,10 @@ void loop() {
     // 3. Tick the actuators in HW
     run_actuators();
     
-    //Serial.print("|");
-    //Serial.print("       ");
-    //Serial.print(*pid_input, 3);
-
-    //Serial.println();
-
-    
-    //foo++;
-    /*
-    if (foo == 100) {
-        Serial.print(millis() - time);
-        Serial.println();
-        foo = 0;
-    }*/
-    /*
-    if (digitalRead(PA15)) {
-        pwm_start(PB_4, 1000000, 10, 10, 0);
-        pwm_start(PA_8, 1000000, 10, 10, 0);
-    }
-    else {
-        pwm_start(PB_4, 1000000, 10, 0, 0);
-        pwm_start(PA_8, 1000000, 10, 0, 0);
-    }*/
-
-    /*
-    if (digitalRead(PA12)) {
-        pwm_start(PA_8, 1000000, 10, 10, 0);
-    }
-    else {
-        pwm_start(PA_8, 1000000, 10, 0, 0);
-    }*/
-    
-
 }
 
 void update_sensors() {
-
     tape_sensor.update();
-    //side_tape_sensor.update();
-
 }
 
 void compute() {
@@ -333,32 +207,18 @@ void compute() {
     // diff = -pid_output, since pid_output is negative of what we want
     drive_system.pid_update(-pid_output);
 
-    //Serial.print(pid_output, 4);
-    //Serial.println();
-
     intersection_manager.update();
-//*pid_input
     
     if (tape_sensor.is_far_left()) {
         drive_system.update(0.74+pid_output*1.1, -2.9);
-        //pwm_start(PA_0, 1000000, 10, 10, 0);
     }
-    else {
-        //pwm_start(PA_0, 1000000, 10, 0, 0);
-    }
-
     if (tape_sensor.is_far_right()) {
         drive_system.update(-2.9, 0.76-pid_output*1.1);
     }
-   
-    
-
 }
 
 void run_actuators() {
-
     drive_system.actuate();
-
 }
 
 // Just to test
