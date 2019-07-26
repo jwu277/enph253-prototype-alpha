@@ -294,8 +294,8 @@ void IntersectionManager::handle_intersection() {
             delay(300);
 
             //TODO UCOMENT PLZZZZZ
-            // grabCrystal();
-            // openClaw();
+            grabCrystal();
+            openClaw();
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
@@ -342,7 +342,7 @@ void IntersectionManager::handle_intersection() {
             delay(300);
 
             //TODO uncoment
-            // grabCrystal();
+            grabCrystal();
             
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
@@ -499,7 +499,7 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
-                delay(900);
+                delay(700);
 
                 this->drive_system->set_speed_add(-0.06);
 
