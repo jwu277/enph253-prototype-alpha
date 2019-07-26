@@ -199,6 +199,16 @@ void MainTapeSensor::init_sensor_weights() {
 
 }
 
+//TODO Should set qrd sensors to zero from index a to b
+void MainTapeSensor::ignore_sensors(int start, int stop) {
+
+}
+
+//TODO resets QRD weights to default 
+void MainTapeSensor::default_weights() {
+
+}
+
 
 // Currently ignore sensor functions are NIU
 void MainTapeSensor::ignore_left_sensors() {

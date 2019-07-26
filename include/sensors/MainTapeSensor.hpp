@@ -52,6 +52,9 @@ class MainTapeSensor: public BaseSensor {
         vector<bool> get_qrds_status();
 
         void init_sensor_weights();
+        void ignore_sensors(int start,int stop);
+        void default_weights();
+
         void ignore_left_sensors();
         void ignore_right_sensors();
 
