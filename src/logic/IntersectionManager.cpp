@@ -280,7 +280,7 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
             delay(350);
 
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < 12; i++) {
                 this->drive_system->update(0.93, -0.1);
                 this->drive_system->actuate();
                 delay(120);
@@ -328,7 +328,7 @@ void IntersectionManager::handle_intersection() {
             delay(350);
 
 
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < 12; i++) {
                 this->drive_system->update(0.93, -0.1);
                 this->drive_system->actuate();
                 delay(120);
@@ -346,10 +346,10 @@ void IntersectionManager::handle_intersection() {
             
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(300);
+            delay(290);
             this->drive_system->update(.98, -3.0);
             this->drive_system->actuate();
-            delay(390);
+            delay(500);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
             break;
@@ -480,7 +480,7 @@ void IntersectionManager::handle_gauntlet() {
 
             gauntlet_timer = millis();
 
-            this->drive_system->set_speed_add(-0.07);
+            this->drive_system->set_speed_add(-0.04);
 
             this->gauntlet_state++;
 
@@ -499,9 +499,11 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
-                delay(700);
+                delay(500);
 
-                this->drive_system->set_speed_add(-0.07);
+                this->drive_system->set_speed_add(0.0);
+
+                this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
                 gauntlet_timer = millis();
 
@@ -579,9 +581,9 @@ void IntersectionManager::handle_gauntlet() {
                 moveZToExtreme(HOME);
                 digitalWrite(STEPPERENABLE, HIGH);
 
-                this->drive_system->update(0.94, 0.94);
+                this->drive_system->update(0.94, 0.80);
                 this->drive_system->actuate();
-                delay(400);
+                delay(500);
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
