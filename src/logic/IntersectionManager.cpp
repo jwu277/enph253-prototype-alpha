@@ -349,7 +349,7 @@ void IntersectionManager::handle_intersection() {
             delay(300);
             this->drive_system->update(.98, -3.0);
             this->drive_system->actuate();
-            delay(300);
+            delay(390);
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
             break;
@@ -480,7 +480,7 @@ void IntersectionManager::handle_gauntlet() {
 
             gauntlet_timer = millis();
 
-            //this->drive_system->set_speed_add(-0.1);
+            this->drive_system->set_speed_add(-0.07);
 
             this->gauntlet_state++;
 
@@ -495,18 +495,15 @@ void IntersectionManager::handle_gauntlet() {
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
-                delay(400);
+                delay(200);
 
                 this->drive_system->update(-3.0, -3.0);
                 this->drive_system->actuate();
                 delay(700);
 
-                this->drive_system->set_speed_add(-0.06);
+                this->drive_system->set_speed_add(-0.07);
 
                 gauntlet_timer = millis();
-
-                // Set timer for backwards mode
-                //gauntlet_timer = millis();
 
             }
 
