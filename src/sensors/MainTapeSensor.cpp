@@ -35,7 +35,6 @@ MainTapeSensor::MainTapeSensor(vector<PinName> pins,
     this->qrd0_status = false;
     this->qrd7_status = false;
 
-    // TODO: clean up
     this->init_sensor_weights();
 
 }
@@ -56,9 +55,6 @@ void MainTapeSensor::init() {
         qrd.init();
     }
 
-    //pinMode(PA11, INPUT_PULLUP);
-    //pinMode(PA15, INPUT_PULLUP);
-
     this->qrd0.set_on_threshold(520);
     this->qrd7.set_on_threshold(520);
 
@@ -66,12 +62,8 @@ void MainTapeSensor::init() {
 
 // Read data
 void MainTapeSensor::update() {
-
     MainTapeSensor::update_qrds();
-    //this->qrd0_status = digitalRead(PA11);
-    //this->qrd7_status = digitalRead(PA15);
     MainTapeSensor::update_state();
-
 }
 
 void MainTapeSensor::update_qrds() {
@@ -92,21 +84,12 @@ void MainTapeSensor::update_state() {
 
     this->x = 0.0;
 
-    /*
-    for (int i = 0; i < this->qrds.size(); i++) {
-        this->x += this->qrds.at(i).get_read() * this->weights.at(i);
-        //Serial.print(this->qrds.at(i).get_read());
-        //Serial.print(this->qrds.at(i).get_value());
-        //Serial.print("       ");
-    }
-    */
-
-   this->x += this->qrd1.get_read() * this->qrd1_weight;
-   this->x += this->qrd2.get_read() * this->qrd2_weight;
-   this->x += this->qrd3.get_read() * this->qrd3_weight;
-   this->x += this->qrd4.get_read() * this->qrd4_weight;
-   this->x += this->qrd5.get_read() * this->qrd5_weight;
-   this->x += this->qrd6.get_read() * this->qrd6_weight;
+    this->x += this->qrd1.get_read() * this->qrd1_weight;
+    this->x += this->qrd2.get_read() * this->qrd2_weight;
+    this->x += this->qrd3.get_read() * this->qrd3_weight;
+    this->x += this->qrd4.get_read() * this->qrd4_weight;
+    this->x += this->qrd5.get_read() * this->qrd5_weight;
+    this->x += this->qrd6.get_read() * this->qrd6_weight;
 
    if (this->qrd1.is_on() && !this->qrd2.is_on()) {
        this->x = 2 * this->qrd1.get_read() * this->qrd1_weight;
@@ -121,26 +104,18 @@ void MainTapeSensor::update_state() {
    else if (this->x < 0) {
        this->state = LEFT;
    }
-
-   //pwm_start(PA_0, 1000000, 10, 0, 0);
-   //pwm_start(PA_8, 1000000, 10, 0, 0);
-
    if (!this->qrd1.is_on() && !this->qrd2.is_on() && !this->qrd3.is_on() &&
         !this->qrd4.is_on() && !this->qrd5.is_on() && !this->qrd6.is_on()) {
        if (this->state == LEFT || this->state == FAR_LEFT) {
            this->x = -8.0;
            this->state = FAR_LEFT;
-           //pwm_start(PA_0, 1000000, 10, 10, 0);
        }
        if (this->state == RIGHT || this->state == FAR_RIGHT) {
            this->x = 8.0;
            this->state = FAR_RIGHT;
-           //pwm_start(PA_8, 1000000, 10, 10, 0);
        }
    }
-
 }
-
 bool MainTapeSensor::is_both_on() {
     return false;
 }
@@ -164,8 +139,6 @@ void MainTapeSensor::set_state(State state) {
 
 vector<bool> MainTapeSensor::get_qrds_status() {
 
-    // TODO: update + test
-
     vector<bool> status = {};
 
     status.push_back(this->qrd0.is_on());
@@ -177,15 +150,7 @@ vector<bool> MainTapeSensor::get_qrds_status() {
     status.push_back(this->qrd6.is_on());
     status.push_back(this->qrd7.is_on());
 
-    // temp print
-    for (vector<bool>::iterator it = status.begin(); it != status.end(); it++) {
-        // Serial.print(*it ? 1 : 0);
-        // Serial.print("     ");
-    }
-    // Serial.println();
-
     return status;
-
 }
 
 void MainTapeSensor::init_sensor_weights() {
@@ -197,26 +162,6 @@ void MainTapeSensor::init_sensor_weights() {
     this->qrd5_weight = -2.0;
     this->qrd6_weight = -3.0;
 
-}
-
-
-// Currently ignore sensor functions are NIU
-void MainTapeSensor::ignore_left_sensors() {
-    this->qrd1_weight = 0.0;
-    this->qrd2_weight = 0.0;
-    this->qrd3_weight = 0.0;
-    this->qrd4_weight = -1.5;
-    this->qrd5_weight = -2.5;
-    this->qrd6_weight = -3.5;
-}
-
-void MainTapeSensor::ignore_right_sensors() {
-    this->qrd1_weight = 3.5;
-    this->qrd2_weight = 2.5;
-    this->qrd3_weight = 1.5;
-    this->qrd4_weight = 0.0;
-    this->qrd5_weight = 0.0;
-    this->qrd6_weight = 0.0;
 }
 
 void MainTapeSensor::reset_thresholds() {
