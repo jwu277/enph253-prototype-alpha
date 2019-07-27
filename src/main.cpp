@@ -75,10 +75,11 @@ void setup() {
 
     Serial.begin(9600);
 
-    Serial.print(kp, 5);
-    Serial.print("  ");
-    Serial.print(kd, 5);
-    Serial.println();
+    // record pid tuning parameters 
+    // Serial.print(kp, 5);
+    // Serial.print("  ");
+    // Serial.print(kd, 5);
+    // Serial.println();
 
     init_sensors();
     init_actuators();
