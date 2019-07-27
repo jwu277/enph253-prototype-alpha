@@ -82,45 +82,43 @@ void clawFloorPBISR()
 
 void openClaw()
 {
-    if (1)//(!clawIsOpen)
-    {
-        //Serial.println("Opening claw");
-        pwm_start(
-            CLAW_SERVO_PWM_NAME,
-            PWM_CLOCK_FREQ,
-            FWD_PERIOD,
-            FWD_ON_PERIOD,
-            1);
-        clawStatus = MOVING_FWD;
-        //Serial.println("PWM to open claw started");
+    
+    //Serial.println("Opening claw");
+    pwm_start(
+        CLAW_SERVO_PWM_NAME,
+        PWM_CLOCK_FREQ,
+        FWD_PERIOD,
+        FWD_ON_PERIOD,
+        1);
+    clawStatus = MOVING_FWD;
+    //Serial.println("PWM to open claw started");
 
-        delay(1700);
+    delay(1700);
 
-        pwm_stop(CLAW_SERVO_PWM_NAME);
-    }
+    pwm_stop(CLAW_SERVO_PWM_NAME);
+
     clawStatus = NOT_MOVING;
     clawIsOpen = true;
 }
 
 void closeClaw()
 {
-    if (1) //(clawIsOpen)
-    {
-        //Serial.println("Closing claw");
-        pwm_start(
-            CLAW_SERVO_PWM_NAME,
-            PWM_CLOCK_FREQ,
-            BK_PERIOD,
-            BK_ON_PERIOD,
-            1);
-        // Serial.println("PWM to close claw started");
-        clawStatus = MOVING_BK;
-        // Serial.println("PWM to open claw started");
 
-        delay(3000);
+    //Serial.println("Closing claw");
+    pwm_start(
+        CLAW_SERVO_PWM_NAME,
+        PWM_CLOCK_FREQ,
+        BK_PERIOD,
+        BK_ON_PERIOD,
+        1);
+    // Serial.println("PWM to close claw started");
+    clawStatus = MOVING_BK;
+    // Serial.println("PWM to open claw started");
 
-        pwm_stop(CLAW_SERVO_PWM_NAME);
-    }
+    delay(3000);
+
+    pwm_stop(CLAW_SERVO_PWM_NAME);
+
     clawStatus = NOT_MOVING;
     clawIsOpen = false;
 }
@@ -282,24 +280,16 @@ void moveZToExtreme(bool home)
         {
             stepperPulse();
         }
-        zIsHome = false; //reset the flag
+        zIsHome = false;
     }
     else
     {
-        // if (digitalRead(ZFULLEXT)) {
-        //     while (1) {
-        //         Serial.println("FUCK");
-        //         delay(10);
-        //     }
-        //     return; //if it is sensed that z is extended, quit this protocal since a rising edge interrupt can not occur
-        // }
         digitalWrite(STEPPERDIR, HIGH);
         while (!zIsExtended)
         {
-            //Serial.println("HI");
             stepperPulse();
         }
-        zIsExtended = false; //reset the flag
+        zIsExtended = false;
     }
 }
 
@@ -317,6 +307,7 @@ void disableStepper()
 {
     digitalWrite(STEPPERCLK, HIGH);
 }
+
 /* 
 StepperPulse sends a pwm signal to the CLK pin of a stepper motor driver
  */
