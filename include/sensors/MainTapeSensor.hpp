@@ -14,7 +14,7 @@ class MainTapeSensor: public BaseSensor {
     public:
 
         // Constructor
-        MainTapeSensor(vector<PinName> pins, vector<tuple<int, int>> calibration, vector<double> weights);
+        MainTapeSensor();
 
         QrdSensor qrd0;
         QrdSensor qrd1;

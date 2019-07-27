@@ -46,21 +46,7 @@ void run_actuators();
 // Testing only
 void test_hardware();
 
-// TODO
-
-// (left to right)
-vector<PinName> qrd_pins = {PA_7, PA_6, PA_5, PA_4};
-
-vector<tuple<int, int>> qrd_calibration = {
-    make_tuple(50, 150),
-    make_tuple(50, 150),
-    make_tuple(50, 150),
-    make_tuple(50, 150)
-};
-
-vector<double> qrd_weights = {-1.5, -0.5, 0.5, 1.5}; // TODO
-
-MainTapeSensor tape_sensor = MainTapeSensor(qrd_pins, qrd_calibration, qrd_weights);
+MainTapeSensor tape_sensor = MainTapeSensor();
 
 // Actuators
 DriveSystem drive_system = DriveSystem(PB_9, PB_8, PB_6, PB_7, PWM_CLK_FREQ, PWM_PERIOD);
@@ -93,10 +79,6 @@ void setup() {
     Serial.print("  ");
     Serial.print(kd, 5);
     Serial.println();
-
-    // p 3.51562 d 0.00000
-    //3.49609 3730.46875
-    // p 0.01602 d 24.51172
 
     init_sensors();
     init_actuators();
@@ -132,14 +114,6 @@ void setup() {
 
     closeClaw();
 
-    // pinMode(PA_1, INPUT);
-    // pinMode(PA_3, INPUT);
-    // pinMode(PA_7, INPUT);
-    // pinMode(PA_6, INPUT);
-    // pinMode(PA_5, INPUT);
-    // pinMode(PA_4, INPUT);
-    // pinMode(PA_0, INPUT);
-    // pinMode(PA_2, INPUT);
 
     // Hardware test
     //test_hardware();

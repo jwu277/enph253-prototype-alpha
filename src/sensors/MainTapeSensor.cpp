@@ -17,15 +17,12 @@
 using namespace std;
 
 // Constructor
-MainTapeSensor::MainTapeSensor(vector<PinName> pins,
-    vector<tuple<int, int>> calibration, vector<double> weights)
+MainTapeSensor::MainTapeSensor()
     : qrd0(QrdSensor(PA_6, make_tuple(50, 450))),
     qrd1(QrdSensor(PA_5, make_tuple(50, 450))), qrd2(QrdSensor(PA_3, make_tuple(50, 450))),
     qrd3(QrdSensor(PA_2, make_tuple(50, 450))), qrd4(QrdSensor(PA_1, make_tuple(50, 450))),
     qrd5(QrdSensor(PA_0, make_tuple(50, 450))), qrd6(QrdSensor(PA_4, make_tuple(50, 450))),
     qrd7(QrdSensor(PA_7, make_tuple(50, 450))) {
-
-    this->create_qrds(pins, calibration);
 
     this->weights = weights;
     
