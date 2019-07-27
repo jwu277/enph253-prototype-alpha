@@ -39,10 +39,6 @@ class DriveSystem: public BaseActuator {
         // Actuate
         void actuate();
 
-        void turn_left();
-
-        void turn_right();
-
         void drive_forward();
 
         void set_speed_add(double val);
