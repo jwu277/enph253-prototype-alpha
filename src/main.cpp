@@ -144,25 +144,7 @@ void setup() {
     // Hardware test
     //test_hardware();
 
-    // while (1) {
-    //     Serial.print(analogRead(PA6));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA5));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA3));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA2));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA1));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA0));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA4));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA7));
-    //     Serial.print("       ");
-    //     Serial.println();
-    // }
+    
     
 
 }
@@ -241,6 +223,26 @@ void test_hardware() {
         // delay(300);
 
         delay(1500);
+
+
+            Serial.print(analogRead(PA6));
+            Serial.print("       ");
+            Serial.print(analogRead(PA5));
+            Serial.print("       ");
+            Serial.print(analogRead(PA3));
+            Serial.print("       ");
+            Serial.print(analogRead(PA2));
+            Serial.print("       "); 
+            Serial.print(analogRead(PA1));
+            Serial.print("       ");
+            Serial.print(analogRead(PA0));
+            Serial.print("       ");
+            Serial.print(analogRead(PA4));
+            Serial.print("       ");
+            Serial.print(analogRead(PA7));
+            Serial.print("       ");
+            Serial.println();
+
 
         // 2. Check that QRDs are white
         if (fmax(fmax(fmax(fmax(fmax(fmax(fmax(analogRead(PA_1),
