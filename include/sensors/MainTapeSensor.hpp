@@ -14,7 +14,16 @@ class MainTapeSensor: public BaseSensor {
     public:
 
         // Constructor
-        MainTapeSensor(vector<PinName> pins, vector<tuple<int, int>> calibration, vector<double> weights);
+        MainTapeSensor();
+
+        QrdSensor qrd0;
+        QrdSensor qrd1;
+        QrdSensor qrd2;
+        QrdSensor qrd3;
+        QrdSensor qrd4;
+        QrdSensor qrd5;
+        QrdSensor qrd6;
+        QrdSensor qrd7;
 
         void init();
 
@@ -42,6 +51,12 @@ class MainTapeSensor: public BaseSensor {
 
         vector<bool> get_qrds_status();
 
+        void init_sensor_weights();
+        void ignore_left_sensors();
+        void ignore_right_sensors();
+
+        void reset_thresholds();
+
     private:
 
         //QrdSensor left_qrd;
@@ -49,12 +64,16 @@ class MainTapeSensor: public BaseSensor {
 
         vector<QrdSensor> qrds;
 
-        QrdSensor qrd1;
-        QrdSensor qrd2;
-        QrdSensor qrd3;
-        QrdSensor qrd4;
-        QrdSensor qrd5;
-        QrdSensor qrd6;
+        double qrd1_weight;
+        double qrd2_weight;
+        double qrd3_weight;
+        double qrd4_weight;
+        double qrd5_weight;
+        double qrd6_weight;
+
+        // temp
+        bool qrd0_status;
+        bool qrd7_status;
 
         State state;
 
