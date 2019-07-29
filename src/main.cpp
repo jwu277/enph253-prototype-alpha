@@ -1,10 +1,13 @@
 // Arduino Modules
 #include <Arduino.h>
 #include <PID_v1.h>
+#include <Wire.h>
 
 // Sensor Modules
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
+#include "sensors/MPU6050.h"
+#include "sensors/I2Cdev.h"
 
 // Actuator Modules
 #include "actuators/DriveSystem.hpp"
@@ -72,6 +75,15 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 IntersectionManager intersection_manager = IntersectionManager(
     &tape_sensor, &drive_system);
 
+
+// Accelerometer
+MPU6050 accelgyro;
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+#define GRAVITY 9.81
+#define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
+
+
 void setup() {
 
     pinMode(PA_1, INPUT);
@@ -109,8 +121,15 @@ void setup() {
     init_actuators();
     init_logic();
 
-    pwm_start(PB_4, 1000000, 10, 0, 1);
-    //pwm_start(PA_8, 1000000, 10, 0, 1);
+    // I2C for accelerometer
+    Wire.setSDA(PB11);
+    Wire.setSCL(PB10);
+    Wire.begin();
+
+    accelgyro.initialize();
+
+    // Set accelerometer range to be +- 16g
+    accelgyro.setFullScaleAccelRange(3);
 
 }
 
@@ -222,7 +241,13 @@ void compute() {
         drive_system.update(-2.7, 0.72-pid_output*1.1);
     }
    
-    
+    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+
+    if (ax * ax + ay * ay >= 10 * 10) {
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(1000);
+    }
 
 }
 
