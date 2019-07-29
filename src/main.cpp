@@ -5,6 +5,8 @@
 // Sensor Modules
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
+#include "sensors/MPU6050.h"
+#include "sensors/I2Cdev.h"
 
 // Actuator Modules
 #include "actuators/DriveSystem.hpp"
@@ -63,6 +65,13 @@ PID drive_pid = PID(pid_input, &pid_output, &pid_setpoint, 0, 0, 0, DIRECT);;
 IntersectionManager intersection_manager = IntersectionManager(
     &tape_sensor, &drive_system);
 
+// Accelerometer
+MPU6050 accelgyro;
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+#define GRAVITY 9.81
+#define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
+
 void setup() {
 
     //TUNING PID
@@ -119,8 +128,15 @@ void setup() {
     // Hardware test
     //test_hardware();
 
-    
-    
+    // I2C for accelerometer
+    Wire.setSDA(PB11);
+    Wire.setSCL(PB10);
+    Wire.begin();
+
+    accelgyro.initialize();
+
+    // Set accelerometer range to be +- 16g
+    accelgyro.setFullScaleAccelRange(3);
 
 }
 
