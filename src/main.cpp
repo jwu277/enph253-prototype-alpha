@@ -194,11 +194,14 @@ void compute() {
 
     // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
 
-    if ((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR >= 10 * 10) {
-        drive_system.update(0.0, 0.0);
-        drive_system.actuate();
-        delay(1000);
-        // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+    if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
+        // drive_system.update(0.0, 0.0);
+        // drive_system.actuate();
+        // delay(1000);
+        // Serial.println("BUMP");
+        // Serial.println(ax * CONVERSION_FACTOR);
+        // Serial.println(ay * CONVERSION_FACTOR);
+        // Serial.println();
 
     }
 
