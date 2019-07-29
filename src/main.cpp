@@ -1,6 +1,7 @@
 // Arduino Modules
 #include <Arduino.h>
 #include <PID_v1.h>
+#include <Wire.h>
 
 // Sensor Modules
 #include "sensors/MainTapeSensor.hpp"
@@ -188,6 +189,19 @@ void compute() {
     if (tape_sensor.is_far_right()) {
         drive_system.update(-2.9, 0.76-pid_output*1.1);
     }
+
+    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+
+    // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+
+    if ((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR >= 10 * 10) {
+        drive_system.update(0.0, 0.0);
+        drive_system.actuate();
+        delay(1000);
+        // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+
+    }
+
 }
 
 void run_actuators() {

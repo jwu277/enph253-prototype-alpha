@@ -39,7 +39,7 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include "I2Cdev.h"
+#include "sensors/I2Cdev.h"
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
     // NBWire implementation based heavily on code by Gene Knight <Gene@Telobot.com>
