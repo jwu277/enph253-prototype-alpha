@@ -24,6 +24,17 @@ MainTapeSensor::MainTapeSensor()
     qrd5(QrdSensor(PA_0, make_tuple(50, 450))), qrd6(QrdSensor(PA_4, make_tuple(50, 450))),
     qrd7(QrdSensor(PA_7, make_tuple(50, 450))) {
 
+
+    // LINES BELOW REQUIRED FOR SOME REASON IF FAILUER OCCURS DEBUG WHY 
+    vector<PinName> pins = {PA_7, PA_6, PA_5, PA_4};
+    vector<tuple<int, int>> calibration = {
+        make_tuple(50, 150),
+        make_tuple(50, 150),
+        make_tuple(50, 150),
+        make_tuple(50, 150)
+    };
+    this->create_qrds(pins, calibration);
+
     this->weights = weights;
     
     this->state = CENTRE; // start neutral
