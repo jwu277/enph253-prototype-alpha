@@ -483,3 +483,18 @@ void IntersectionManager::steer_left() {
     }
 
 }
+
+void IntersectionManager::steer_right() {
+
+    this->drive_system->update(0.8, 0.9);
+    this->drive_system->actuate();
+
+    long timeout = millis();
+    while (!(this->tape_sensor->qrd0.is_on() && !this->at_y_intersection())) {
+        // TODO: maybe set far off state
+        if (millis() - timeout >= 2400) {
+            break;
+        }
+    }
+
+}

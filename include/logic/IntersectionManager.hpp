@@ -38,6 +38,7 @@ class IntersectionManager {
         void get_to_post();
 
         void steer_left();
+        void steer_right();
 
     public:
 
