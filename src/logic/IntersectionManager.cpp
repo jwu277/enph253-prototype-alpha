@@ -43,7 +43,8 @@ void IntersectionManager::update() {
     } 
 
     // TEMP: for now
-    else if (this->at_t_intersection()||this->at_y_intersection()) {
+    // else if (this->at_t_intersection()||this->at_y_intersection()) {
+    else if (this->at_y_intersection()) {
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
@@ -53,6 +54,7 @@ void IntersectionManager::update() {
             last_intersection_time = new_time;
         }
     }
+    
 }
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
 bool IntersectionManager::at_y_intersection() {
@@ -413,4 +415,14 @@ void IntersectionManager::handle_gauntlet() {
 
 void IntersectionManager::place_stone() {
     // TODO
+}
+
+void IntersectionManager::steer_left() {
+
+    this->drive_system->update(0.9, 0.8);
+    this->drive_system->actuate();
+
+    // todo: maybe a timeout
+    while (!(this->tape_sensor->qrd7.is_on() && !this->at_y_intersection()));
+
 }

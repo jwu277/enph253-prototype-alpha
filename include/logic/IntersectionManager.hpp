@@ -35,6 +35,8 @@ class IntersectionManager {
 
         void place_stone();
 
+        void steer_left();
+
     public:
 
         // Constructor
