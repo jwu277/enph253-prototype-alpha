@@ -224,9 +224,17 @@ void moveYUntilClawPressed()
 
     int run_time = 0;
 
+    long timeout = millis();
+
     while(!clawPBPressed) {  
-        run_time++;
+
         delay(1);
+        run_time++;
+
+        if (millis() - timeout >= 1000) {
+            break;
+        }
+
     }
 
     clawPBPressed = false;
@@ -257,10 +265,19 @@ void findTopOfPillar()
     if (digitalRead(CLAWFLOORPB))
         return;
     changeStepperDir(DOWN);
+    
+    long timeout = millis();
     while (!clawBasePBPressed)
     {
+        
         stepperPulse();
+
+        if (millis() - timeout >= 2000) {
+            break;
+        }
+
     }
+
     clawBasePBPressed = false;
 }
 
