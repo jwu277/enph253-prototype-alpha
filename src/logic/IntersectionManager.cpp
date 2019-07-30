@@ -49,12 +49,13 @@ void IntersectionManager::update() {
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
-            this->handle_intersection();
+            // this->handle_intersection();
+            this->steer_left();
             this->intersection_count++;
             last_intersection_time = new_time;
         }
     }
-    
+
 }
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
 bool IntersectionManager::at_y_intersection() {
