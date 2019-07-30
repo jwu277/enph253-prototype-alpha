@@ -72,6 +72,8 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 #define GRAVITY 9.81
 #define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
+#define ACCEL_DEBOUNCE 300 // ms
+long accel_trigger_time = millis();
 
 void setup() {
 
@@ -194,15 +196,17 @@ void compute() {
 
     // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
 
-    if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
-        // drive_system.update(0.0, 0.0);
-        // drive_system.actuate();
-        // delay(1000);
-        // Serial.println("BUMP");
-        // Serial.println(ax * CONVERSION_FACTOR);
-        // Serial.println(ay * CONVERSION_FACTOR);
-        // Serial.println();
-
+    if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
+        if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
+            drive_system.update(0.0, 0.0);
+            drive_system.actuate();
+            delay(1000);
+            // Serial.println("BUMP");
+            // Serial.println(ax * CONVERSION_FACTOR);
+            // Serial.println(ay * CONVERSION_FACTOR);
+            // Serial.println();
+            accel_trigger_time = millis();
+        }
     }
 
 }
