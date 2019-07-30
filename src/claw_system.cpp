@@ -30,19 +30,19 @@ volatile bool clawIsOpen = false;
 
 void zHomeISR()
 {
-    //Serial.println("zhome");
+    // Serial.println("zhome");
     zIsHome = true;
 }
 
 void zFullExtISR()
 {
-    //Serial.println("zFullExtISR");
+    // Serial.println("zFullExtISR");
     zIsExtended = true;
 }
 
 void yHomeISR()
 {
-    //Serial.println("yHomeISR");
+    // Serial.println("yHomeISR");
     if (yStatus == MOVING_BK)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -56,7 +56,7 @@ void yHomeISR()
 
 void yFullExtISR()
 {
-    //Serial.println("yFullExtISR");
+    // Serial.println("yFullExtISR");
     if (yStatus == MOVING_FWD)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -70,13 +70,13 @@ void yFullExtISR()
 
 void clawPBISR()
 {
-    //Serial.println("clawPBISR");
+    // Serial.println("clawPBISR");
     clawPBPressed = true;
 }
 
 void clawFloorPBISR()
 {
-    //Serial.println("clawFloorPBISR");
+    // Serial.println("clawFloorPBISR");
     clawBasePBPressed = true;
 }
 

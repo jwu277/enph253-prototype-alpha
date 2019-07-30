@@ -7,11 +7,14 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 200
+#define DELAY_TIME 0 //200
 
 unsigned long last_intersection_time = millis();
 
 unsigned long gauntlet_timer;
+
+bool off_intersection = false;
+bool qrd7_was_black = false;
 
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
@@ -38,17 +41,17 @@ void IntersectionManager::update() {
 
     // temp: handle gauntlet
     // TODO: manage intersection increments
-    if (this->intersection_count == 7) {
-        this->handle_gauntlet();
-    } 
+    // if (this->intersection_count == 7) {
+    //     this->handle_gauntlet();
+    // } 
 
     // TEMP: for now
-    else if (this->at_t_intersection()||this->at_y_intersection()) {
+    if (this->at_y_intersection()) {
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
-            this->handle_intersection();
+            //this->handle_intersection();
             this->intersection_count++;
             last_intersection_time = new_time;
             
@@ -58,8 +61,18 @@ void IntersectionManager::update() {
         }
     }
 
-    else {
+    else if (off_intersection) {
         this->tape_sensor->init_sensor_weights();
+        off_intersection = false;
+        qrd7_was_black = false;
+    }
+
+    else if (qrd7_was_black) {
+        off_intersection = !this->tape_sensor->qrd7.is_on();
+    }
+
+    else if (this->tape_sensor->qrd7.is_on()) {
+        qrd7_was_black = true;
     }
 
 }
@@ -78,12 +91,12 @@ bool IntersectionManager::at_y_intersection() {
 
     it = qrds_status.begin();
 
-    // Search for two blacks in a row
+    // Search for one black//two blacks in a row
     int count = 0;
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 1) {
+            if (count == 0) {
                 break;
             }
         }
@@ -104,7 +117,7 @@ bool IntersectionManager::at_y_intersection() {
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 1) {
+            if (count == 0) {
                 cond = true;
                 break;
             }
