@@ -35,6 +35,8 @@ class IntersectionManager {
 
         void place_stone();
 
+        int y_first_white_sensor(); // only need to consider qrds 1-6 for now
+
     public:
 
         // Constructor

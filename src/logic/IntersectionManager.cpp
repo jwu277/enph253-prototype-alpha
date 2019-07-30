@@ -51,8 +51,17 @@ void IntersectionManager::update() {
             this->handle_intersection();
             this->intersection_count++;
             last_intersection_time = new_time;
+            
+            // go to the left
+            this->tape_sensor->ignore_right_sensors(this->y_first_white_sensor());
+
         }
     }
+
+    else {
+        this->tape_sensor->init_sensor_weights();
+    }
+
 }
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
 bool IntersectionManager::at_y_intersection() {
@@ -413,4 +422,34 @@ void IntersectionManager::handle_gauntlet() {
 
 void IntersectionManager::place_stone() {
     // TODO
+}
+
+int IntersectionManager::y_first_white_sensor() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Goal: find index of first white
+    int idx = 0;
+
+    // Get to a black
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            break;
+        }
+        idx++;
+    }
+
+    // Now search for first white
+    for (; it != qrds_status.end(); it++) {
+        if (!*it) {
+            return idx;
+        }
+        idx++;
+    }
+
+    // default return 4
+    return 4;
+
 }

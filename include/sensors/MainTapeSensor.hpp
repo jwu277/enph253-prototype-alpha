@@ -53,7 +53,7 @@ class MainTapeSensor: public BaseSensor {
 
         void init_sensor_weights();
         void ignore_left_sensors();
-        void ignore_right_sensors();
+        void ignore_right_sensors(int start); // start is the first qrd to shutoff
 
         void reset_thresholds();
 

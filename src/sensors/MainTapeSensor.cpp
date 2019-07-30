@@ -171,3 +171,24 @@ void MainTapeSensor::reset_thresholds() {
     this->qrd6.set_on_threshold(250);
     this->qrd7.set_on_threshold(250);
 }
+
+void MainTapeSensor::ignore_right_sensors(int start) {
+
+    switch (start) {
+
+        case 1:
+            this->qrd1_weight = 0.0;
+        case 2:
+            this->qrd2_weight = 0.0;
+        case 3:
+            this->qrd3_weight = 0.0;
+        case 4:
+            this->qrd4_weight = 0.0;
+        case 5:
+            this->qrd5_weight = 0.0;
+        case 6:
+            this->qrd6_weight = 0.0;
+
+    }
+
+}
