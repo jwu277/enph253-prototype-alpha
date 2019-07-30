@@ -414,8 +414,59 @@ void IntersectionManager::handle_gauntlet() {
     }
 }
 
-void IntersectionManager::place_stone() {
-    // TODO
+void IntersectionManager::get_to_post() {
+
+    // 1. Get post in view
+    this->drive_system->update(0.88, 0.0); // spin right
+    this->drive_system->actuate();
+    while (!Serial.available());
+
+    // 2. Navigate to post
+    // TODO: complete
+    // Current strategy: proportional minimize x and 
+    int x;
+    int y;
+
+    do {
+
+        // May be useful to find post when lost
+
+        // TODO: incorporate camera offset
+
+        // ~20-25px per cm (crude estimate, height dependent, etc.)
+        // currently have 0.05% pwm per px
+
+        if (Serial.read() == 'P') {
+
+            x = Serial.readStringUntil(',').toInt();
+            y = Serial.readStringUntil(';').toInt();
+
+            if (x > 0) {
+                // Turn right
+                this->drive_system->update(0.8 + 0.0005 * x, -(0.8 + 0.0005 * x));
+            }
+            else if (x < 0) {
+                // Turn left
+                this->drive_system->update(-(0.8 - 0.0005 * x), 0.8 - 0.0005 * x);
+            }
+
+        }
+
+        this->drive_system->actuate();
+
+    } while (fabs(x) > 30);
+
+    // Go forward into post
+    // TODO: use y feedback, and maybe swim
+    this->drive_system->update(0.87, 0.87);
+    this->drive_system->actuate();
+    delay(800);
+
+}
+
+void IntersectionManager::handle_post() {
+    get_to_post();
+    grabCrystal();
 }
 
 void IntersectionManager::steer_left() {

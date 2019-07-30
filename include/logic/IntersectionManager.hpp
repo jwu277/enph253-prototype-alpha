@@ -33,7 +33,9 @@ class IntersectionManager {
         // temp function?
         void handle_gauntlet();
 
-        void place_stone();
+        void handle_post();
+
+        void get_to_post();
 
         void steer_left();
 
