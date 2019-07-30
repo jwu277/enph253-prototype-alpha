@@ -198,9 +198,8 @@ void compute() {
 
     if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
         if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
-            drive_system.update(0.0, 0.0);
-            drive_system.actuate();
-            delay(1000);
+            // TODO: collision handling
+
             // Serial.println("BUMP");
             // Serial.println(ax * CONVERSION_FACTOR);
             // Serial.println(ay * CONVERSION_FACTOR);
