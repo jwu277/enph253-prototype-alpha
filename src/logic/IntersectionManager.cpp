@@ -163,21 +163,12 @@ void IntersectionManager::handle_intersection() {
 
     switch (this->intersection_count) {
         case 0:
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(400);
-            this->drive_system->update(-2.8, 0.98);
-            this->drive_system->actuate();
-            delay(400);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(300);
+            this->steer_left();
+            // TODO: figure out far off state (for all junctions)
             this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             break;
         case 1:
-            this->drive_system->update(0.94, 0.98);
-            this->drive_system->actuate();
-            delay(100);
+            this->steer_left();
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
         case 2:
