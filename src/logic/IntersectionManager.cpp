@@ -474,7 +474,12 @@ void IntersectionManager::steer_left() {
     this->drive_system->update(0.9, 0.8);
     this->drive_system->actuate();
 
-    // todo: maybe a timeout
-    while (!(this->tape_sensor->qrd7.is_on() && !this->at_y_intersection()));
+    long timeout = millis();
+    while (!(this->tape_sensor->qrd7.is_on() && !this->at_y_intersection())) {
+        // TODO: maybe set far off state
+        if (millis() - timeout >= 2400) {
+            break;
+        }
+    }
 
 }
