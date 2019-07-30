@@ -14,6 +14,8 @@ class QrdSensor: public AnalogSensor {
         int on_tape;
         int on_white;
 
+        int threshold;
+
     public:
 
         // Constructor for QRD Sensor
@@ -24,6 +26,8 @@ class QrdSensor: public AnalogSensor {
         double get_read();
 
         bool is_on();
+
+        void set_on_threshold(int thresh);
 
 };
 
