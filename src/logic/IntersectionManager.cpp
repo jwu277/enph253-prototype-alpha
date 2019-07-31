@@ -50,7 +50,7 @@ void IntersectionManager::update() {
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
             // this->handle_intersection();
-            this->tape_sensor->steer_left_weights();
+            this->steer_left();
             this->intersection_count++;
             last_intersection_time = new_time;
         }
@@ -470,16 +470,30 @@ void IntersectionManager::handle_post() {
 
 void IntersectionManager::steer_left() {
 
-    this->drive_system->update(0, 0.86);
+    QrdSensor* qrds[8] = {&this->tape_sensor->qrd0, &this->tape_sensor->qrd1,
+                          &this->tape_sensor->qrd2, &this->tape_sensor->qrd3,
+                          &this->tape_sensor->qrd4, &this->tape_sensor->qrd5,
+                          &this->tape_sensor->qrd6, &this->tape_sensor->qrd7};
+
+    int qrd_idx = 4;
+
+    this->drive_system->update(-2.7, 0.93);
     this->drive_system->actuate();
 
     long timeout = millis();
-    while (!(this->tape_sensor->qrd7.is_on() && !this->at_intersection())) {
+    // Do until qrd6 is on tape
+    while (qrd_idx <= 6) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
+
+        if ((*qrds[qrd_idx]).is_on()) {
+            qrd_idx++;
+        }
+
         if (millis() - timeout >= 2400) {
             break;
         }
+
     }
 
 }
@@ -497,5 +511,28 @@ void IntersectionManager::steer_right() {
             break;
         }
     }
+
+}
+
+int IntersectionManager::first_black_sensor() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Goal: find index of first white
+    int idx = 0;
+
+    // Get to a black
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            idx++;
+            return idx;
+        }
+        idx++;
+    }
+
+    // default return 1
+    return 4;
 
 }

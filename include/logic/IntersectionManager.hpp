@@ -42,6 +42,8 @@ class IntersectionManager {
         void steer_left();
         void steer_right();
 
+        int first_black_sensor();
+
     public:
 
         // Constructor

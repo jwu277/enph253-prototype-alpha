@@ -125,7 +125,7 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
-    closeClaw();
+    //closeClaw();
 
 
     // Hardware test
