@@ -316,5 +316,8 @@ void test_hardware() {
         homeY(false);
         moveZToExtreme(HOME);
 
+        openClaw();
+        closeClaw();
+
     }
 }
