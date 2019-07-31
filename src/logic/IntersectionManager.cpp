@@ -44,7 +44,7 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     // else if (this->at_t_intersection()||this->at_y_intersection()) {
-    else if (this->at_y_intersection()) {
+    else if (this->at_intersection()) {
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
@@ -57,6 +57,11 @@ void IntersectionManager::update() {
     }
 
 }
+
+bool IntersectionManager::at_intersection() {
+    return this->at_y_intersection() || this->at_t_intersection();
+}
+
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
 bool IntersectionManager::at_y_intersection() {
     
@@ -77,7 +82,7 @@ bool IntersectionManager::at_y_intersection() {
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 1) {
+            if (count == 2) {
                 break;
             }
         }
@@ -98,7 +103,7 @@ bool IntersectionManager::at_y_intersection() {
     for (; it != qrds_status.end(); it++) {
         if (*it) {
             count++;
-            if (count == 1) {
+            if (count == 2) {
                 cond = true;
                 break;
             }
@@ -165,7 +170,7 @@ void IntersectionManager::handle_intersection() {
         case 0:
             this->steer_left();
             // TODO: figure out far off state (for all junctions)
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
         case 1:
             this->steer_left();
@@ -462,11 +467,11 @@ void IntersectionManager::handle_post() {
 
 void IntersectionManager::steer_left() {
 
-    this->drive_system->update(0.9, 0.8);
+    this->drive_system->update(-2.7, 0.9);
     this->drive_system->actuate();
 
     long timeout = millis();
-    while (!(this->tape_sensor->qrd7.is_on() && !this->at_y_intersection())) {
+    while (!(this->tape_sensor->qrd7.is_on() && !this->at_intersection())) {
         // TODO: maybe set far off state
         if (millis() - timeout >= 2400) {
             break;
@@ -477,11 +482,11 @@ void IntersectionManager::steer_left() {
 
 void IntersectionManager::steer_right() {
 
-    this->drive_system->update(0.8, 0.9);
+    this->drive_system->update(0.9, -2.7);
     this->drive_system->actuate();
 
     long timeout = millis();
-    while (!(this->tape_sensor->qrd0.is_on() && !this->at_y_intersection())) {
+    while (!(this->tape_sensor->qrd0.is_on() && !this->at_intersection())) {
         // TODO: maybe set far off state
         if (millis() - timeout >= 2400) {
             break;
