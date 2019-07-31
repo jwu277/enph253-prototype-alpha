@@ -8,8 +8,12 @@
 
 #define TURN_COUNTER_MAX 100
 #define DELAY_TIME 0 //200
+#define WEIGHTS_DELAY_TIME 400 //200
+
 
 unsigned long last_intersection_time = millis();
+unsigned long last_wights_time = millis();
+
 
 unsigned long gauntlet_timer;
 
@@ -46,9 +50,12 @@ void IntersectionManager::update() {
     // } 
 
     // TEMP: for now
+    unsigned long new_time_weights = millis();
+
     if (this->at_y_intersection()) {
 
         unsigned long new_time = millis();
+
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
             //this->handle_intersection();
@@ -61,7 +68,7 @@ void IntersectionManager::update() {
         }
     }
 
-    else if (off_intersection) {
+    else if (off_intersection && (new_time_weights - last_wights_time >= WEIGHTS_DELAY_TIME) ) {
         this->tape_sensor->init_sensor_weights();
         off_intersection = false;
         qrd7_was_black = false;
@@ -71,7 +78,7 @@ void IntersectionManager::update() {
         off_intersection = !this->tape_sensor->qrd7.is_on();
     }
 
-    else if (this->tape_sensor->qrd7.is_on()) {
+    else if (this->tape_sensor->qrd7.is_on() && (new_time_weights - last_wights_time >= WEIGHTS_DELAY_TIME)) {
         qrd7_was_black = true;
     }
 
