@@ -1,9 +1,16 @@
 #ifndef INTERSECTIONMANAGER
 #define INTERSECTIONMANAGER
 
+#define Y_ISECT true
+#define T_ISECT false
+#define ISECT_VOTES 3
+
+using namespace std;
+
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
 #include "actuators/DriveSystem.hpp"
+#include <deque> 
 
 
 // IntersectionManager is a logic controller for handling intersections
@@ -22,11 +29,17 @@ class IntersectionManager {
         // temp gauntlet state
         int gauntlet_state;
 
+        //intersection voting for classification
+        deque<bool> isectTypeVotes;
+        bool isectType;
+
         // Intersection Detectors
         bool at_y_intersection();
         bool at_t_intersection();
 
         bool at_intersection();
+        bool at_intersection_and_get_vote();
+        bool classify_intersection();
 
         // TODO: different intersection handlers for Y vs. T junctions
         // Intersection Handler
