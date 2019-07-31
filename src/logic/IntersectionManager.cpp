@@ -308,17 +308,23 @@ void IntersectionManager::handle_gauntlet() {
                 this->gauntlet_state++;
                 this->drive_system->set_speed_add(0.0);
 
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(200);
+                this->place_stone(0);
 
-                this->drive_system->update(-3.0, -3.0);
-                this->drive_system->actuate();
-                delay(500);
+                // this->drive_system->update(0.0, 0.0);
+                // this->drive_system->actuate();
+                // delay(200);
 
-                this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                // this->drive_system->update(-3.0, -3.0);
+                // this->drive_system->actuate();
+                // delay(500);
 
-                gauntlet_timer = millis();
+                // this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
+                // gauntlet_timer = millis();
+
+                // TODO:
+                // drive back onto the course/place second stone
+                delay(69420);
 
             }
 
@@ -415,10 +421,55 @@ void IntersectionManager::place_stone(int slot) {
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
 
     // 1. Minimie x
-    // todo
+
+    // initial values should fail the while loop checks
+    int x = 999;
+    int y = 999;
+
+    do {
+
+        // May be useful to find post when lost
+
+        // TODO: incorporate camera offset
+
+        // ~20-25px per cm (crude estimate, height dependent, etc.)
+        // currently have 0.05% pwm per px
+
+        if (Serial.read() == 'G') {
+
+            x = Serial.readStringUntil(',').toInt();
+            y = Serial.readStringUntil(';').toInt();
+
+            if (x > 0) {
+                // Turn right
+                this->drive_system->update(0.8 + 0.0005 * x, -(0.8 + 0.0005 * x));
+            }
+            else if (x < 0) {
+                // Turn left
+                this->drive_system->update(-(0.8 - 0.0005 * x), 0.8 - 0.0005 * x);
+            }
+
+        }
+        else {
+            // TODO: Refind the gauntlet
+        }
+
+        this->drive_system->actuate();
+
+    } while (fabs(x) > 15);
     
     // 2. Drive forward in y
+    this->drive_system->update(0.85, 0.85);
+    this->drive_system->actuate();
+    // Drive until we are within a certain number of pixels
+    while (y > 50) {
+
+        x = Serial.readStringUntil(',').toInt();
+        y = Serial.readStringUntil(';').toInt();
+
+    }
 
     // 3. Deposit stone
+    // todo
 
 }
