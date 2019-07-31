@@ -26,6 +26,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
     this->gauntlet_state = 0;
 
+     
+
 }
 
 //TODO make function to wiggle left and right to get clean lock on
@@ -44,8 +46,10 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     // else if (this->at_t_intersection()||this->at_y_intersection()) {
-    else if (this->at_intersection()) {
+    else if (this->at_intersection_and_get_vote()) {
 
+        isectType = classify_intersection();
+        
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
@@ -63,7 +67,44 @@ void IntersectionManager::update() {
 }
 
 bool IntersectionManager::at_intersection() {
-    return this->at_y_intersection() || this->at_t_intersection();
+    bool atY = this->at_y_intersection();
+    bool atT = this->at_t_intersection();
+    
+    return atY || atT;
+}
+
+//also modifies the deque for classifying intersections.
+bool IntersectionManager::at_intersection_and_get_vote() {
+    bool atY = this->at_y_intersection();
+    bool atT = this->at_t_intersection();
+    if (atY) {
+        this->isectTypeVotes.push_back(Y_ISECT);
+    }
+    else {
+        this->isectTypeVotes.push_back(T_ISECT);
+    }
+
+    while (this->isectTypeVotes.size() > ISECT_VOTES) {
+        this->isectTypeVotes.pop_front();
+    }
+    return atY || atT;
+}
+
+bool IntersectionManager::classify_intersection() {
+    int result = 0;
+    for (int i = 0; i < ISECT_VOTES; i++) {
+        if (this->isectTypeVotes.at(i) == T_ISECT) {
+            result++;
+        }
+    }
+    if (result >= 2) {
+        Serial.println("Voting determined T intersection");
+        return T_ISECT;
+    }
+    else {
+        Serial.println("Voting determined Y intersection");
+        return Y_ISECT;
+    }
 }
 
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
@@ -142,6 +183,15 @@ bool IntersectionManager::at_t_intersection() {
     it = qrds_status.begin();
 
     bool cond = false;
+
+    if (!(*qrds_status.begin())) {
+        qrds_status.end();
+        advance(it, -1);
+        if (!*it) {
+            Serial.println("Failed T intersection test beacause both ends were white");
+            return false;
+        }
+    }
 
     // Skip whites
     for (; it != qrds_status.end(); it++) {
