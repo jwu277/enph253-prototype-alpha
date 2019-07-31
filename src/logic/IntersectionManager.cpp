@@ -28,7 +28,6 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
 }
 
-//TODO make function to wiggle left and right to get clean lock on
 void IntersectionManager::wiggle(int numOfWiggles, int wiggleHalfPeriod) {
     for (int i = 0; i < numOfWiggles; i++) {
         this->drive_system->update(0.93, -0.1);

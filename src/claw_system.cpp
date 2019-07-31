@@ -2,6 +2,8 @@
 
 #include "claw_system.h"
 
+#define POST_OFFSET 47
+
 //crane pushbutton booleans
 volatile bool zIsHome = 0;
 volatile bool yIsHome = 0;
@@ -239,7 +241,7 @@ void grabCrystal()
 {
     digitalWrite(STEPPERENABLE, LOW);
     moveZToExtreme(EXTEND);
-    moveY(47);
+    moveY(POST_OFFSET);
     openClaw();
     findTopOfPillar();
     moveYUntilClawPressed();
@@ -249,6 +251,24 @@ void grabCrystal()
     digitalWrite(STEPPERENABLE, HIGH);
     
     delay(2000);//moveZToExtreme(HOME);freefall down
+}
+
+void depositCrystal() {
+    //requires claw is at home, and opened
+    closeClaw();
+
+    digitalWrite(STEPPERENABLE, LOW);
+    moveZSteps(mmToSteps(200), UP);
+    homeY(false);
+    digitalWrite(STEPPERENABLE, HIGH);
+    delay(1000);
+    openClaw();
+    digitalWrite(STEPPERENABLE, LOW);
+    moveZSteps(mmToSteps(100), UP);
+    homeY(true);
+    moveZToExtreme(HOME);
+    digitalWrite(STEPPERENABLE, HIGH);
+
 }
 
 void findTopOfPillar()
