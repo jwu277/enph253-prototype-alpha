@@ -281,10 +281,14 @@ void IntersectionManager::handle_gauntlet() {
     switch(this->gauntlet_state) {
 
         case 0:
+
+            // TODO: make the go into gauntlet code more reliable
+            //    + more robust (works on various lipo voltages, angles, etc.)
+            // Maybe we can rethink the algorithm/steps
             
             this->drive_system->update(-1.0, -1.0);
             this->drive_system->actuate();
-            delay(550);
+            delay(300);
             
             this->drive_system->update(-3.5, 0.0);
             this->drive_system->actuate();
@@ -304,10 +308,14 @@ void IntersectionManager::handle_gauntlet() {
             break;
 
         case 1:
-            // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1600) {
+            // keep pid going until picamera detects the gauntlet
+            // TODO: incorporate timeout failsafe
+
+            // if (millis() - gauntlet_timer >= 1600) {
+            if (Serial.available() && Serial.read() == 'G') {
 
                 this->gauntlet_state++;
+                this->drive_system->set_speed_add(0.0);
 
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
@@ -317,8 +325,6 @@ void IntersectionManager::handle_gauntlet() {
                 this->drive_system->actuate();
                 delay(500);
 
-                this->drive_system->set_speed_add(0.0);
-
                 this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
                 gauntlet_timer = millis();
@@ -326,6 +332,7 @@ void IntersectionManager::handle_gauntlet() {
             }
 
             break;
+
         case 2:
             
             // keep pid going for ____ milliseconds and then increment to next state
@@ -411,6 +418,16 @@ void IntersectionManager::handle_gauntlet() {
     }
 }
 
-void IntersectionManager::place_stone() {
-    // TODO
+void IntersectionManager::place_stone(int slot) {
+
+    // TODO: better algo could be to move forward y until close enough
+    //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
+
+    // 1. Minimie x
+    // todo
+    
+    // 2. Drive forward in y
+
+    // 3. Deposit stone
+
 }
