@@ -506,7 +506,6 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 
     void Fastwire::setup(int khz, boolean pullup) {
         TWCR = 0;
-        // TODO: add support for other MCUs, this is ATmega328+compatible only
         if (pullup)
             PORTC |= ((1 << 4) | (1 << 5));
         else
