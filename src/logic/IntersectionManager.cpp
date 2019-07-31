@@ -470,6 +470,6 @@ void IntersectionManager::place_stone(int slot) {
     }
 
     // 3. Deposit stone
-    // todo
+    depositCrystal();
 
 }

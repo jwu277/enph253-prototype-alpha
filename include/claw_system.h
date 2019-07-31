@@ -62,6 +62,7 @@ void moveZToExtreme(bool);
 void changeStepperDir(bool);
 void findTopOfPillar();
 void grabCrystal();
+void depositCrystal();
 void enableStepper();
 void disableStepper();
 void moveZSteps(int, bool);
