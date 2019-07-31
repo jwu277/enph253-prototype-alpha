@@ -29,9 +29,15 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 }
 
 //TODO make function to wiggle left and right to get clean lock on
-void wiggle() {
-
-
+void IntersectionManager::wiggle(int numOfWiggles, int wiggleHalfPeriod) {
+    for (int i = 0; i < numOfWiggles; i++) {
+        this->drive_system->update(0.93, -0.1);
+        this->drive_system->actuate();
+        delay(wiggleHalfPeriod);
+        this->drive_system->update(-0.1, 0.93);
+        this->drive_system->actuate();
+        delay(wiggleHalfPeriod);
+    }
 }
 
 void IntersectionManager::update() {
@@ -193,14 +199,7 @@ void IntersectionManager::handle_intersection() {
             delay(350);
 
             //WIGGLE
-            for (int i = 0; i < 12; i++) {
-                this->drive_system->update(0.93, -0.1);
-                this->drive_system->actuate();
-                delay(120);
-                this->drive_system->update(-0.1, 0.93);
-                this->drive_system->actuate();
-                delay(120);
-            }
+            this->wiggle(12,120);
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
@@ -235,14 +234,7 @@ void IntersectionManager::handle_intersection() {
             delay(350);
 
             // WIGGLE
-            for (int i = 0; i < 12; i++) {
-                this->drive_system->update(0.93, -0.1);
-                this->drive_system->actuate();
-                delay(120);
-                this->drive_system->update(-0.1, 0.93);
-                this->drive_system->actuate();
-                delay(120);
-            }
+            this->wiggle(12,120);
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
