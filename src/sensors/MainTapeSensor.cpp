@@ -171,3 +171,14 @@ void MainTapeSensor::reset_thresholds() {
     this->qrd6.set_on_threshold(250);
     this->qrd7.set_on_threshold(250);
 }
+
+void MainTapeSensor::steer_left_weights() {
+
+    this->qrd1_weight = -5.0;
+    this->qrd2_weight = -4.0;
+    this->qrd3_weight = -3.0;
+    this->qrd4_weight = -2.0;
+    this->qrd5_weight = -1.0;
+    this->qrd6_weight = 0.0;
+
+}

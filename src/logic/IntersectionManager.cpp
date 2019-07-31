@@ -50,10 +50,13 @@ void IntersectionManager::update() {
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
             // this->handle_intersection();
-            this->steer_left();
+            this->tape_sensor->steer_left_weights();
             this->intersection_count++;
             last_intersection_time = new_time;
         }
+    }
+    else {
+        this->tape_sensor->init_sensor_weights();
     }
 
 }
@@ -467,12 +470,13 @@ void IntersectionManager::handle_post() {
 
 void IntersectionManager::steer_left() {
 
-    this->drive_system->update(-2.7, 0.9);
+    this->drive_system->update(0, 0.86);
     this->drive_system->actuate();
 
     long timeout = millis();
     while (!(this->tape_sensor->qrd7.is_on() && !this->at_intersection())) {
         // TODO: maybe set far off state
+        this->tape_sensor->update();
         if (millis() - timeout >= 2400) {
             break;
         }
@@ -482,12 +486,13 @@ void IntersectionManager::steer_left() {
 
 void IntersectionManager::steer_right() {
 
-    this->drive_system->update(0.9, -2.7);
+    this->drive_system->update(0.86, 0);
     this->drive_system->actuate();
 
     long timeout = millis();
     while (!(this->tape_sensor->qrd0.is_on() && !this->at_intersection())) {
         // TODO: maybe set far off state
+        this->tape_sensor->update();
         if (millis() - timeout >= 2400) {
             break;
         }

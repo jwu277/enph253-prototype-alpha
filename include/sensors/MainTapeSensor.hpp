@@ -57,6 +57,8 @@ class MainTapeSensor: public BaseSensor {
 
         void reset_thresholds();
 
+        void steer_left_weights();
+
     private:
 
         //QrdSensor left_qrd;
