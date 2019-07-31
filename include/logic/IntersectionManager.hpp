@@ -26,6 +26,9 @@ class IntersectionManager {
         bool at_y_intersection();
         bool at_t_intersection();
 
+        //Wiggle function
+        void wiggle(int numOfWiggles, int wiggleHalfPeriod);
+
         // TODO: different intersection handlers for Y vs. T junctions
         // Intersection Handler
         void handle_intersection();
