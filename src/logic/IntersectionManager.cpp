@@ -50,6 +50,7 @@ void IntersectionManager::update() {
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
             // this->handle_intersection();
+            Serial.println("AT INT");
             this->steer_left();
             this->intersection_count++;
             last_intersection_time = new_time;
@@ -164,6 +165,70 @@ bool IntersectionManager::at_t_intersection() {
         }
     }
     return cond;
+
+}
+
+// Only require 1 black on both sides of wide
+bool IntersectionManager::at_y_intersection_lenient() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    // duplicate end elements for correct detection
+    qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
+    vector<bool>::iterator it = qrds_status.end();
+    advance(it, -1);
+    qrds_status.push_back(*it);
+
+    bool cond = false;
+
+    it = qrds_status.begin();
+
+    // Search for two blacks in a row
+    int count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 1) {
+                break;
+            }
+        }
+    }
+
+    // Skip whites + ensure at least one white
+    count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if(!*it) {
+            count++;
+        }
+        else if (count >= 1) {
+            break;
+        }
+    }
+    // Search for two blacks in a row
+    count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 1) {
+                cond = true;
+                break;
+            }
+        }
+    }
+
+    it = qrds_status.begin();
+    bool val1 = *it;
+    advance(it, 2);
+    bool val2 = *it;
+
+    it = qrds_status.end();
+    bool val3 = *it;
+    advance(it, -2);
+    bool val4 = *it;
+
+    bool cond2 = (val1 && val2) || (val3 && val4);
+
+    return cond || cond2;
 
 }
 
@@ -475,14 +540,22 @@ void IntersectionManager::steer_left() {
                           &this->tape_sensor->qrd4, &this->tape_sensor->qrd5,
                           &this->tape_sensor->qrd6, &this->tape_sensor->qrd7};
 
-    int qrd_idx = 4;
+    int qrd_idx = this->first_black_sensor();
+
+    this->drive_system->update(-2.7, -2.7);
+    this->drive_system->actuate();
+    while (!this->at_y_intersection_lenient()) {
+        this->tape_sensor->update();
+    }
+
+    Serial.println("fried chicken");
 
     this->drive_system->update(-2.7, 0.93);
     this->drive_system->actuate();
 
     long timeout = millis();
     // Do until qrd6 is on tape
-    while (qrd_idx <= 6) {
+    while ((qrd_idx <= 6) || (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 

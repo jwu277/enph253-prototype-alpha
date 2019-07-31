@@ -26,6 +26,8 @@ class IntersectionManager {
         bool at_y_intersection();
         bool at_t_intersection();
 
+        bool at_y_intersection_lenient();
+
         bool at_intersection();
 
         // TODO: different intersection handlers for Y vs. T junctions
