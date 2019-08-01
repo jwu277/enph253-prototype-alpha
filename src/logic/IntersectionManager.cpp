@@ -9,6 +9,9 @@
 #define TURN_COUNTER_MAX 100
 #define DELAY_TIME 200
 
+#define REVERSE_LEFT false
+#define REVERSE_RIGHT true
+
 unsigned long last_intersection_time = millis();
 
 unsigned long gauntlet_timer;
@@ -37,6 +40,25 @@ void IntersectionManager::wiggle(int numOfWiggles, int wiggleHalfPeriod) {
         this->drive_system->actuate();
         delay(wiggleHalfPeriod);
     }
+}
+
+void IntersectionManager::reverseAndTurn(int reverseTime, int turnTime, bool dir) {
+    //if dir is true, turns right
+    this->drive_system->update(-3.0, -3.0);
+    this->drive_system->actuate();
+    delay(reverseTime);
+    if (dir == REVERSE_RIGHT) {
+        this->drive_system->update(.98, -3.0);
+        this->drive_system->actuate();
+        delay(turnTime);
+        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+    }
+    else {
+        this->drive_system->update(-3.0, .98);
+        this->drive_system->actuate();
+        delay(turnTime);
+        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+    }    
 }
 
 void IntersectionManager::update() {
@@ -210,13 +232,9 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
             delay(300);
-            this->drive_system->update(-3.0, -3.0);
-            this->drive_system->actuate();
-            delay(300);
-            this->drive_system->update(-3.0, .98);
-            this->drive_system->actuate();
-            delay(300);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+            this->reverseAndTurn(300, 300, REVERSE_RIGHT);
+
             break;
         case 3:
             this->drive_system->update(0.0, 0.0);
@@ -241,13 +259,8 @@ void IntersectionManager::handle_intersection() {
 
             grabCrystal();
             
-            this->drive_system->update(-3.0, -3.0);
-            this->drive_system->actuate();
-            delay(290);
-            this->drive_system->update(.98, -3.0);
-            this->drive_system->actuate();
-            delay(500);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+            this->reverseAndTurn(290, 500, REVERSE_LEFT);
+
             break;
             
         case 4:
@@ -420,7 +433,7 @@ void IntersectionManager::place_stone(int slot) {
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
 
-    // 1. Minimie x
+    // 1. Minimize x
 
     // initial values should fail the while loop checks
     int x = 999;
