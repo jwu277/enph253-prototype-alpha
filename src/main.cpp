@@ -69,7 +69,6 @@ IntersectionManager intersection_manager = IntersectionManager(
 // Accelerometer
 MPU6050 accelgyro;
 int16_t ax, ay, az;
-int16_t gx, gy, gz;
 #define GRAVITY 9.81
 #define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
 #define ACCEL_DEBOUNCE 300 // ms
@@ -141,6 +140,26 @@ void setup() {
     // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
 
+    // while (1) {
+    //     Serial.print(analogRead(PA6));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA5));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA3));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA2));
+    //     Serial.print("       "); 
+    //     Serial.print(analogRead(PA1));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA0));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA4));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA7));
+    //     Serial.print("       ");
+    //     Serial.println();
+    // }
+
 }
 
 void init_sensors() {
@@ -158,6 +177,7 @@ void init_logic() {
 }
 
 void loop() {
+    // long time = millis();
     // 1. Read new data from sensors
     update_sensors();
 
@@ -166,6 +186,8 @@ void loop() {
 
     // 3. Tick the actuators in HW
     run_actuators();
+
+    // Serial.println(millis() - time);
     
 }
 
@@ -192,9 +214,7 @@ void compute() {
         drive_system.update(-2.9, 0.76-pid_output*1.1);
     }
 
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-
-    // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+    accelgyro.getAcceleration(&ax, &ay, &az);
 
     if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
         if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
