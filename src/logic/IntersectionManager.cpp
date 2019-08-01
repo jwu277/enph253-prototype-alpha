@@ -12,6 +12,11 @@
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
 
+#define Y_ISECT true
+#define T_ISECT false
+
+#define SERIAL_ISECT_RETRIES 10
+
 unsigned long last_intersection_time = millis();
 
 unsigned long gauntlet_timer;
@@ -28,6 +33,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->intersection_count = 0;
 
     this->gauntlet_state = 0;
+
+    this->isectType = T_ISECT;
 
 }
 
@@ -61,6 +68,26 @@ void IntersectionManager::reverseAndTurn(int reverseTime, int turnTime, bool dir
     }    
 }
 
+void IntersectionManager::motorsOff(int duration) {
+    this->drive_system->update(0, 0);
+    this->drive_system->actuate();
+    delay(duration);
+}
+
+bool IntersectionManager::readSerialIsectType() {
+    for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
+        if (Serial.available()) {
+            if (Serial.read() == 'Y') {
+                return Y_ISECT;
+            }
+            else if (Serial.read() == 'T') {
+                return T_ISECT;
+            }
+        }
+    }
+    return T_ISECT;
+}
+
 void IntersectionManager::update() {
 
     // temp: handle gauntlet
@@ -71,6 +98,8 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     else if (this->at_t_intersection()||this->at_y_intersection()) {
+
+        this->isectType = readSerialIsectType();
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
@@ -205,9 +234,7 @@ void IntersectionManager::handle_intersection() {
             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             break;
         case 2:
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
 
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
@@ -222,24 +249,18 @@ void IntersectionManager::handle_intersection() {
             //WIGGLE
             this->wiggle(12,120);
 
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
 
             grabCrystal();
             openClaw();
 
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
 
             this->reverseAndTurn(300, 300, REVERSE_RIGHT);
 
             break;
         case 3:
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
             delay(400);
@@ -253,9 +274,7 @@ void IntersectionManager::handle_intersection() {
             // WIGGLE
             this->wiggle(12,120);
 
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
 
             grabCrystal();
             
@@ -264,15 +283,11 @@ void IntersectionManager::handle_intersection() {
             break;
             
         case 4:
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
             break;
         
         case 5:
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-            delay(300);
+            this->motorsOff(300);
             break;
 
         // Gauntlet here

@@ -29,11 +29,15 @@ class IntersectionManager {
         //Frequently used movement functions
         void wiggle(int numOfWiggles, int wiggleHalfPeriod);
         void reverseAndTurn(int reverseTime, int turnTime, bool dir);
+        void motorsOff(int duration);
 
         // TODO: different intersection handlers for Y vs. T junctions
         // Intersection Handler
         void handle_intersection();
         int task;
+
+        bool readSerialIsectType();
+        bool isectType;
 
         // temp function?
         void handle_gauntlet();
