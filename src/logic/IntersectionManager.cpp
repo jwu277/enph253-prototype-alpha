@@ -460,7 +460,7 @@ void IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) < 30) {
+                if (fabs(x) < 20) {
                     complete = true;
                     break;
                 }
@@ -486,7 +486,7 @@ void IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) < 30) {
+                if (fabs(x) < 20) {
                     complete = true;
                     break;
                 }
