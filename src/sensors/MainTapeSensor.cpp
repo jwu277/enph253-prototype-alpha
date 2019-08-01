@@ -104,11 +104,11 @@ void MainTapeSensor::update_state() {
    if (!this->qrd1.is_on() && !this->qrd2.is_on() && !this->qrd3.is_on() &&
         !this->qrd4.is_on() && !this->qrd5.is_on() && !this->qrd6.is_on()) {
        if (this->state == LEFT || this->state == FAR_LEFT) {
-           this->x = -8.0;
+           this->x = -12.0;
            this->state = FAR_LEFT;
        }
        if (this->state == RIGHT || this->state == FAR_RIGHT) {
-           this->x = 8.0;
+           this->x = 12.0;
            this->state = FAR_RIGHT;
        }
    }
@@ -153,10 +153,10 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 void MainTapeSensor::init_sensor_weights() {
 
     this->qrd1_weight = 3.0;
-    this->qrd2_weight = 2.0;
-    this->qrd3_weight = 1.0;
-    this->qrd4_weight = -1.0;
-    this->qrd5_weight = -2.0;
+    this->qrd2_weight = 1.5;
+    this->qrd3_weight = 0.1;
+    this->qrd4_weight = -0.1;
+    this->qrd5_weight = -1.5;
     this->qrd6_weight = -3.0;
 
 }
