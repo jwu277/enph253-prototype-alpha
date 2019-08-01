@@ -25,6 +25,7 @@ class IntersectionManager {
         // Intersection Detectors
         bool at_y_intersection();
         bool at_t_intersection();
+        
 
         // TODO: different intersection handlers for Y vs. T junctions
         // Intersection Handler
@@ -34,6 +35,9 @@ class IntersectionManager {
         void handle_gauntlet();
 
         void place_stone();
+
+        void uturn(bool dir);
+        
 
     public:
 
