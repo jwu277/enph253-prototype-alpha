@@ -67,14 +67,14 @@ void MainTapeSensor::update_qrds() {
     for (QrdSensor qrd : this->qrds) {
         qrd.update();
     }
-    // this->qrd0.update();
+    this->qrd0.update();
     this->qrd1.update();
     this->qrd2.update();
     this->qrd3.update();
     this->qrd4.update();
     this->qrd5.update();
     this->qrd6.update();
-    // this->qrd7.update();
+    this->qrd7.update();
 }
 
 void MainTapeSensor::update_state() {
