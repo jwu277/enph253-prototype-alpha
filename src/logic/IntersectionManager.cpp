@@ -290,7 +290,7 @@ void IntersectionManager::handle_gauntlet() {
             this->tape_sensor->update();
 
             //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-            while (!(this->tape_sensor->qrd2.is_on() || this->tape_sensor->qrd3.is_on())) {
+            while (!(this->tape_sensor->qrd3.is_on() || this->tape_sensor->qrd4.is_on())) {
                 this->tape_sensor->update();
             }
             gauntlet_timer = millis();
@@ -316,13 +316,7 @@ void IntersectionManager::handle_gauntlet() {
                 this->gauntlet_state++;
                 this->drive_system->set_speed_add(0.0);
 
-                this->drive_system->update(-1.5, -1.5);
-                this->drive_system->actuate();
-                delay(800);
-
-                this->drive_system->update(-2.6, -2.6);
-                this->drive_system->actuate();
-                delay(300);
+                this->wiggle(10, 150);
 
                 this->place_stone(0);
 
@@ -444,60 +438,71 @@ void IntersectionManager::place_stone(int slot) {
 
     Serial.println("Initiating deposit sequence...");
 
-    this->drive_system->update(-1.5, -1.5);
-    this->drive_system->actuate();
-    delay(800);
+    bool complete = false;
 
     do {
 
-        // May be useful to find post when lost
+        // Right now: turn left wheel back to hole 0
 
-        // TODO: incorporate camera offset
+        // May be useful to find post when lost
 
         // ~20-25px per cm (crude estimate, height dependent, etc.)
         // currently have 0.05% pwm per px
 
-        if (Serial.read() == 'G') {
-
-            x = Serial.readStringUntil(',').toInt();
-            y = Serial.readStringUntil(';').toInt();
-
-            if (x > 0) {
-                // Turn right
-                this->drive_system->update(0.8 + 0.1 * x, -(0.8 + 0.1 * x));
-            }
-            else if (x < 0) {
-                // Turn left
-                this->drive_system->update(-(0.8 - 0.1 * x), 0.8 - 0.1 * x);
-            }
-
-        }
-        else {
-            this->drive_system->update(0.86, 0.86);
-            this->drive_system->actuate();
-            delay(300);
-            this->drive_system->update(0.0, 0.0);
-            this->drive_system->actuate();
-        }
-
+        // turn left
+        this->drive_system->update(-3.0, 0.4);
         this->drive_system->actuate();
 
-    } while (fabs(x) > 15);
+        for (int i = 0; i < 150; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) < 30) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (complete) {
+            break;
+        }
+
+        // Pause motors
+        this->drive_system->update(0.0, 0.4);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 100; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) < 30) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+    } while (fabs(x) > 20);
+
+    this->drive_system->update(0.0, 0.0);
+    this->drive_system->actuate();
 
     Serial.println("OMFG");
-    
-    // 2. Drive forward in y
-    this->drive_system->update(0.87, 0.87);
-    this->drive_system->actuate();
-    // Drive until we are within a certain number of pixels
-    while (y > 50) {
-
-        x = Serial.readStringUntil(',').toInt();
-        y = Serial.readStringUntil(';').toInt();
-
-    }
-
-    Serial.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 
     // 3. Deposit stone
     depositCrystal();
