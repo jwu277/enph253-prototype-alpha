@@ -69,7 +69,6 @@ IntersectionManager intersection_manager = IntersectionManager(
 // Accelerometer
 MPU6050 accelgyro;
 int16_t ax, ay, az;
-int16_t gx, gy, gz;
 #define GRAVITY 9.81
 #define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
 #define ACCEL_DEBOUNCE 300 // ms
@@ -125,13 +124,9 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
-<<<<<<< HEAD
-    //closeClaw();
-=======
 
     // Save time in testing avoid running 
     // closeClaw();
->>>>>>> 9f9369e104a8d96bf202a5896fcf3e15301b0006
 
 
     // Hardware test
@@ -199,7 +194,7 @@ void compute() {
         drive_system.update(-3.0, 0.76-pid_output*1.2);
     }
 
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    accelgyro.getAcceleration(&ax, &ay, &az);
 
     // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
 

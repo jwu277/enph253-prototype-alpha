@@ -55,7 +55,7 @@ void IntersectionManager::update() {
         if(new_time - last_intersection_time >= DELAY_TIME) {
             // this->handle_intersection();
             Serial.println("AT INT");
-            this->steer_right();
+            this->steer_left();
             this->intersection_count++;
             last_intersection_time = new_time;
         }
