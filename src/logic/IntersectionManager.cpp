@@ -22,7 +22,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 0;
+    this->intersection_count = 6;
 
     this->gauntlet_state = 0;
 
@@ -55,6 +55,7 @@ void IntersectionManager::update() {
         if(new_time - last_intersection_time >= DELAY_TIME) {
             this->handle_intersection();
             this->intersection_count++;
+            Serial.println("AT INT");
             last_intersection_time = new_time;
         }
     }
@@ -277,6 +278,8 @@ void IntersectionManager::handle_gauntlet() {
             //    + more robust (works on various lipo voltages, angles, etc.)
             // Maybe we can rethink the algorithm/steps
             
+            Serial.println("Initiating gauntlet sequence...");
+
             this->drive_system->update(-1.0, -1.0);
             this->drive_system->actuate();
             delay(300);
@@ -292,6 +295,8 @@ void IntersectionManager::handle_gauntlet() {
             }
             gauntlet_timer = millis();
 
+            Serial.println("Followed back on tape");
+
             this->drive_system->set_speed_add(-0.04);
 
             this->gauntlet_state++;
@@ -302,11 +307,22 @@ void IntersectionManager::handle_gauntlet() {
             // keep pid going until picamera detects the gauntlet
             // TODO: incorporate timeout failsafe
 
+
             // if (millis() - gauntlet_timer >= 1600) {
             if (Serial.available() && Serial.read() == 'G') {
 
+                Serial.println("Received G");
+
                 this->gauntlet_state++;
                 this->drive_system->set_speed_add(0.0);
+
+                this->drive_system->update(-1.5, -1.5);
+                this->drive_system->actuate();
+                delay(800);
+
+                this->drive_system->update(-2.6, -2.6);
+                this->drive_system->actuate();
+                delay(300);
 
                 this->place_stone(0);
 
@@ -426,6 +442,12 @@ void IntersectionManager::place_stone(int slot) {
     int x = 999;
     int y = 999;
 
+    Serial.println("Initiating deposit sequence...");
+
+    this->drive_system->update(-1.5, -1.5);
+    this->drive_system->actuate();
+    delay(800);
+
     do {
 
         // May be useful to find post when lost
@@ -442,24 +464,30 @@ void IntersectionManager::place_stone(int slot) {
 
             if (x > 0) {
                 // Turn right
-                this->drive_system->update(0.8 + 0.0005 * x, -(0.8 + 0.0005 * x));
+                this->drive_system->update(0.8 + 0.1 * x, -(0.8 + 0.1 * x));
             }
             else if (x < 0) {
                 // Turn left
-                this->drive_system->update(-(0.8 - 0.0005 * x), 0.8 - 0.0005 * x);
+                this->drive_system->update(-(0.8 - 0.1 * x), 0.8 - 0.1 * x);
             }
 
         }
         else {
-            // TODO: Refind the gauntlet
+            this->drive_system->update(0.86, 0.86);
+            this->drive_system->actuate();
+            delay(300);
+            this->drive_system->update(0.0, 0.0);
+            this->drive_system->actuate();
         }
 
         this->drive_system->actuate();
 
     } while (fabs(x) > 15);
+
+    Serial.println("OMFG");
     
     // 2. Drive forward in y
-    this->drive_system->update(0.85, 0.85);
+    this->drive_system->update(0.87, 0.87);
     this->drive_system->actuate();
     // Drive until we are within a certain number of pixels
     while (y > 50) {
@@ -468,6 +496,8 @@ void IntersectionManager::place_stone(int slot) {
         y = Serial.readStringUntil(';').toInt();
 
     }
+
+    Serial.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 
     // 3. Deposit stone
     depositCrystal();

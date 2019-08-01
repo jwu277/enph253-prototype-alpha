@@ -52,7 +52,7 @@ void test_hardware();
 MainTapeSensor tape_sensor = MainTapeSensor();
 
 // Actuators
-DriveSystem drive_system = DriveSystem(PB_9, PB_8, PB_6, PB_7, PWM_CLK_FREQ, PWM_PERIOD);
+DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_9, PB_8, PWM_CLK_FREQ, PWM_PERIOD);
 
 // Control/Logic/Computation
 
@@ -125,7 +125,7 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
-    closeClaw();
+    // closeClaw();
 
 
     // Hardware test
@@ -192,21 +192,21 @@ void compute() {
         drive_system.update(-2.9, 0.76-pid_output*1.1);
     }
 
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    // accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
-    // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+    // // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
 
-    if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
-        if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
-            // TODO: collision handling
+    // if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
+    //     if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
+    //         // TODO: collision handling
 
-            // Serial.println("BUMP");
-            // Serial.println(ax * CONVERSION_FACTOR);
-            // Serial.println(ay * CONVERSION_FACTOR);
-            // Serial.println();
-            accel_trigger_time = millis();
-        }
-    }
+    //         // Serial.println("BUMP");
+    //         // Serial.println(ax * CONVERSION_FACTOR);
+    //         // Serial.println(ay * CONVERSION_FACTOR);
+    //         // Serial.println();
+    //         accel_trigger_time = millis();
+    //     }
+    // }
 
 }
 
