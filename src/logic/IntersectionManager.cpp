@@ -15,6 +15,10 @@
 #define Y_ISECT true
 #define T_ISECT false
 
+#define TASK_RAMP_TO_HOME 0
+#define TASK_RECOVERY_GAUNT_HOME 1
+
+
 #define SERIAL_ISECT_RETRIES 10
 
 unsigned long last_intersection_time = millis();
@@ -99,7 +103,7 @@ void IntersectionManager::update() {
     // TEMP: for now
     else if (this->at_t_intersection()||this->at_y_intersection()) {
 
-        this->isectType = readSerialIsectType();
+        //this->isectType = readSerialIsectType();
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
