@@ -48,8 +48,8 @@ void IntersectionManager::update() {
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
-            this->handle_intersection();
-            this->intersection_count++;
+            // this->handle_intersection();
+            // this->intersection_count++;
             last_intersection_time = new_time;
         }
     }

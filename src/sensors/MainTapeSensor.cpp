@@ -67,14 +67,14 @@ void MainTapeSensor::update_qrds() {
     for (QrdSensor qrd : this->qrds) {
         qrd.update();
     }
-    this->qrd0.update();
+    // this->qrd0.update();
     this->qrd1.update();
     this->qrd2.update();
     this->qrd3.update();
     this->qrd4.update();
     this->qrd5.update();
     this->qrd6.update();
-    this->qrd7.update();
+    // this->qrd7.update();
 }
 
 void MainTapeSensor::update_state() {
@@ -153,10 +153,10 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 void MainTapeSensor::init_sensor_weights() {
 
     this->qrd1_weight = 3.0;
-    this->qrd2_weight = 2.0;
-    this->qrd3_weight = 1.0;
-    this->qrd4_weight = -1.0;
-    this->qrd5_weight = -2.0;
+    this->qrd2_weight = 1.5;
+    this->qrd3_weight = 0.1;
+    this->qrd4_weight = -0.1;
+    this->qrd5_weight = -1.5;
     this->qrd6_weight = -3.0;
 
 }
