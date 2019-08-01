@@ -52,7 +52,7 @@ void test_hardware();
 MainTapeSensor tape_sensor = MainTapeSensor();
 
 // Actuators
-DriveSystem drive_system = DriveSystem(PB_9, PB_8, PB_6, PB_7, PWM_CLK_FREQ, PWM_PERIOD);
+DriveSystem drive_system = DriveSystem(PB_6, PB_7, PB_9, PB_8, PWM_CLK_FREQ, PWM_PERIOD);
 
 // Control/Logic/Computation
 
