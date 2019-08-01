@@ -88,10 +88,10 @@ void setup() {
     Serial.begin(9600);
 
     // record pid tuning parameters 
-    Serial.print(kp, 5);
-    Serial.print("  ");
-    Serial.print(kd, 5);
-    Serial.println();
+//    Serial.print(kp, 5);
+//    Serial.print("  ");
+//    Serial.print(kd, 5);
+//    Serial.println();
 
     init_sensors();
     init_actuators();
@@ -125,6 +125,8 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
+
+    // Save time in testing avoid running 
     // closeClaw();
 
 
