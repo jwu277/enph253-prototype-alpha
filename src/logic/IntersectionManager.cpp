@@ -46,16 +46,16 @@ void IntersectionManager::update() {
 
     // TEMP: for now
     // else if (this->at_t_intersection()||this->at_y_intersection()) {
-    else if (this->at_intersection_and_get_vote()) {
+    else if (this->at_intersection()) {
 
-        isectType = classify_intersection();
+        // isectType = classify_intersection();
         
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
         if(new_time - last_intersection_time >= DELAY_TIME) {
             // this->handle_intersection();
             Serial.println("AT INT");
-            this->steer_left();
+            this->steer_right();
             this->intersection_count++;
             last_intersection_time = new_time;
         }
@@ -188,7 +188,7 @@ bool IntersectionManager::at_t_intersection() {
         qrds_status.end();
         advance(it, -1);
         if (!*it) {
-            Serial.println("Failed T intersection test beacause both ends were white");
+            // Serial.println("Failed T intersection test beacause both ends were white");
             return false;
         }
     }
@@ -590,13 +590,13 @@ void IntersectionManager::steer_left() {
                           &this->tape_sensor->qrd4, &this->tape_sensor->qrd5,
                           &this->tape_sensor->qrd6, &this->tape_sensor->qrd7};
 
-    int qrd_idx = this->first_black_sensor();
-
     this->drive_system->update(-2.7, -2.7);
     this->drive_system->actuate();
     while (!this->at_y_intersection_lenient()) {
         this->tape_sensor->update();
     }
+
+    int qrd_idx = this->first_black_sensor();
 
     Serial.println("fried chicken");
 
@@ -623,16 +623,39 @@ void IntersectionManager::steer_left() {
 
 void IntersectionManager::steer_right() {
 
-    this->drive_system->update(0.86, 0);
+    // Sneak: just make the array backwards compared to steer_left
+    QrdSensor* qrds[8] = {&this->tape_sensor->qrd7, &this->tape_sensor->qrd6,
+                          &this->tape_sensor->qrd5, &this->tape_sensor->qrd4,
+                          &this->tape_sensor->qrd3, &this->tape_sensor->qrd2,
+                          &this->tape_sensor->qrd1, &this->tape_sensor->qrd0};
+
+    this->drive_system->update(-2.7, -2.7);
+    this->drive_system->actuate();
+    while (!this->at_y_intersection_lenient()) {
+        this->tape_sensor->update();
+    }
+
+    Serial.println("raw sashimi");
+
+    int qrd_idx = this->last_black_sensor();
+
+    this->drive_system->update(0.93, -2.7);
     this->drive_system->actuate();
 
     long timeout = millis();
-    while (!(this->tape_sensor->qrd0.is_on() && !this->at_intersection())) {
+    // Do until qrd6 is on tape
+    while ((qrd_idx <= 6) || (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
+
+        if ((*qrds[qrd_idx]).is_on()) {
+            qrd_idx++;
+        }
+
         if (millis() - timeout >= 2400) {
             break;
         }
+
     }
 
 }
@@ -643,7 +666,7 @@ int IntersectionManager::first_black_sensor() {
 
     vector<bool>::iterator it = qrds_status.begin();
 
-    // Goal: find index of first white
+    // Goal: find index of first white in white island
     int idx = 0;
 
     // Get to a black
@@ -655,7 +678,31 @@ int IntersectionManager::first_black_sensor() {
         idx++;
     }
 
-    // default return 1
+    // default return 4
     return 4;
+
+}
+
+int IntersectionManager::last_black_sensor() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+    reverse(qrds_status.begin(), qrds_status.end());
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Goal: find index of last white in white island
+    int idx = 0;
+
+    // Get to a black
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            idx++;
+            return 7 - idx;
+        }
+        idx++;
+    }
+
+    // default return 4
+    return 3;
 
 }

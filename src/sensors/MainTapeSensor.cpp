@@ -88,11 +88,11 @@ void MainTapeSensor::update_state() {
     this->x += this->qrd5.get_read() * this->qrd5_weight;
     this->x += this->qrd6.get_read() * this->qrd6_weight;
 
-   if (this->qrd1.is_on() && !this->qrd2.is_on()) {
-       this->x = 2 * this->qrd1.get_read() * this->qrd1_weight;
+   if (this->qrd0.is_on() && !this->qrd1.is_on()) {
+       this->x = 2 * this->qrd0.get_read() * this->qrd0_weight;
    }
-   else if (this->qrd6.is_on() && !this->qrd5.is_on()) {
-       this->x = 2 * this->qrd6.get_read() * this->qrd6_weight;
+   else if (this->qrd7.is_on() && !this->qrd6.is_on()) {
+       this->x = 2 * this->qrd7.get_read() * this->qrd7_weight;
    }
 
    if (this->x > 0) {
@@ -151,13 +151,14 @@ vector<bool> MainTapeSensor::get_qrds_status() {
 }
 
 void MainTapeSensor::init_sensor_weights() {
-
+    this->qrd0_weight = 4.0;
     this->qrd1_weight = 3.0;
     this->qrd2_weight = 2.0;
     this->qrd3_weight = 1.0;
     this->qrd4_weight = -1.0;
     this->qrd5_weight = -2.0;
     this->qrd6_weight = -3.0;
+    this->qrd7_weight = -4.0;
 
 }
 

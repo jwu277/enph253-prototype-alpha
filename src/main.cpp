@@ -78,8 +78,8 @@ long accel_trigger_time = millis();
 void setup() {
 
     //TUNING PID
-    //  double kp = (0.4 * analogRead(PA_6)) / 1024;
-    //  double kd = (100.0 * analogRead(PA_7)) / 1024;
+    // double kp = (1.0 * analogRead(PA_6)) / 1024;
+    // double kd = (1.0 * analogRead(PA_7)) / 1024;
     double kp = 0.10977;
     double kd = 0.0;
 
@@ -88,10 +88,10 @@ void setup() {
     Serial.begin(9600);
 
     // record pid tuning parameters 
-    // Serial.print(kp, 5);
-    // Serial.print("  ");
-    // Serial.print(kd, 5);
-    // Serial.println();
+//    Serial.print(kp, 5);
+//    Serial.print("  ");
+//    Serial.print(kd, 5);
+//    Serial.println();
 
     init_sensors();
     init_actuators();
@@ -125,7 +125,13 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
+<<<<<<< HEAD
     //closeClaw();
+=======
+
+    // Save time in testing avoid running 
+    // closeClaw();
+>>>>>>> 9f9369e104a8d96bf202a5896fcf3e15301b0006
 
 
     // Hardware test
@@ -187,10 +193,10 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*1.1, -2.9);
+        drive_system.update(0.74+pid_output*1.2, -3.0);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.9, 0.76-pid_output*1.1);
+        drive_system.update(-3.0, 0.76-pid_output*1.2);
     }
 
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
