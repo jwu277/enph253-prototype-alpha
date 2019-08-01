@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.02
+#define KI 0.2
 
 using namespace std;
 
@@ -186,10 +186,10 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*0.6, -3.3);
+        drive_system.update(0.74+pid_output*0.07, -3.3);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-3.3, 0.74-pid_output*0.6);
+        drive_system.update(-3.3, 0.74-pid_output*0.07);
     }
 
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
