@@ -510,7 +510,7 @@ void IntersectionManager::place_stone(int slot) {
 }
 
 // true turns the robot clockwise
-void IntersectionManager::get_stone(bool dir) {
+void IntersectionManager::center_post(bool dir) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
