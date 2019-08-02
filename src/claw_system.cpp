@@ -255,11 +255,10 @@ bool grabCrystal(int pillarType)
         break;
     }
 
-
-    moveY(62);
+    moveY(65);
     openClaw();
     findTopOfPillar(1500);
-    moveY(15);
+    moveY(17);
     closeClaw();
     moveZDist(UP, 50, 2500);
     homeY(true);
@@ -359,12 +358,13 @@ void stepperPulse(int delay)
 //moves the z axis for "steps" steps
 int moveZSteps(int steps, bool dir, int delay)
 {
+
     if (dir == UP)
     {
         changeStepperDir(UP);
         for (int i = 0; i < steps; i++)
         {
-            if (zIsExtended)
+            if (digitalRead(ZFULLEXT))
             {
                 zIsExtended = false;
                 return i;
@@ -378,7 +378,7 @@ int moveZSteps(int steps, bool dir, int delay)
         changeStepperDir(DOWN);
         for (int i = 0; i < steps; i++)
         {
-            if (zIsHome)
+            if (digitalRead(ZHOME))
             {
                 zIsHome = false;
                 return i;

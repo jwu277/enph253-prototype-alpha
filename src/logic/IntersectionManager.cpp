@@ -37,6 +37,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->tasksToDo.push_back(TASK_TALL_POSTS);
 
     this->isectType = T_ISECT;
+    // initialize later TODO
+    //this->task = this->getNextTask();
 
 }
 
@@ -307,6 +309,7 @@ bool IntersectionManager::at_t_intersection() {
 void IntersectionManager::handle_intersection() {
     switch (this->task) {
         case TASK_RAMP_TO_HOME: {
+            Serial.println("Going up ramp to home");
             this->steer_left();
             this->task = this->getNextTask();
             this->intersection_count = 0;
@@ -314,6 +317,7 @@ void IntersectionManager::handle_intersection() {
             break;
             
         case TASK_TALL_POSTS: {
+            Serial.println("Performing tall posts task");
             switch (this->intersection_count) {
                 case 0: {
                     //slight right at first Y intersection
@@ -329,10 +333,14 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(-3.0, -3.0);
                     this->drive_system->actuate();
-                    delay(400);
+                    delay(200);
                     this->drive_system->update(0.93, -3.0);
                     this->drive_system->actuate();
-                    delay(280);
+                    delay(100);
+                    Serial.println("starting centering to post #1 now ");
+
+                    center_post(true);
+
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
                     delay(350);
@@ -341,12 +349,14 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal(1);
+                    grabCrystal(0);
                     openClaw();
 
                     this->motorsOff(300);
 
                     this->reverseAndTurn(300, 300, REVERSE_RIGHT);
+                    Serial.println("ending centering to post #1 now ");
+
                 }
                     break;
 
@@ -354,10 +364,14 @@ void IntersectionManager::handle_intersection() {
                     this->motorsOff(300);
                     this->drive_system->update(-3.0, -3.0);
                     this->drive_system->actuate();
-                    delay(400);
+                    delay(200);
                     this->drive_system->update(0.93, -3.0);
                     this->drive_system->actuate();
-                    delay(280);
+                    delay(100);
+                    Serial.println("starting centering to posts #2 now ");
+
+
+                    center_post(true);
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
                     delay(350);
@@ -366,13 +380,15 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal(1);
+                    grabCrystal(0);
                     
                     this->reverseAndTurn(290, 500, REVERSE_LEFT);
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_TO_RECOVERY;
                     this->intersection_count = 0;
+                    Serial.println("gauntelt time ");
+
                 }
                     break;
             }
