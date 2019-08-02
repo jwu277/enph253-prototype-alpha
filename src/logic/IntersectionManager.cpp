@@ -356,7 +356,7 @@ void IntersectionManager::handle_intersection() {
                     this->motorsOff(300);
 
                     grabCrystal(0);
-                    openClaw();
+                    //openClaw(); // for now todo
 
                     this->motorsOff(300);
 
@@ -457,24 +457,28 @@ void IntersectionManager::handle_gauntlet() {
     switch(this->gauntlet_state) {
 
         case 0:
-
+        {
             // TODO: make the go into gauntlet code more reliable
             //    + more robust (works on various lipo voltages, angles, etc.)
             // Maybe we can rethink the algorithm/steps
             
             Serial.println("Initiating gauntlet sequence...");
 
-            this->drive_system->update(-1.0, -1.0);
+            this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
-            delay(300);
+            delay(400);
             
-            this->drive_system->update(-3.5, 0.0);
+            this->drive_system->update(-3.5, 0.87);
             this->drive_system->actuate();
+
+            delay(2000);
 
             this->tape_sensor->update();
 
+            long gauntlet_turn_time = millis();
+
             //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-            while (!(this->tape_sensor->qrd3.is_on() || this->tape_sensor->qrd4.is_on())) {
+            while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on()) || millis() - gauntlet_turn_time <= 800) {
                 this->tape_sensor->update();
             }
             gauntlet_timer = millis();
@@ -484,10 +488,12 @@ void IntersectionManager::handle_gauntlet() {
             this->drive_system->set_speed_add(-0.04);
 
             this->gauntlet_state++;
+        }
 
             break;
 
         case 1:
+        {
             // keep pid going until picamera detects the gauntlet
             // TODO: incorporate timeout failsafe
 
@@ -517,6 +523,7 @@ void IntersectionManager::handle_gauntlet() {
                 }
 
             }
+        }
 
             break;
         
