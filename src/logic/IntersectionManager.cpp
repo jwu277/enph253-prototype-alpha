@@ -321,6 +321,7 @@ void IntersectionManager::handle_intersection() {
             Serial.println("Performing tall posts task");
             switch (this->intersection_count) {
                 case 0: {
+                    Serial.println("Tall posts task: first Isect, slight right");
                     //slight right at first Y intersection
                     this->drive_system->update(0.94, 0.98);
                     this->drive_system->actuate();
@@ -330,6 +331,7 @@ void IntersectionManager::handle_intersection() {
                     break;
                 case 1: {
                     //turn right to find first post, wiggle, grab stone, U turn and keep going
+                    Serial.println("Tall posts task: first T, turn right");
                     this->motorsOff(300);
 
                     this->drive_system->update(-3.0, -3.0);
@@ -356,7 +358,7 @@ void IntersectionManager::handle_intersection() {
                     this->motorsOff(300);
 
                     this->reverseAndTurn(600, 300, REVERSE_RIGHT);
-                    Serial.println("ending centering to post #1 now ");
+                    Serial.println("ending centering to post #1 now, going back to recovery ");
                     this->task = TASK_TO_RECOVERY;
 
 
@@ -390,7 +392,7 @@ void IntersectionManager::handle_intersection() {
                     this->tasksToDo.pop_back();
                     this->task = TASK_TO_RECOVERY;
                     this->intersection_count = -1;
-                    Serial.println("gauntelt time ");
+                    Serial.println("gauntlet time ");
 
                 }
                     break;
@@ -399,6 +401,7 @@ void IntersectionManager::handle_intersection() {
             break;
         case TASK_TO_RECOVERY:
         {
+            Serial.println("Encountered intersection in recovery");
             isectType = readSerialIsectType();
             if (isectType == Y_ISECT) {
                 Serial.println("detected y intersection ");
@@ -408,6 +411,7 @@ void IntersectionManager::handle_intersection() {
                 this->intersection_count = -1;
             }
             else {
+                Serial.println("Detected T intersection, coasting");
                 this->motorsOff(300);
             }
         }
