@@ -28,6 +28,8 @@ volatile int yStatus = NOT_MOVING;
 volatile int clawStatus = NOT_MOVING;
 volatile bool clawIsOpen = false;
 
+volatile bool clawRecentAction = CLOSED;
+
 void zHomeISR()
 {
     //Serial.println("zhome");
@@ -80,7 +82,7 @@ void clawFloorPBISR()
     clawBasePBPressed = true;
 }
 
-void openClaw()
+void openClaw(int duration)
 {
     
     //Serial.println("Opening claw");
@@ -93,7 +95,7 @@ void openClaw()
     clawStatus = MOVING_FWD;
     //Serial.println("PWM to open claw started");
 
-    delay(1300);
+    delay(duration);
 
     pwm_stop(CLAW_SERVO_PWM_NAME);
 
@@ -101,7 +103,7 @@ void openClaw()
     clawIsOpen = true;
 }
 
-void closeClaw()
+void closeClaw(int duration)
 {
 
     //Serial.println("Closing claw");
@@ -115,7 +117,7 @@ void closeClaw()
     clawStatus = MOVING_BK;
     // Serial.println("PWM to open claw started");
 
-    delay(3000);
+    delay(duration);
 
     pwm_stop(CLAW_SERVO_PWM_NAME);
 
@@ -256,10 +258,10 @@ bool grabCrystal(int pillarType)
     }
 
     moveY(65);
-    openClaw();
+    openClaw(1300);
     findTopOfPillar(1500);
     moveY(17);
-    closeClaw();
+    closeClaw(3000);
     moveZDist(UP, 50, 2500);
     homeY(true);
 
@@ -401,6 +403,60 @@ int mmToSteps(int mm)
     return (float) mm * (float) 820 / (float) 299; //truncates the float, this precision is not necessary. ie 2.3 steps.
 }
 
-void depositCrystal() {
-    // todo
+// gauntlet pos: -1 for full extend, 0 for farthest two from robot, 1 for middle two, 2 for closest two 
+// inClaw is boolean for if the crystal is already in the claw or in the pouch (true iff in claw)
+void depositCrystal(int gauntletPos, bool inClaw) 
+{
+
+    enableStepper();
+
+    if (inClaw) {
+        closeClaw(500); //make sure the claw is holding the crystal
+    } else {   
+        //if the claw was most recently opened it is still open, just close it
+        if (clawRecentAction == OPENED) {
+            moveZToExtreme(HOME,1700);
+            closeClaw(2000);
+        //if the claw is closed move up, open, and then grab the crystal
+        } else {
+            moveZDist(UP,50,1800);
+            openClaw(700);
+            moveZToExtreme(HOME,1700);
+            closeClaw(2000);
+        }
+    }
+
+    //move z to the right position
+    switch(gauntletPos) {
+        case -1: moveZToExtreme(EXTEND, 2000);
+        break;
+        case 0: moveZDist(UP, 150, 2000);
+        break;
+        case 1: moveZDist(UP, 110, 2000);
+        break;
+        case 2:moveZDist(UP, 80, 2000);
+        break;
+    }
+
+    //for now no special cases
+    switch(gauntletPos) {
+        case -1: homeY(EXTEND);
+        break;
+        case 0: homeY(EXTEND);
+        break;
+        case 1: homeY(EXTEND);
+        break;
+        case 2: homeY(EXTEND);
+        break;
+    }
+
+    disableStepper();   //drop the claw onto the gauntlet
+    delay(500);
+    openClaw(500);
+    enableStepper();
+    moveZDist(UP, 70, 1800);
+    homeY(HOME);
+
+    disableStepper();   //leaves the claw open currently
+
 }

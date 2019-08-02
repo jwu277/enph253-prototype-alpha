@@ -44,6 +44,9 @@
 #define BK_PERIOD 2135
 #define BK_ON_PERIOD 135
 
+#define CLOSED 0
+#define OPENED 1
+
 void hardwareISR();
 void zHomeISR();
 void yHomeISR();
@@ -56,13 +59,13 @@ void servoPulseLong(byte);
 void stepperPulse(int);
 void homeY(bool retract);
 void moveY(double dist);
-void closeClaw();
-void openClaw();
+void closeClaw(int duration);
+void openClaw(int duration);
 int moveZToExtreme(bool, int);
 void changeStepperDir(bool);
 void findTopOfPillar(int);
 bool grabCrystal(int);
-void depositCrystal();
+void depositCrystal(int gauntletPos, bool inClaw);
 void enableStepper();
 void disableStepper();
 int moveZSteps(int, bool, int);

@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 200
+#define DELAY_TIME 1000
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -81,6 +81,7 @@ void IntersectionManager::motorsOff(int duration) {
 }
 
 bool IntersectionManager::readSerialIsectType() {
+    return Y_ISECT;
     Serial.println("~");
     for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
         if (Serial.available()) {
@@ -415,7 +416,12 @@ void IntersectionManager::handle_intersection() {
             if (isectType == Y_ISECT) {
                 Serial.println("detected y intersection ");
 
-                this->motorsOff(300);
+                // this->motorsOff(300);
+                
+                this->drive_system->update(0.94, 0.94);
+                this->drive_system->actuate();
+                delay(100);
+
                 this->task = TASK_RECOVERY_TO_GAUNT_TO_HOME;
                 this->intersection_count = -1;
             }
@@ -425,23 +431,15 @@ void IntersectionManager::handle_intersection() {
             }
         }
             break;
+
         case TASK_RECOVERY_TO_GAUNT_TO_HOME:
         {
-            this->task = TASK_HOME_TO_GAUNT;
+            Serial.println("TASK RECOVERY TO GAUNT TO HOME");
             this->intersection_count = -1;
-        }
-            break;
-
-        case TASK_HOME_TO_GAUNT:
-        {
-            
-            // todo: can use isec classification checking
-
             handling_gauntlet = true;
             this->gauntlet_state = 0;
-
         }
-
+            break;
 
     } 
 }
@@ -476,17 +474,15 @@ void IntersectionManager::handle_gauntlet() {
             this->drive_system->actuate();
             delay(400);
             
-            this->drive_system->update(-3.5, 0.87);
+            this->drive_system->update(-3.5, 0);
             this->drive_system->actuate();
-
-            delay(2000);
 
             this->tape_sensor->update();
 
             long gauntlet_turn_time = millis();
 
             //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-            while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on()) || millis() - gauntlet_turn_time <= 800) {
+            while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
                 this->tape_sensor->update();
             }
             gauntlet_timer = millis();
@@ -640,7 +636,7 @@ bool IntersectionManager::place_stone(int slot) {
     Serial.println("OMFG");
 
     // 3. Deposit stone
-    depositCrystal();
+    depositCrystal(0, true);
 
     return true;
 
