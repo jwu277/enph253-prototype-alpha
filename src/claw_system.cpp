@@ -2,8 +2,6 @@
 
 #include "claw_system.h"
 
-#define POST_OFFSET 57
-
 //crane pushbutton booleans
 volatile bool zIsHome = 0;
 volatile bool yIsHome = 0;
@@ -95,7 +93,7 @@ void openClaw()
     clawStatus = MOVING_FWD;
     //Serial.println("PWM to open claw started");
 
-    delay(1700);
+    delay(1300);
 
     pwm_stop(CLAW_SERVO_PWM_NAME);
 
@@ -237,68 +235,85 @@ void moveYUntilClawPressed()
     yPos += run_time * (129.05 * 62.832) / 60000;
 }
 
-void grabCrystal()
+//returns true if a crystal was grabbed
+//-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
+bool grabCrystal(int pillarType)
 {
+
     digitalWrite(STEPPERENABLE, LOW);
-    moveZToExtreme(EXTEND);
-    moveY(POST_OFFSET);
+    switch(pillarType) {
+        case -1: moveZToExtreme(EXTEND, 1800);
+        break;
+
+        case 0: moveZDist(UP, 270, 1900);
+        break;
+
+        case 1: moveZDist(UP, 190, 1900);
+        break;
+
+        case 2: moveZDist(UP, 130, 1900);
+        break;
+    }
+
+
+    moveY(62);
     openClaw();
-    findTopOfPillar();
-    moveYUntilClawPressed();
+    findTopOfPillar(1500);
+    moveY(15);
     closeClaw();
-    moveZToExtreme(EXTEND);
+    moveZDist(UP, 50, 2500);
     homeY(true);
-    digitalWrite(STEPPERENABLE, HIGH);
+
+
+
+    //digitalWrite(STEPPERENABLE, HIGH);
     
-    delay(2000);//moveZToExtreme(HOME);freefall down
+    //delay(2000);//moveZToExtreme(HOME);freefall down
+    
+    //TESTING
+    //digitalWrite(STEPPERENABLE, LOW);
+    if (digitalRead(CLAWPB)) {
+        moveZToExtreme(EXTEND,2000);
+        clawPBPressed = false;
+        return true;
+    } else {
+        moveZToExtreme(HOME,2000);
+        return false;
+        }
+    
 }
 
-void depositCrystal() {
-    //requires claw is at home, and opened
-    closeClaw();
-
-    digitalWrite(STEPPERENABLE, LOW);
-    moveZSteps(mmToSteps(200), UP);
-    homeY(false);
-    digitalWrite(STEPPERENABLE, HIGH);
-    delay(1000);
-    openClaw();
-    digitalWrite(STEPPERENABLE, LOW);
-    moveZSteps(mmToSteps(100), UP);
-    homeY(true);
-    moveZToExtreme(HOME);
-    digitalWrite(STEPPERENABLE, HIGH);
-
-}
-
-void findTopOfPillar()
+void findTopOfPillar(int delay)
 {
     clawBasePBPressed = false;
-    if (digitalRead(CLAWFLOORPB))
+    if (!digitalRead(CLAWFLOORPB))
         return;
     changeStepperDir(DOWN);
     while (!clawBasePBPressed)
     {
-        stepperPulse();
+        stepperPulse(delay);
     }
     clawBasePBPressed = false;
 }
 
-void moveZToExtreme(bool home)
+//returns the number of steps moved to get to either switch
+int moveZToExtreme(bool home, int delay)
 {
     //set the home flags to false to allow for the positive edge of the interrupts to cause a rising flag
-
     zIsHome = 0;
     zIsExtended = 0;
+
+    int count = 0;
 
     if (home == true)
     {
         if (digitalRead(ZHOME))
-            return; //if it is sensed that z is home, quit this protocal since a rising edge interrupt can not occur
+            return count; //if it is sensed that z is home, quit this protocal since a rising edge interrupt can not occur
         digitalWrite(STEPPERDIR, DOWN);
         while (!zIsHome)
         {
-            stepperPulse();
+            count++;
+            stepperPulse(delay);
         }
         zIsHome = false;
     }
@@ -307,10 +322,12 @@ void moveZToExtreme(bool home)
         digitalWrite(STEPPERDIR, HIGH);
         while (!zIsExtended)
         {
-            stepperPulse();
+            count++;
+            stepperPulse(delay);
         }
         zIsExtended = false;
     }
+    return count;
 }
 
 void changeStepperDir(bool dir)
@@ -331,16 +348,16 @@ void disableStepper()
 /* 
 StepperPulse sends a pwm signal to the CLK pin of a stepper motor driver
  */
-void stepperPulse()
+void stepperPulse(int delay)
 {
     digitalWrite(STEPPERCLK, HIGH);
     delayMicroseconds(1);
     digitalWrite(STEPPERCLK, LOW);
-    delayMicroseconds(2200);
+    delayMicroseconds(delay);
 }
 
 //moves the z axis for "steps" steps
-void moveZSteps(int steps, bool dir)
+int moveZSteps(int steps, bool dir, int delay)
 {
     if (dir == UP)
     {
@@ -350,10 +367,11 @@ void moveZSteps(int steps, bool dir)
             if (zIsExtended)
             {
                 zIsExtended = false;
-                return;
+                return i;
             }
-            stepperPulse();
+            stepperPulse(delay);
         }
+        return steps;
     }
     else
     {
@@ -363,16 +381,26 @@ void moveZSteps(int steps, bool dir)
             if (zIsHome)
             {
                 zIsHome = false;
-                return;
+                return i;
             }
-            stepperPulse();
+            stepperPulse(delay);
         }
+        return steps;
     }
+}
+
+//moves z for milimeters in the specified direction, returns steps taken
+int moveZDist(bool dir, int mm, int delay) {
+    int steps = mmToSteps(mm);
+
+    return moveZSteps(steps, dir, delay);
 }
 
 int mmToSteps(int mm)
 {
-    float r = 10;                                      //radius of belt holder in mm
-    float stepsPermm = (float)200 / (2 * 3.14159 * r); //200 stepsPerrotation / (lenghtPerrotation) gives steps per length mm
-    return (int)((float)mm * stepsPermm);
+    return (float) mm * (float) 820 / (float) 299; //truncates the float, this precision is not necessary. ie 2.3 steps.
+}
+
+void depositCrystal() {
+    // todo
 }
