@@ -91,6 +91,7 @@ bool IntersectionManager::readSerialIsectType() {
             }
         }
     }
+    // todo have a fail state
     return T_ISECT;
 }
 
