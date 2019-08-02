@@ -15,10 +15,6 @@
 #define Y_ISECT true
 #define T_ISECT false
 
-#define TASK_RAMP_TO_HOME 0
-#define TASK_RECOVERY_GAUNT_HOME 1
-
-
 #define SERIAL_ISECT_RETRIES 10
 
 unsigned long last_intersection_time = millis();
@@ -37,6 +33,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->intersection_count = 0;
 
     this->gauntlet_state = 0;
+
+    this->tasksToDo.push_back(TASK_TALL_POSTS);
 
     this->isectType = T_ISECT;
 
@@ -94,20 +92,19 @@ bool IntersectionManager::readSerialIsectType() {
 
 void IntersectionManager::update() {
 
+
     // temp: handle gauntlet
     // TODO: manage intersection increments
-    if (this->intersection_count == 7) {
-        this->handle_gauntlet();
-    } 
+    // if (this->intersection_count == 7) {
+    //     this->handle_gauntlet();
+    // } 
 
     // TEMP: for now
-    else if (this->at_t_intersection()||this->at_y_intersection()) {
-
-        //this->isectType = readSerialIsectType();
+    if (this->at_t_intersection()||this->at_y_intersection()) {
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
-        if(new_time - last_intersection_time >= DELAY_TIME) {
+        if (new_time - last_intersection_time >= DELAY_TIME) {
             this->handle_intersection();
             this->intersection_count++;
             last_intersection_time = new_time;
@@ -217,7 +214,118 @@ bool IntersectionManager::at_t_intersection() {
 }
 
 void IntersectionManager::handle_intersection() {
+    switch (this->task) {
+        case TASK_RAMP_TO_HOME: 
+        {
+            switch (this->intersection_count) {
+                case 0:
+                {
+                    this->drive_system->update(-0.1, -0.1);
+                    this->drive_system->actuate();
+                    delay(400);
+                    this->drive_system->update(-2.8, 0.98);
+                    this->drive_system->actuate();
+                    delay(400);
+                    this->drive_system->update(-0.1, -0.1);
+                    this->drive_system->actuate();
+                    delay(300);
+                    this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                }
+                    break;
+                case 1:
+                {
+                    this->drive_system->update(0.94, 0.98);
+                    this->drive_system->actuate();
+                    delay(100);
+                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    this->task = this->getNextTask();
+                    this->intersection_count = 0;
+                }
+                    break;
+            }
+        }
+            break;
+        case TASK_TALL_POSTS:
+        {
+            switch (this->intersection_count) {
+                case 0:
+                {
+                    this->motorsOff(300);
 
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(400);
+                    this->drive_system->update(0.93, -3.0);
+                    this->drive_system->actuate();
+                    delay(280);
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(350);
+
+                    this->wiggle(12,120);
+
+                    this->motorsOff(300);
+
+                    grabCrystal();
+                    openClaw();
+
+                    this->motorsOff(300);
+
+                    this->reverseAndTurn(300, 300, REVERSE_RIGHT);
+                }
+                    break;
+
+                case 1:
+                {
+                    this->motorsOff(300);
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(400);
+                    this->drive_system->update(0.93, -3.0);
+                    this->drive_system->actuate();
+                    delay(280);
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(350);
+
+                    this->wiggle(12,120);
+
+                    this->motorsOff(300);
+
+                    grabCrystal();
+                    
+                    this->reverseAndTurn(290, 500, REVERSE_LEFT);
+
+                    this->tasksToDo.pop_back();
+                    this->task = TASK_TO_RECOVERY;
+                    this->intersection_count = 0;
+                }
+                    break;
+            }
+        }
+            break;
+        case TASK_TO_RECOVERY:
+        {
+            isectType = readSerialIsectType();
+            if (isectType == Y_ISECT) {
+                this->motorsOff(300);
+                this->task = TASK_RECOVERY_TO_GAUNT_TO_HOME;
+                this->intersection_count = 0;
+            }
+            else {
+                this->motorsOff(300);
+            }
+        }
+            break;
+        case TASK_RECOVERY_TO_GAUNT_TO_HOME:
+        {
+            this->handle_gauntlet();
+            this->task = this->getNextTask();
+            this->intersection_count = 0;
+            this->gauntlet_state = 0;
+        }
+    }
+    /*
     switch (this->intersection_count) {
         case 0:
             this->drive_system->update(-0.1, -0.1);
@@ -297,8 +405,24 @@ void IntersectionManager::handle_intersection() {
         // Gauntlet here
         case 6:
             break;
-    }
+        
+    }*/
 }
+
+int IntersectionManager::getNextTask() {
+    if (this->tasksToDo.empty()) {
+        Serial.println("No more tasks!");
+        while (true) {
+            delay(1000);
+            Serial.println("Spinning...");
+        }
+    }
+    int retVal = this->tasksToDo.front();
+    this->tasksToDo.pop_front();
+    this->tasksToDo.push_back(retVal);
+    return retVal;
+}
+
 void IntersectionManager::handle_gauntlet() {
 
     switch(this->gauntlet_state) {
