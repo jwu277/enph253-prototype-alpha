@@ -312,120 +312,36 @@ void IntersectionManager::handle_gauntlet() {
             if (Serial.available() && Serial.read() == 'G') {
 
                 Serial.println("Received G");
-
-                this->gauntlet_state++;
+                
                 this->drive_system->set_speed_add(0.0);
 
                 this->wiggle(10, 150);
 
-                this->place_stone(0);
+                if (this->place_stone(0)) {
+                    this->gauntlet_state++; // necessary?
+                    delay(69420);
+                }
+                else {
 
-                // this->drive_system->update(0.0, 0.0);
-                // this->drive_system->actuate();
-                // delay(200);
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(300);
 
-                // this->drive_system->update(-3.0, -3.0);
-                // this->drive_system->actuate();
-                // delay(500);
+                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
-                // this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-
-                // gauntlet_timer = millis();
-
-                // TODO:
-                // drive back onto the course/place second stone
-                delay(69420);
+                }
 
             }
 
             break;
+        
+        // Todo: maybe case 2 = failed case
 
-        case 2:
-            
-            // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1600) {
 
-                this->drive_system->set_speed_add(0.0);
-
-                this->gauntlet_state++;
-
-                for (int i = 0; i < 16; i++) {
-                    this->drive_system->update(0.93, -0.1);
-                    this->drive_system->actuate();
-                    delay(120);
-                    this->drive_system->update(-0.1, 0.93);
-                    this->drive_system->actuate();
-                    delay(120);
-                }
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(500);
-
-                this->drive_system->update(-3.5, 0.88);
-                this->drive_system->actuate();
-                delay(280);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(400);
-
-                closeClaw();
-
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(false);
-                digitalWrite(STEPPERENABLE, HIGH);
-                delay(1000);
-                openClaw();
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(true);
-                moveZToExtreme(HOME);
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                this->drive_system->update(0.94, 0.80);
-                this->drive_system->actuate();
-                delay(500);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(200);
-
-                this->drive_system->update(0.88, -3.5);
-                this->drive_system->actuate();
-                delay(280);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(400);
-
-                closeClaw();
-
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(false);
-                digitalWrite(STEPPERDIR, DOWN);
-                for(int i = 0; i < 100; i++) {
-                    stepperPulse();
-                }
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                delay(1000);
-                openClaw();
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(true);
-                moveZToExtreme(HOME);
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                delay(69420);
-            }
-            break;
     }
 }
 
-void IntersectionManager::place_stone(int slot) {
+bool IntersectionManager::place_stone(int slot) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
@@ -439,6 +355,7 @@ void IntersectionManager::place_stone(int slot) {
     Serial.println("Initiating deposit sequence...");
 
     bool complete = false;
+    long timeout = millis();
 
     do {
 
@@ -460,7 +377,7 @@ void IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) < 20) {
+                if (fabs(x) <= 20) {
                     complete = true;
                     break;
                 }
@@ -486,7 +403,7 @@ void IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) < 20) {
+                if (fabs(x) <= 20) {
                     complete = true;
                     break;
                 }
@@ -495,6 +412,10 @@ void IntersectionManager::place_stone(int slot) {
 
             delay(1);
 
+        }
+
+        if (millis() - timeout > 8000) {
+            return false;
         }
 
     } while (fabs(x) > 20);
@@ -506,5 +427,7 @@ void IntersectionManager::place_stone(int slot) {
 
     // 3. Deposit stone
     depositCrystal();
+
+    return true;
 
 }
