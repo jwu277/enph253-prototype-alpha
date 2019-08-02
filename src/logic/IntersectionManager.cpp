@@ -161,6 +161,7 @@ bool IntersectionManager::at_y_intersection() {
     bool val2 = *it;
 
     it = qrds_status.end();
+    advance(it, -1);
     bool val3 = *it;
     advance(it, -2);
     bool val4 = *it;
@@ -272,6 +273,7 @@ bool IntersectionManager::at_y_intersection_lenient() {
     bool val2 = *it;
 
     it = qrds_status.end();
+    advance(it, -1);
     bool val3 = *it;
     advance(it, -2);
     bool val4 = *it;
@@ -637,7 +639,7 @@ void IntersectionManager::steer_right() {
 
     Serial.println("raw sashimi");
 
-    int qrd_idx = this->last_black_sensor();
+    int qrd_idx = 7 - this->last_black_sensor();
 
     this->drive_system->update(0.93, -2.7);
     this->drive_system->actuate();
@@ -702,7 +704,7 @@ int IntersectionManager::last_black_sensor() {
         idx++;
     }
 
-    // default return 4
+    // default return 3
     return 3;
 
 }
