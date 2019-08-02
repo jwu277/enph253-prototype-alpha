@@ -112,9 +112,8 @@ void IntersectionManager::uturn(bool dir) {
         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
     } 
 
-    this->drive_system->update(0.0, 0.0);
-    this->drive_system->actuate();
-    delay(6969669);
+    this->motorsOff(6969669);
+
 }
 
 void IntersectionManager::update() {
