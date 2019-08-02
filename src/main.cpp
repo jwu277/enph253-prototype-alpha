@@ -80,7 +80,7 @@ void setup() {
     // double kp = (0.4 * analogRead(PA_6)) / 1024;
     // double kd = (1.0 * analogRead(PA_7)) / 1024;
     double kp = 0.39961;
-    double kd = 0.0;
+    double kd = 0.1;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 

@@ -34,6 +34,7 @@ class IntersectionManager {
         // Intersection Detectors
         bool at_y_intersection();
         bool at_t_intersection();
+        bool at_y_intersection_lenient();
         
 
         //Frequently used movement functions
@@ -59,6 +60,8 @@ class IntersectionManager {
         void center_post(bool dir);
 
         void uturn(bool dir);
+        void steer_left();
+        void steer_right();
         
 
     public:

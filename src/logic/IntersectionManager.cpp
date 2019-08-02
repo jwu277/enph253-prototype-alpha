@@ -37,6 +37,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->tasksToDo.push_back(TASK_TALL_POSTS);
 
     this->isectType = T_ISECT;
+    // initialize later TODO
+    //this->task = this->getNextTask();
 
 }
 
@@ -131,7 +133,7 @@ void IntersectionManager::update() {
         if (new_time - last_intersection_time >= DELAY_TIME) {
             this->handle_intersection();
             this->intersection_count++;
-            Serial.println("AT INT");
+            Serial.println("At intersection");
             last_intersection_time = new_time;
         }
     }
@@ -199,6 +201,72 @@ bool IntersectionManager::at_y_intersection() {
     return cond || cond2;
 
 }
+
+// Only require 1 black on both sides of wide
+bool IntersectionManager::at_y_intersection_lenient() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    // duplicate end elements for correct detection
+    qrds_status.insert(qrds_status.begin(), *qrds_status.begin());
+    vector<bool>::iterator it = qrds_status.end();
+    advance(it, -1);
+    qrds_status.push_back(*it);
+
+    bool cond = false;
+
+    it = qrds_status.begin();
+
+    // Search for two blacks in a row
+    int count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 1) {
+                break;
+            }
+        }
+    }
+
+    // Skip whites + ensure at least one white
+    count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if(!*it) {
+            count++;
+        }
+        else if (count >= 1) {
+            break;
+        }
+    }
+    // Search for two blacks in a row
+    count = 0;
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            count++;
+            if (count == 1) {
+                cond = true;
+                break;
+            }
+        }
+    }
+
+    it = qrds_status.begin();
+    bool val1 = *it;
+    advance(it, 2);
+    bool val2 = *it;
+
+    it = qrds_status.end();
+    advance(it, -1);
+    bool val3 = *it;
+    advance(it, -2);
+    bool val4 = *it;
+
+    bool cond2 = (val1 && val2) || (val3 && val4);
+
+    return cond || cond2;
+
+}
+
 // T intersction required atleast 4 subsequent Black in a row
 bool IntersectionManager::at_t_intersection() {
     
@@ -240,44 +308,27 @@ bool IntersectionManager::at_t_intersection() {
 
 void IntersectionManager::handle_intersection() {
     switch (this->task) {
-        case TASK_RAMP_TO_HOME: 
-        {
-
-            Serial.println("going home now ");
+        case TASK_RAMP_TO_HOME: {
+            Serial.println("Going up ramp to home");
+            this->steer_left();
+            this->task = this->getNextTask();
+            this->intersection_count = 0;
+        }
+            break;
+            
+        case TASK_TALL_POSTS: {
+            Serial.println("Performing tall posts task");
             switch (this->intersection_count) {
-                case 0:
-                {
-                    this->drive_system->update(-0.1, -0.1);
-                    this->drive_system->actuate();
-                    delay(400);
-                    this->drive_system->update(-2.8, 0.98);
-                    this->drive_system->actuate();
-                    delay(400);
-                    this->drive_system->update(-0.1, -0.1);
-                    this->drive_system->actuate();
-                    delay(300);
-                    this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
-                }
-                    break;
-                case 1:
-                {
+                case 0: {
+                    //slight right at first Y intersection
                     this->drive_system->update(0.94, 0.98);
                     this->drive_system->actuate();
                     delay(100);
                     this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-                    this->task = this->getNextTask();
-                    this->intersection_count = 0;
                 }
                     break;
-            }
-        }
-            break;
-        case TASK_TALL_POSTS:
-        {
-            Serial.println("going tall posts now ");
-            switch (this->intersection_count) {
-                case 0:
-                {
+                case 1: {
+                    //turn right to find first post, wiggle, grab stone, U turn and keep going
                     this->motorsOff(300);
 
                     this->drive_system->update(-3.0, -3.0);
@@ -309,8 +360,7 @@ void IntersectionManager::handle_intersection() {
                 }
                     break;
 
-                case 1:
-                {
+                case 2: {
                     this->motorsOff(300);
                     this->drive_system->update(-3.0, -3.0);
                     this->drive_system->actuate();
@@ -734,3 +784,71 @@ void IntersectionManager::center_post(bool dir) {
 
 }
 
+void IntersectionManager::steer_left() {
+
+    QrdSensor* qrds[8] = {&this->tape_sensor->qrd0, &this->tape_sensor->qrd1,
+                          &this->tape_sensor->qrd2, &this->tape_sensor->qrd3,
+                          &this->tape_sensor->qrd4, &this->tape_sensor->qrd5,
+                          &this->tape_sensor->qrd6, &this->tape_sensor->qrd7};
+
+    this->drive_system->update(-2.7, -2.7);
+    this->drive_system->actuate();
+    while (!this->at_y_intersection_lenient()) {
+        this->tape_sensor->update();
+    }
+
+    int qrd_idx = this->first_black_sensor();
+
+    Serial.println("fried chicken");
+
+    this->drive_system->update(-2.7, 0.93);
+    this->drive_system->actuate();
+
+    long timeout = millis();
+    // Do until qrd6 is on tape
+    while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
+        // TODO: maybe set far off state
+        this->tape_sensor->update();
+
+        if ((*qrds[qrd_idx]).is_on()) {
+            qrd_idx++;
+        }
+
+    }
+
+}
+
+void IntersectionManager::steer_right() {
+
+    // Sneak: just make the array backwards compared to steer_left
+    QrdSensor* qrds[8] = {&this->tape_sensor->qrd7, &this->tape_sensor->qrd6,
+                          &this->tape_sensor->qrd5, &this->tape_sensor->qrd4,
+                          &this->tape_sensor->qrd3, &this->tape_sensor->qrd2,
+                          &this->tape_sensor->qrd1, &this->tape_sensor->qrd0};
+
+    this->drive_system->update(-2.7, -2.7);
+    this->drive_system->actuate();
+    while (!this->at_y_intersection_lenient()) {
+        this->tape_sensor->update();
+    }
+
+    Serial.println("raw sashimi");
+
+    int qrd_idx = 7 - this->last_black_sensor();
+
+    this->drive_system->update(0.93, -2.7);
+    this->drive_system->actuate();
+
+    long timeout = millis();
+    // Do until qrd6 is on tape
+    while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
+        // TODO: maybe set far off state
+        this->tape_sensor->update();
+
+        if ((*qrds[qrd_idx]).is_on()) {
+            qrd_idx++;
+        }
+
+    }
+
+}
