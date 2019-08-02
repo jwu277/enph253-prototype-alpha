@@ -21,6 +21,8 @@ unsigned long last_intersection_time = millis();
 
 unsigned long gauntlet_timer;
 
+bool handling_gauntlet = false;
+
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     DriveSystem* drive_system) {
@@ -126,7 +128,10 @@ void IntersectionManager::update() {
     // } 
 
     // TEMP: for now
-    if (this->at_t_intersection()||this->at_y_intersection()) {
+    if (handling_gauntlet) {
+        this->handle_gauntlet();
+    }
+    else if (this->at_t_intersection()||this->at_y_intersection()) {
 
         unsigned long new_time = millis();
         //Debounce in case intersection triggered by accident due to oscilation 
@@ -414,11 +419,22 @@ void IntersectionManager::handle_intersection() {
             break;
         case TASK_RECOVERY_TO_GAUNT_TO_HOME:
         {
-            this->handle_gauntlet();
-            this->task = this->getNextTask();
+            this->task = TASK_HOME_TO_GAUNT;
             this->intersection_count = -1;
-            this->gauntlet_state = 0;
         }
+            break;
+
+        case TASK_HOME_TO_GAUNT:
+        {
+            
+            // todo: can use isec classification checking
+
+            handling_gauntlet = true;
+            this->gauntlet_state = 0;
+
+        }
+
+
     } 
 }
 
@@ -487,6 +503,7 @@ void IntersectionManager::handle_gauntlet() {
 
                 if (this->place_stone(0)) {
                     this->gauntlet_state++; // necessary?
+                    handling_gauntlet = false; // put at end of handle gauntlet
                     delay(69420);
                 }
                 else {

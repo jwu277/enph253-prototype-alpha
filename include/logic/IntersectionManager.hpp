@@ -9,6 +9,8 @@ using namespace std;
 #define TASK_TALL_POSTS 4
 #define TASK_SINGLE_POST 5
 #define TASK_SHORT_POSTS 6
+#define TASK_GAUNT_TO_HOME 10
+#define TASK_HOME_TO_GAUNT 11
 
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
