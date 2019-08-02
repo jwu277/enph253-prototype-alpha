@@ -265,20 +265,20 @@ bool grabCrystal(int pillarType)
 
 
 
-    //digitalWrite(STEPPERENABLE, HIGH);
+    digitalWrite(STEPPERENABLE, HIGH);
     
-    //delay(2000);//moveZToExtreme(HOME);freefall down
+    // delay(2000);//moveZToExtreme(HOME);freefall down
     
     //TESTING
     //digitalWrite(STEPPERENABLE, LOW);
-    if (digitalRead(CLAWPB)) {
-        moveZToExtreme(EXTEND,2000);
-        clawPBPressed = false;
-        return true;
-    } else {
-        moveZToExtreme(HOME,2000);
-        return false;
-        }
+    // if (digitalRead(CLAWPB)) {
+    //     moveZToExtreme(EXTEND,2000);
+    //     clawPBPressed = false;
+    //     return true;
+    // } else {
+    //     moveZToExtreme(HOME,2000);
+    //     return false;
+    //     }
     
 }
 
