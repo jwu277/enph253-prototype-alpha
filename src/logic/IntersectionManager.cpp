@@ -312,7 +312,8 @@ void IntersectionManager::handle_intersection() {
             Serial.println("Going up ramp to home");
             this->steer_left();
             this->task = this->getNextTask();
-            this->intersection_count = 0;
+            //increments to 0  = home position
+            this->intersection_count = -1;
         }
             break;
             
@@ -388,7 +389,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_TO_RECOVERY;
-                    this->intersection_count = 0;
+                    this->intersection_count = -1;
                     Serial.println("gauntelt time ");
 
                 }
@@ -400,9 +401,11 @@ void IntersectionManager::handle_intersection() {
         {
             isectType = readSerialIsectType();
             if (isectType == Y_ISECT) {
+                Serial.println("detected y intersection ");
+
                 this->motorsOff(300);
                 this->task = TASK_RECOVERY_TO_GAUNT_TO_HOME;
-                this->intersection_count = 0;
+                this->intersection_count = -1;
             }
             else {
                 this->motorsOff(300);
@@ -413,100 +416,10 @@ void IntersectionManager::handle_intersection() {
         {
             this->handle_gauntlet();
             this->task = this->getNextTask();
-            this->intersection_count = 0;
+            this->intersection_count = -1;
             this->gauntlet_state = 0;
         }
-    }
-    /*
-    switch (this->intersection_count) {
-        case 0:
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(400);
-            this->drive_system->update(-2.8, 0.98);
-            this->drive_system->actuate();
-            delay(400);
-            this->drive_system->update(-0.1, -0.1);
-            this->drive_system->actuate();
-            delay(300);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
-            break;
-        case 1:
-            this->drive_system->update(0.94, 0.98);
-            this->drive_system->actuate();
-            delay(100);
-            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-            break;
-        case 2:
-            this->motorsOff(300);
-
-            this->drive_system->update(-3.0, -3.0);
-            this->drive_system->actuate();
-            delay(200);
-            this->drive_system->update(0.93, -3.0);
-            this->drive_system->actuate();
-            delay(100);
-
-            // get centered 
-            center_post(true);
-            
-            this->drive_system->update(0.86, 0.86);
-            this->drive_system->actuate();
-            delay(350);
-
-            //WIGGLE
-            this->wiggle(12,120);
-
-            this->motorsOff(300);
-
-            grabCrystal(0);
-            openClaw();
-
-            this->motorsOff(300);
-
-            this->reverseAndTurn(300, 300, REVERSE_RIGHT);
-
-            break;
-        case 3:
-            this->motorsOff(300);
-            this->drive_system->update(-3.0, -3.0);
-            this->drive_system->actuate();
-            delay(200);
-
-            this->drive_system->update(0.93, -3.0);
-            this->drive_system->actuate();
-            delay(100);
-
-            center_post(true);
-
-            this->drive_system->update(0.86, 0.86);
-            this->drive_system->actuate();
-            delay(350);
-
-            // WIGGLE
-            this->wiggle(12,120);
-
-            this->motorsOff(300);
-
-            grabCrystal(0);
-            
-            this->reverseAndTurn(290, 500, REVERSE_LEFT);
-
-            break;
-            
-        case 4:
-            this->motorsOff(300);
-            break;
-        
-        case 5:
-            this->motorsOff(300);
-            break;
-
-        // Gauntlet here
-        case 6:
-            break;
-        
-    }*/
+    } 
 }
 
 int IntersectionManager::getNextTask() {
@@ -801,7 +714,7 @@ void IntersectionManager::steer_left() {
 
     int qrd_idx = this->first_black_sensor();
 
-    Serial.println("fried chicken");
+    Serial.println("steering left");
 
     this->drive_system->update(-2.7, 0.93);
     this->drive_system->actuate();
@@ -834,7 +747,7 @@ void IntersectionManager::steer_right() {
         this->tape_sensor->update();
     }
 
-    Serial.println("raw sashimi");
+    Serial.println("steering right");
 
     int qrd_idx = 7 - this->last_black_sensor();
 
