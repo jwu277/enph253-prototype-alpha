@@ -25,7 +25,8 @@ class IntersectionManager {
         // Intersection Detectors
         bool at_y_intersection();
         bool at_t_intersection();
-        
+
+        bool at_y_intersection_lenient();
 
         //Frequently used movement functions
         void wiggle(int numOfWiggles, int wiggleHalfPeriod);
@@ -47,6 +48,12 @@ class IntersectionManager {
         void center_post(bool dir);
 
         void uturn(bool dir);
+
+        void steer_left();
+        void steer_right();
+
+        int first_black_sensor();
+        int last_black_sensor();
         
 
     public:
