@@ -192,7 +192,7 @@ void IntersectionManager::handle_intersection() {
             delay(400);
             this->drive_system->update(0.93, -3.0);
             this->drive_system->actuate();
-            delay(150);
+            delay(100);
 
             // get centered 
             center_post(true);
@@ -543,14 +543,14 @@ void IntersectionManager::center_post(bool dir) {
         this->drive_system->update(mult * 3.0, -mult * 3.0);
         this->drive_system->actuate();
 
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 80; i++) {
 
             if (Serial.read() == 'P') {
 
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 30) {
+                if (fabs(x) <= 90) {
                     complete = true;
                     break;
                 }
@@ -576,7 +576,7 @@ void IntersectionManager::center_post(bool dir) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 30) {
+                if (fabs(x) <= 90) {
                     complete = true;
                     break;
                 }
@@ -587,7 +587,7 @@ void IntersectionManager::center_post(bool dir) {
 
         }
 
-    } while (fabs(x) > 30);
+    } while (fabs(x) > 90);
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();

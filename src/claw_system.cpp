@@ -2,7 +2,7 @@
 
 #include "claw_system.h"
 
-#define POST_OFFSET 47
+#define POST_OFFSET 57
 
 //crane pushbutton booleans
 volatile bool zIsHome = 0;
