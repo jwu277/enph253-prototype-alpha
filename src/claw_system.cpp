@@ -451,7 +451,7 @@ void depositCrystal(int gauntletPos, bool inClaw)
         break;
     }
 
-    disableStepper();
+    disableStepper();   //drop the claw onto the gauntlet
     delay(500);
     openClaw(500);
     enableStepper();
