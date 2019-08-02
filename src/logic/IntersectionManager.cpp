@@ -402,7 +402,7 @@ void IntersectionManager::handle_gauntlet() {
     }
 }
 
-void IntersectionManager::place_stone(int slot) {
+bool IntersectionManager::place_stone(int slot) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
@@ -489,7 +489,7 @@ void IntersectionManager::place_stone(int slot) {
     // 3. Deposit stone
     depositCrystal();
 
-    return;
+    return true;
 
 }
 
