@@ -34,7 +34,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 2;
+    this->intersection_count = 0;
 
     this->gauntlet_state = 0;
 
@@ -268,7 +268,7 @@ void IntersectionManager::handle_intersection() {
 
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(400);
+            delay(200);
             this->drive_system->update(0.93, -3.0);
             this->drive_system->actuate();
             delay(100);
@@ -297,10 +297,14 @@ void IntersectionManager::handle_intersection() {
             this->motorsOff(300);
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
-            delay(400);
+            delay(200);
+
             this->drive_system->update(0.93, -3.0);
             this->drive_system->actuate();
-            delay(280);
+            delay(100);
+
+            center_post(true);
+
             this->drive_system->update(0.86, 0.86);
             this->drive_system->actuate();
             delay(350);
