@@ -16,9 +16,9 @@
 
 //Stepper motors
 #define STEPPERENABLE PB12
-#define STEPPERSLEEP PA12
 #define STEPPERDIR PA11
 #define STEPPERCLK PA15
+#define STEPPERSLEEP PA12
 
 //boolean definitions
 #define UP 1
@@ -53,18 +53,19 @@ void clawPBISR();
 void clawFloorPBISR();
 void servoPulseShort(byte);
 void servoPulseLong(byte);
-void stepperPulse();
+void stepperPulse(int);
 void homeY(bool retract);
 void moveY(double dist);
 void closeClaw();
 void openClaw();
-void moveZToExtreme(bool);
+int moveZToExtreme(bool, int);
 void changeStepperDir(bool);
-void findTopOfPillar();
-void grabCrystal();
+void findTopOfPillar(int);
+bool grabCrystal(int);
 void depositCrystal();
 void enableStepper();
 void disableStepper();
-void moveZSteps(int, bool);
+int moveZSteps(int, bool, int);
 int mmToSteps(int);
 void moveYUntilClawPressed();
+int moveZDist(bool, int, int);

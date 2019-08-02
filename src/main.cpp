@@ -331,10 +331,10 @@ void test_hardware() {
         drive_system.actuate();
         delay(300);
 
-        moveZToExtreme(EXTEND);
+        moveZToExtreme(EXTEND,2000);
         homeY(true);
         homeY(false);
-        moveZToExtreme(HOME);
+        moveZToExtreme(HOME, 2000);
 
         openClaw();
         closeClaw();
