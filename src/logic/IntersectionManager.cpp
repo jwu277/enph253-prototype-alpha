@@ -83,6 +83,7 @@ void IntersectionManager::motorsOff(int duration) {
 bool IntersectionManager::readSerialIsectType() {
     Serial.println("~");
     for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
+        delay(5);
         if (Serial.available()) {
             if (Serial.read() == 'Y') {
                 Serial.println("Received Y classification");
@@ -94,6 +95,7 @@ bool IntersectionManager::readSerialIsectType() {
             }
         }
     }
+    Serial.println("Classify timed out. Returning T");
     return T_ISECT;
 }
 
