@@ -509,7 +509,7 @@ void IntersectionManager::place_stone(int slot) {
 
 }
 
-void IntersectionManager::get_stone() {
+void IntersectionManager::get_stone(bool direction) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
