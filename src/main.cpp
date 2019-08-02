@@ -146,10 +146,13 @@ void setup() {
 
     digitalWrite(STEPPERENABLE, LOW);
     
-    moveZToExtreme(EXTEND);
-    moveZToExtreme(HOME);
-    moveZDist(UP, 100);
-    //grabCrystal();
+    // moveZToExtreme(EXTEND);
+    // moveZToExtreme(HOME);
+    // moveZDist(UP, 100);
+    // delay(1000);
+    // moveZDist(DOWN, 200);
+    // moveZDist(UP, 500);
+    grabCrystal(0);
     while(true) {
     }
 }
@@ -323,10 +326,10 @@ void test_hardware() {
         drive_system.actuate();
         delay(300);
 
-        moveZToExtreme(EXTEND);
+        //moveZToExtreme(EXTEND);
         homeY(true);
         homeY(false);
-        moveZToExtreme(HOME);
+        //moveZToExtreme(HOME);
 
     }
 }

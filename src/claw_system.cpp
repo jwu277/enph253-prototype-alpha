@@ -93,7 +93,7 @@ void openClaw()
     clawStatus = MOVING_FWD;
     //Serial.println("PWM to open claw started");
 
-    delay(1700);
+    delay(1300);
 
     pwm_stop(CLAW_SERVO_PWM_NAME);
 
@@ -235,37 +235,69 @@ void moveYUntilClawPressed()
     yPos += run_time * (129.05 * 62.832) / 60000;
 }
 
-void grabCrystal()
+//returns true if a crystal was grabbed
+//-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
+bool grabCrystal(int pillarType)
 {
+
     digitalWrite(STEPPERENABLE, LOW);
-    moveZToExtreme(EXTEND);
-    moveY(47);
+    switch(pillarType) {
+        case -1: moveZToExtreme(EXTEND, 1800);
+        break;
+
+        case 0: moveZDist(UP, 270, 1900);
+        break;
+
+        case 1: moveZDist(UP, 190, 1900);
+        break;
+
+        case 2: moveZDist(UP, 130, 1900);
+        break;
+    }
+
+
+    moveY(62);
     openClaw();
-    findTopOfPillar();
-    moveYUntilClawPressed();
+    findTopOfPillar(1500);
+    moveY(15);
     closeClaw();
-    moveZToExtreme(EXTEND);
+    moveZDist(UP, 50, 2500);
     homeY(true);
-    digitalWrite(STEPPERENABLE, HIGH);
+
+
+
+    //digitalWrite(STEPPERENABLE, HIGH);
     
-    delay(2000);//moveZToExtreme(HOME);freefall down
+    //delay(2000);//moveZToExtreme(HOME);freefall down
+    
+    //TESTING
+    //digitalWrite(STEPPERENABLE, LOW);
+    if (digitalRead(CLAWPB)) {
+        moveZToExtreme(EXTEND,2000);
+        clawPBPressed = false;
+        return true;
+    } else {
+        moveZToExtreme(HOME,2000);
+        return false;
+        }
+    
 }
 
-void findTopOfPillar()
+void findTopOfPillar(int delay)
 {
     clawBasePBPressed = false;
-    if (digitalRead(CLAWFLOORPB))
+    if (!digitalRead(CLAWFLOORPB))
         return;
     changeStepperDir(DOWN);
     while (!clawBasePBPressed)
     {
-        stepperPulse();
+        stepperPulse(delay);
     }
     clawBasePBPressed = false;
 }
 
 //returns the number of steps moved to get to either switch
-int moveZToExtreme(bool home)
+int moveZToExtreme(bool home, int delay)
 {
     //set the home flags to false to allow for the positive edge of the interrupts to cause a rising flag
     zIsHome = 0;
@@ -281,7 +313,7 @@ int moveZToExtreme(bool home)
         while (!zIsHome)
         {
             count++;
-            stepperPulse();
+            stepperPulse(delay);
         }
         zIsHome = false;
     }
@@ -291,7 +323,7 @@ int moveZToExtreme(bool home)
         while (!zIsExtended)
         {
             count++;
-            stepperPulse();
+            stepperPulse(delay);
         }
         zIsExtended = false;
     }
@@ -316,16 +348,16 @@ void disableStepper()
 /* 
 StepperPulse sends a pwm signal to the CLK pin of a stepper motor driver
  */
-void stepperPulse()
+void stepperPulse(int delay)
 {
     digitalWrite(STEPPERCLK, HIGH);
     delayMicroseconds(1);
     digitalWrite(STEPPERCLK, LOW);
-    delayMicroseconds(1800);
+    delayMicroseconds(delay);
 }
 
 //moves the z axis for "steps" steps
-void moveZSteps(int steps, bool dir)
+int moveZSteps(int steps, bool dir, int delay)
 {
     if (dir == UP)
     {
@@ -335,10 +367,11 @@ void moveZSteps(int steps, bool dir)
             if (zIsExtended)
             {
                 zIsExtended = false;
-                return;
+                return i;
             }
-            stepperPulse();
+            stepperPulse(delay);
         }
+        return steps;
     }
     else
     {
@@ -348,18 +381,19 @@ void moveZSteps(int steps, bool dir)
             if (zIsHome)
             {
                 zIsHome = false;
-                return;
+                return i;
             }
-            stepperPulse();
+            stepperPulse(delay);
         }
+        return steps;
     }
 }
 
 //moves z for milimeters in the specified direction, returns steps taken
-int moveZDist(bool dir, int mm) {
+int moveZDist(bool dir, int mm, int delay) {
     int steps = mmToSteps(mm);
 
-    moveZSteps(steps, dir);
+    return moveZSteps(steps, dir, delay);
 }
 
 int mmToSteps(int mm)

@@ -206,7 +206,7 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
             delay(300);
 
-            grabCrystal();
+            //grabCrystal();
             openClaw();
 
             this->drive_system->update(0.0, 0.0);
@@ -248,7 +248,7 @@ void IntersectionManager::handle_intersection() {
             this->drive_system->actuate();
             delay(300);
 
-            grabCrystal();
+            //grabCrystal();
             
             this->drive_system->update(-3.0, -3.0);
             this->drive_system->actuate();
@@ -359,15 +359,15 @@ void IntersectionManager::handle_gauntlet() {
                 closeClaw();
 
                 digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
+                //moveZToExtreme(EXTEND);
                 homeY(false);
                 digitalWrite(STEPPERENABLE, HIGH);
                 delay(1000);
                 openClaw();
                 digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
+                //moveZToExtreme(EXTEND);
                 homeY(true);
-                moveZToExtreme(HOME);
+                //moveZToExtreme(HOME);
                 digitalWrite(STEPPERENABLE, HIGH);
 
                 this->drive_system->update(0.94, 0.80);
@@ -385,7 +385,7 @@ void IntersectionManager::handle_gauntlet() {
                 this->drive_system->update(0.0, 0.0);
                 this->drive_system->actuate();
                 delay(400);
-
+/* 
                 closeClaw();
 
                 digitalWrite(STEPPERENABLE, LOW);
@@ -405,7 +405,7 @@ void IntersectionManager::handle_gauntlet() {
                 moveZToExtreme(HOME);
                 digitalWrite(STEPPERENABLE, HIGH);
 
-                delay(69420);
+                delay(69420);*/
             }
             break;
     }
