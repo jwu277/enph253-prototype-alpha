@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.02
+#define KI 0.2
 
 using namespace std;
 
@@ -69,7 +69,6 @@ IntersectionManager intersection_manager = IntersectionManager(
 // Accelerometer
 MPU6050 accelgyro;
 int16_t ax, ay, az;
-int16_t gx, gy, gz;
 #define GRAVITY 9.81
 #define CONVERSION_FACTOR GRAVITY / 2048 // For +- 16g reading
 #define ACCEL_DEBOUNCE 300 // ms
@@ -78,16 +77,16 @@ long accel_trigger_time = millis();
 void setup() {
 
     //TUNING PID
-    //  double kp = (0.4 * analogRead(PA_6)) / 1024;
-    //  double kd = (100.0 * analogRead(PA_7)) / 1024;
-    double kp = 0.10977;
+    // double kp = (0.4 * analogRead(PA_6)) / 1024;
+    // double kd = (1.0 * analogRead(PA_7)) / 1024;
+    double kp = 0.39961;
     double kd = 0.0;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
 
     Serial.begin(9600);
 
-    // record pid tuning parameters 
+    //record pid tuning parameters 
     // Serial.print(kp, 5);
     // Serial.print("  ");
     // Serial.print(kd, 5);
@@ -125,7 +124,7 @@ void setup() {
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
-    closeClaw();
+    // closeClaw();
 
 
     // Hardware test
@@ -140,6 +139,26 @@ void setup() {
 
     // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
+
+    // while (1) {
+    //     Serial.print(analogRead(PA6));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA5));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA3));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA2));
+    //     Serial.print("       "); 
+    //     Serial.print(analogRead(PA1));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA0));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA4));
+    //     Serial.print("       ");
+    //     Serial.print(analogRead(PA7));
+    //     Serial.print("       ");
+    //     Serial.println();
+    // }
 
 }
 
@@ -158,6 +177,7 @@ void init_logic() {
 }
 
 void loop() {
+    // long time = millis();
     // 1. Read new data from sensors
     update_sensors();
 
@@ -166,6 +186,8 @@ void loop() {
 
     // 3. Tick the actuators in HW
     run_actuators();
+
+    // Serial.println(millis() - time);
     
 }
 
@@ -186,15 +208,13 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*1.1, -2.9);
+        drive_system.update(0.74+pid_output*0.07, -3.3);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.9, 0.76-pid_output*1.1);
+        drive_system.update(-3.3, 0.74-pid_output*0.07);
     }
 
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-
-    // Serial.println((ax * ax + ay * ay) * CONVERSION_FACTOR * CONVERSION_FACTOR);
+    accelgyro.getAcceleration(&ax, &ay, &az);
 
     if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
         if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
