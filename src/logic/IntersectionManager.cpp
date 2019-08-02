@@ -37,6 +37,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->tasksToDo.push_back(TASK_TALL_POSTS);
 
     this->isectType = T_ISECT;
+    // initialize later TODO
+    //this->task = this->getNextTask();
 
 }
 
