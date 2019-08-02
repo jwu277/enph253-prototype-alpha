@@ -82,6 +82,7 @@ void IntersectionManager::motorsOff(int duration) {
 
 bool IntersectionManager::readSerialIsectType() {
     for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
+        Serial.println("~");
         if (Serial.available()) {
             if (Serial.read() == 'Y') {
                 return Y_ISECT;
