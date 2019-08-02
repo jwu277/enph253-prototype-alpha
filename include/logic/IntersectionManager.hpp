@@ -42,7 +42,8 @@ class IntersectionManager {
         // temp function?
         void handle_gauntlet();
 
-        void place_stone(int slot);
+        // Returns success
+        bool place_stone(int slot);
 
     public:
 

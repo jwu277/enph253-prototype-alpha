@@ -34,7 +34,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 0;
+    this->intersection_count = 6;
 
     this->gauntlet_state = 0;
 
@@ -110,6 +110,7 @@ void IntersectionManager::update() {
         if(new_time - last_intersection_time >= DELAY_TIME) {
             this->handle_intersection();
             this->intersection_count++;
+            Serial.println("AT INT");
             last_intersection_time = new_time;
         }
     }
@@ -309,6 +310,8 @@ void IntersectionManager::handle_gauntlet() {
             //    + more robust (works on various lipo voltages, angles, etc.)
             // Maybe we can rethink the algorithm/steps
             
+            Serial.println("Initiating gauntlet sequence...");
+
             this->drive_system->update(-1.0, -1.0);
             this->drive_system->actuate();
             delay(300);
@@ -319,10 +322,12 @@ void IntersectionManager::handle_gauntlet() {
             this->tape_sensor->update();
 
             //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-            while (!(this->tape_sensor->qrd2.is_on() || this->tape_sensor->qrd3.is_on())) {
+            while (!(this->tape_sensor->qrd3.is_on() || this->tape_sensor->qrd4.is_on())) {
                 this->tape_sensor->update();
             }
             gauntlet_timer = millis();
+
+            Serial.println("Followed back on tape");
 
             this->drive_system->set_speed_add(-0.04);
 
@@ -334,120 +339,41 @@ void IntersectionManager::handle_gauntlet() {
             // keep pid going until picamera detects the gauntlet
             // TODO: incorporate timeout failsafe
 
+
             // if (millis() - gauntlet_timer >= 1600) {
             if (Serial.available() && Serial.read() == 'G') {
 
-                this->gauntlet_state++;
+                Serial.println("Received G");
+                
                 this->drive_system->set_speed_add(0.0);
 
-                this->place_stone(0);
+                this->wiggle(10, 150);
 
-                // this->drive_system->update(0.0, 0.0);
-                // this->drive_system->actuate();
-                // delay(200);
+                if (this->place_stone(0)) {
+                    this->gauntlet_state++; // necessary?
+                    delay(69420);
+                }
+                else {
 
-                // this->drive_system->update(-3.0, -3.0);
-                // this->drive_system->actuate();
-                // delay(500);
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(300);
 
-                // this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
-                // gauntlet_timer = millis();
-
-                // TODO:
-                // drive back onto the course/place second stone
-                delay(69420);
+                }
 
             }
 
             break;
+        
+        // Todo: maybe case 2 = failed case
 
-        case 2:
-            
-            // keep pid going for ____ milliseconds and then increment to next state
-            if (millis() - gauntlet_timer >= 1600) {
 
-                this->drive_system->set_speed_add(0.0);
-
-                this->gauntlet_state++;
-
-                for (int i = 0; i < 16; i++) {
-                    this->drive_system->update(0.93, -0.1);
-                    this->drive_system->actuate();
-                    delay(120);
-                    this->drive_system->update(-0.1, 0.93);
-                    this->drive_system->actuate();
-                    delay(120);
-                }
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(500);
-
-                this->drive_system->update(-3.5, 0.88);
-                this->drive_system->actuate();
-                delay(280);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(400);
-
-                closeClaw();
-
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(false);
-                digitalWrite(STEPPERENABLE, HIGH);
-                delay(1000);
-                openClaw();
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(true);
-                moveZToExtreme(HOME);
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                this->drive_system->update(0.94, 0.80);
-                this->drive_system->actuate();
-                delay(500);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(200);
-
-                this->drive_system->update(0.88, -3.5);
-                this->drive_system->actuate();
-                delay(280);
-
-                this->drive_system->update(0.0, 0.0);
-                this->drive_system->actuate();
-                delay(400);
-
-                closeClaw();
-
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(false);
-                digitalWrite(STEPPERDIR, DOWN);
-                for(int i = 0; i < 100; i++) {
-                    stepperPulse();
-                }
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                delay(1000);
-                openClaw();
-                digitalWrite(STEPPERENABLE, LOW);
-                moveZToExtreme(EXTEND);
-                homeY(true);
-                moveZToExtreme(HOME);
-                digitalWrite(STEPPERENABLE, HIGH);
-
-                delay(69420);
-            }
-            break;
     }
 }
 
-void IntersectionManager::place_stone(int slot) {
+bool IntersectionManager::place_stone(int slot) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
@@ -458,50 +384,82 @@ void IntersectionManager::place_stone(int slot) {
     int x = 999;
     int y = 999;
 
+    Serial.println("Initiating deposit sequence...");
+
+    bool complete = false;
+    long timeout = millis();
+
     do {
 
-        // May be useful to find post when lost
+        // Right now: turn left wheel back to hole 0
 
-        // TODO: incorporate camera offset
+        // May be useful to find post when lost
 
         // ~20-25px per cm (crude estimate, height dependent, etc.)
         // currently have 0.05% pwm per px
 
-        if (Serial.read() == 'G') {
-
-            x = Serial.readStringUntil(',').toInt();
-            y = Serial.readStringUntil(';').toInt();
-
-            if (x > 0) {
-                // Turn right
-                this->drive_system->update(0.8 + 0.0005 * x, -(0.8 + 0.0005 * x));
-            }
-            else if (x < 0) {
-                // Turn left
-                this->drive_system->update(-(0.8 - 0.0005 * x), 0.8 - 0.0005 * x);
-            }
-
-        }
-        else {
-            // TODO: Refind the gauntlet
-        }
-
+        // turn left
+        this->drive_system->update(-3.0, 0.4);
         this->drive_system->actuate();
 
-    } while (fabs(x) > 15);
-    
-    // 2. Drive forward in y
-    this->drive_system->update(0.85, 0.85);
+        for (int i = 0; i < 150; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 20) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (complete) {
+            break;
+        }
+
+        // Pause motors
+        this->drive_system->update(0.0, 0.4);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 100; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 20) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (millis() - timeout > 8000) {
+            return false;
+        }
+
+    } while (fabs(x) > 20);
+
+    this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
-    // Drive until we are within a certain number of pixels
-    while (y > 50) {
 
-        x = Serial.readStringUntil(',').toInt();
-        y = Serial.readStringUntil(';').toInt();
-
-    }
+    Serial.println("OMFG");
 
     // 3. Deposit stone
     depositCrystal();
+
+    return true;
 
 }
