@@ -81,13 +81,15 @@ void IntersectionManager::motorsOff(int duration) {
 }
 
 bool IntersectionManager::readSerialIsectType() {
+    Serial.println("~");
     for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
-        Serial.println("~");
         if (Serial.available()) {
             if (Serial.read() == 'Y') {
+                Serial.println("Received Y classification");
                 return Y_ISECT;
             }
             else if (Serial.read() == 'T') {
+                Serial.println("Received T classification");
                 return T_ISECT;
             }
         }
