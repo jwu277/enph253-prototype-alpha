@@ -435,9 +435,17 @@ bool IntersectionManager::place_stone(int slot) {
         this->drive_system->update(-3.0, 0.4);
         this->drive_system->actuate();
 
+        // TODO: tune values
+
         for (int i = 0; i < 150; i++) {
 
             if (Serial.read() == 'G') {
+
+                // Go through the slots before it
+                for (int i = 0; i < slot; i++) {
+                    Serial.readStringUntil(',');
+                    Serial.readStringUntil(';');
+                }
 
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
@@ -464,6 +472,12 @@ bool IntersectionManager::place_stone(int slot) {
         for (int i = 0; i < 100; i++) {
 
             if (Serial.read() == 'G') {
+
+                // Go through the slots before it
+                for (int i = 0; i < slot; i++) {
+                    Serial.readStringUntil(',');
+                    Serial.readStringUntil(';');
+                }
 
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
