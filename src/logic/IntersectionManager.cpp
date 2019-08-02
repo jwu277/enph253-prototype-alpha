@@ -34,7 +34,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
     this->drive_system = drive_system;
 
     // State
-    this->intersection_count = 6;
+    this->intersection_count = 2;
 
     this->gauntlet_state = 0;
 
@@ -246,7 +246,11 @@ void IntersectionManager::handle_intersection() {
             delay(400);
             this->drive_system->update(0.93, -3.0);
             this->drive_system->actuate();
-            delay(280);
+            delay(100);
+
+            // get centered 
+            center_post(true);
+            
             this->drive_system->update(0.86, 0.86);
             this->drive_system->actuate();
             delay(350);
@@ -373,7 +377,7 @@ void IntersectionManager::handle_gauntlet() {
     }
 }
 
-bool IntersectionManager::place_stone(int slot) {
+void IntersectionManager::place_stone(int slot) {
 
     // TODO: better algo could be to move forward y until close enough
     //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
@@ -460,6 +464,92 @@ bool IntersectionManager::place_stone(int slot) {
     // 3. Deposit stone
     depositCrystal();
 
-    return true;
+    return;
 
 }
+
+// true turns the robot clockwise
+// TODO add debounce and check counter clowckwise turn
+void IntersectionManager::center_post(bool dir) {
+
+    // TODO: better algo could be to move forward y until close enough
+    //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
+
+    int mult = dir ? 1 : -1;
+
+    // 1. Minimie x
+
+    // initial values should fail the while loop checks
+    int x = 999;
+    int y = 999;
+
+    Serial.println("Initiating post-centering sequence...");
+
+    bool complete = false;
+
+    do {
+
+        // Right now: turn left wheel back to hole 0
+
+        // May be useful to find post when lost
+
+        // ~20-25px per cm (crude estimate, height dependent, etc.)
+        // currently have 0.05% pwm per px
+
+        // turn
+        this->drive_system->update(mult * 3.0, -mult * 3.0);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 80; i++) {
+
+            if (Serial.read() == 'P') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 90) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (complete) {
+            break;
+        }
+
+        // Pause motors
+        this->drive_system->update(0.0, 0.0);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 100; i++) {
+
+            if (Serial.read() == 'P') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 90) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+    } while (fabs(x) > 90);
+
+    this->drive_system->update(0.0, 0.0);
+    this->drive_system->actuate();
+
+    Serial.println("YOMFG");
+
+}
+
