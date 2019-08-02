@@ -354,8 +354,10 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    this->reverseAndTurn(300, 300, REVERSE_RIGHT);
+                    this->reverseAndTurn(600, 300, REVERSE_RIGHT);
                     Serial.println("ending centering to post #1 now ");
+                    this->task = TASK_TO_RECOVERY;
+
 
                 }
                     break;
@@ -850,5 +852,52 @@ void IntersectionManager::steer_right() {
         }
 
     }
+
+}
+
+int IntersectionManager::first_black_sensor() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Goal: find index of first white in white island
+    int idx = 0;
+
+    // Get to a black
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            idx++;
+            return idx;
+        }
+        idx++;
+    }
+
+    // default return 0
+    return 0;
+
+}
+
+int IntersectionManager::last_black_sensor() {
+    
+    vector<bool> qrds_status = this->tape_sensor->get_qrds_status();
+    reverse(qrds_status.begin(), qrds_status.end());
+
+    vector<bool>::iterator it = qrds_status.begin();
+
+    // Goal: find index of last white in white island
+    int idx = 0;
+
+    // Get to a black
+    for (; it != qrds_status.end(); it++) {
+        if (*it) {
+            idx++;
+            return 7 - idx;
+        }
+        idx++;
+    }
+
+    // default return 7
+    return 7;
 
 }
