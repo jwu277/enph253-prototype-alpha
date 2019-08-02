@@ -508,3 +508,88 @@ void IntersectionManager::place_stone(int slot) {
     depositCrystal();
 
 }
+
+void IntersectionManager::get_stone() {
+
+    // TODO: better algo could be to move forward y until close enough
+    //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
+
+    // 1. Minimie x
+
+    // initial values should fail the while loop checks
+    int x = 999;
+    int y = 999;
+
+    Serial.println("Initiating deposit sequence...");
+
+    bool complete = false;
+
+    do {
+
+        // Right now: turn left wheel back to hole 0
+
+        // May be useful to find post when lost
+
+        // ~20-25px per cm (crude estimate, height dependent, etc.)
+        // currently have 0.05% pwm per px
+
+        // turn left
+        this->drive_system->update(-3.0, 0.4);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 150; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) < 20) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (complete) {
+            break;
+        }
+
+        // Pause motors
+        this->drive_system->update(0.0, 0.4);
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 100; i++) {
+
+            if (Serial.read() == 'G') {
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) < 20) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+    } while (fabs(x) > 20);
+
+    this->drive_system->update(0.0, 0.0);
+    this->drive_system->actuate();
+
+    Serial.println("OMFG");
+
+    // 3. Deposit stone
+    depositCrystal();
+
+}
+

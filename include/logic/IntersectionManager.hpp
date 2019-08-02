@@ -37,6 +37,7 @@ class IntersectionManager {
         void handle_gauntlet();
 
         void place_stone(int slot);
+        void get_stone();
 
     public:
 
