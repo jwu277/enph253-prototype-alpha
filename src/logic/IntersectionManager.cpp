@@ -84,6 +84,7 @@ bool IntersectionManager::readSerialIsectType() {
     return Y_ISECT;
     Serial.println("~");
     for (int i = 0; i < SERIAL_ISECT_RETRIES; i++) {
+        delay(5);
         if (Serial.available()) {
             if (Serial.read() == 'Y') {
                 Serial.println("Received Y classification");
@@ -95,7 +96,11 @@ bool IntersectionManager::readSerialIsectType() {
             }
         }
     }
+<<<<<<< HEAD
     // todo have a fail state
+=======
+    Serial.println("Classify timed out. Returning T");
+>>>>>>> 7fa71de71e0160d64cee820b95cc43e78731563c
     return T_ISECT;
 }
 
