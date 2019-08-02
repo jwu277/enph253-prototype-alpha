@@ -92,6 +92,31 @@ bool IntersectionManager::readSerialIsectType() {
     return T_ISECT;
 }
 
+// Exectutes Uturn in rotating clockwise for direction = true and counter clockwise otherwise. 
+void IntersectionManager::uturn(bool dir) {
+    unsigned long start_uturn_time = millis();
+    //if dir is true, turns right
+    this->drive_system->update(-3.0, -3.0);
+    this->drive_system->actuate();
+    delay(100);
+    if (dir == true) {
+        this->drive_system->update(.98, -3.3);
+        this->drive_system->actuate();
+        delay(300);
+        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+    }
+    else {
+        this->drive_system->update(-3.3, .98);
+        this->drive_system->actuate();
+        delay(300);
+        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+    } 
+
+    this->drive_system->update(0.0, 0.0);
+    this->drive_system->actuate();
+    delay(6969669);
+}
+
 void IntersectionManager::update() {
 
     // temp: handle gauntlet

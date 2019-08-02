@@ -25,6 +25,7 @@ class IntersectionManager {
         // Intersection Detectors
         bool at_y_intersection();
         bool at_t_intersection();
+        
 
         //Frequently used movement functions
         void wiggle(int numOfWiggles, int wiggleHalfPeriod);
@@ -44,6 +45,9 @@ class IntersectionManager {
 
         void place_stone(int slot);
         void center_post(bool dir);
+
+        void uturn(bool dir);
+        
 
     public:
 
