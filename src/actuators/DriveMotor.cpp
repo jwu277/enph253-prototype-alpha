@@ -28,10 +28,10 @@ void DriveMotor::init() {
 // Updates the motor
 void DriveMotor::update(double pct) {
 
-    int pwm = min((int) (fabs(pct) * this->pwm_period), this->pwm_period);
-    this->pwm = pwm;
-
     this->dir = (pct >= 0.0) ? DriveMotor::FORWARD : DriveMotor::REVERSE;
+
+    int pwm = fabs(pct) * this->pwm_period;
+    this->pwm = pwm;
     
 }
 
@@ -46,7 +46,7 @@ void DriveMotor::actuate() {
     }
     else {
         writePwm(this->forward_pin, 0);
-        writePwm(this->reverse_pin, 0);
+        writePwm(this->reverse_pin, this->pwm * 0.3);
     }
     
 }

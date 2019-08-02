@@ -12,6 +12,12 @@
 #endif
 
 #include <PID_v1.h>
+#include <queue>
+#include <numeric>
+
+#define INTEGRAL_HISTORY 100
+
+using namespace std;
 
 /*Constructor (...)*********************************************************
  *    The parameters specified here are those for for which we can't set up
@@ -20,15 +26,22 @@
 PID::PID(double* Input, double* Output, double* Setpoint,
         double Kp, double Ki, double Kd, int POn, int ControllerDirection)
 {
+
+
+    // Init integral history queue
+    for (int i = 0; i < INTEGRAL_HISTORY; i++) {
+        this->integral_queue.push(0.0);
+    }
+
     myOutput = Output;
     myInput = Input;
     mySetpoint = Setpoint;
     inAuto = false;
 
     PID::SetOutputLimits(0, 255);				//default output limit corresponds to
-												//the arduino pwm limits
+                                                //the arduino pwm limits
 
-    SampleTime = 100;							//default Controller Sample Time is 0.1 seconds
+    SampleTime = 1;							//default Controller Sample Time is 0.1 seconds
 
     PID::SetControllerDirection(ControllerDirection);
     PID::SetTunings(Kp, Ki, Kd, POn);
@@ -66,7 +79,20 @@ bool PID::Compute()
       double input = *myInput;
       double error = *mySetpoint - input;
       double dInput = (input - lastInput);
-      outputSum+= (ki * error);
+
+        integral_queue.pop();
+        integral_queue.push(error);
+
+        outputSum = 0.0;
+
+        for (int i = 0; i < INTEGRAL_HISTORY; i++) {
+            double val = integral_queue.front();
+            integral_queue.pop();
+            outputSum += val;
+            integral_queue.push(val);
+        }
+
+        outputSum = ki * outputSum;
 
       /*Add Proportional on Measurement, if P_ON_M is specified*/
       if(!pOnE) outputSum-= kp * dInput;
@@ -75,21 +101,21 @@ bool PID::Compute()
       else if(outputSum < outMin) outputSum= outMin;
 
       /*Add Proportional on Error, if P_ON_E is specified*/
-	   double output;
+       double output;
       if(pOnE) output = kp * error;
       else output = 0;
 
       /*Compute Rest of PID Output*/
       output += outputSum - kd * dInput;
 
-	    if(output > outMax) output = outMax;
+        if(output > outMax) output = outMax;
       else if(output < outMin) output = outMin;
-	    *myOutput = output;
+        *myOutput = output;
 
       /*Remember some variables for next time*/
       lastInput = input;
       lastTime = now;
-	    return true;
+        return true;
    }
    else return false;
 }
@@ -159,11 +185,11 @@ void PID::SetOutputLimits(double Min, double Max)
 
    if(inAuto)
    {
-	   if(*myOutput > outMax) *myOutput = outMax;
-	   else if(*myOutput < outMin) *myOutput = outMin;
+       if(*myOutput > outMax) *myOutput = outMax;
+       else if(*myOutput < outMin) *myOutput = outMin;
 
-	   if(outputSum > outMax) outputSum= outMax;
-	   else if(outputSum < outMin) outputSum= outMin;
+       if(outputSum > outMax) outputSum= outMax;
+       else if(outputSum < outMin) outputSum= outMin;
    }
 }
 
@@ -204,9 +230,9 @@ void PID::SetControllerDirection(int Direction)
 {
    if(inAuto && Direction !=controllerDirection)
    {
-	    kp = (0 - kp);
-      ki = (0 - ki);
-      kd = (0 - kd);
+        kp = (0 - kp);
+        ki = (0 - ki);
+        kd = (0 - kd);
    }
    controllerDirection = Direction;
 }

@@ -3,6 +3,8 @@
 #include "sensors/QrdSensor.hpp"
 #include "sensors/MainTapeSensor.hpp"
 
+#include <vector>
+
 // Current operation:
 // x-axis: x = 0 at centered, left-to-right
 // For x = 0, tape between sensors (not under any)
@@ -11,87 +13,108 @@
 
 // How far off the tape follower would be if both sensors are off tape
 // (could be computed as 1 + tape width / sensor width), units of sensor widths
-#define FAR_OFF 1.3
 
+using namespace std;
 
 // Constructor
-MainTapeSensor::MainTapeSensor(PinName left_qrd_pin, PinName right_qrd_pin)
-    : left_qrd(left_qrd_pin), right_qrd(right_qrd_pin) {
+MainTapeSensor::MainTapeSensor()
+    : qrd0(QrdSensor(PA_6, make_tuple(50, 450))),
+    qrd1(QrdSensor(PA_5, make_tuple(50, 450))), qrd2(QrdSensor(PA_3, make_tuple(50, 450))),
+    qrd3(QrdSensor(PA_2, make_tuple(50, 450))), qrd4(QrdSensor(PA_1, make_tuple(50, 450))),
+    qrd5(QrdSensor(PA_0, make_tuple(50, 450))), qrd6(QrdSensor(PA_4, make_tuple(50, 450))),
+    qrd7(QrdSensor(PA_7, make_tuple(50, 450))) {
 
-    this->x = 0.0; // default value of 0.0
+    this->weights = weights;
+    
     this->state = CENTRE; // start neutral
+    this->x = 0.0; // default value of 0.0
+
+    this->qrd0_status = false;
+    this->qrd7_status = false;
+
+    this->init_sensor_weights();
+
+}
+
+void MainTapeSensor::create_qrds(vector<PinName> pins, vector<tuple<int, int>> calibration) {
+
+    this->qrds = {};
+
+    for (unsigned i = 0; i < pins.size(); i++) {
+        this->qrds.push_back(QrdSensor(pins.at(i), calibration.at(i)));
+    }
 
 }
 
 void MainTapeSensor::init() {
 
-    left_qrd.init();
-    right_qrd.init();
+    for (QrdSensor qrd : this->qrds) {
+        qrd.init();
+    }
+
+    this->qrd0.set_on_threshold(520);
+    this->qrd7.set_on_threshold(520);
 
 }
 
 // Read data
 void MainTapeSensor::update() {
-
     MainTapeSensor::update_qrds();
     MainTapeSensor::update_state();
-
 }
 
 void MainTapeSensor::update_qrds() {
-    this->left_qrd.update();
-    this->right_qrd.update();
+    for (QrdSensor qrd : this->qrds) {
+        qrd.update();
+    }
+    this->qrd0.update();
+    this->qrd1.update();
+    this->qrd2.update();
+    this->qrd3.update();
+    this->qrd4.update();
+    this->qrd5.update();
+    this->qrd6.update();
+    this->qrd7.update();
 }
 
 void MainTapeSensor::update_state() {
 
-    bool left_on = this->left_qrd.is_on();
-    bool right_on = this->right_qrd.is_on();
+    this->x = 0.0;
 
-    //pwm_start(PA_0, 1000000, 10, 0, 0);
-    
-    if (left_on && right_on) {
+    this->x += this->qrd1.get_read() * this->qrd1_weight;
+    this->x += this->qrd2.get_read() * this->qrd2_weight;
+    this->x += this->qrd3.get_read() * this->qrd3_weight;
+    this->x += this->qrd4.get_read() * this->qrd4_weight;
+    this->x += this->qrd5.get_read() * this->qrd5_weight;
+    this->x += this->qrd6.get_read() * this->qrd6_weight;
 
-        // Currently also interpreting two sensors on tape as being on centre
+   if (this->qrd1.is_on() && !this->qrd2.is_on()) {
+       this->x = 2 * this->qrd1.get_read() * this->qrd1_weight;
+   }
+   else if (this->qrd6.is_on() && !this->qrd5.is_on()) {
+       this->x = 2 * this->qrd6.get_read() * this->qrd6_weight;
+   }
 
-        // On centre
-        this->x = 0.0;
-
-    }
-    else if (left_on && !right_on) {
-
-        // To the right
-        this->x = 1.0;
-        this->state = MainTapeSensor::RIGHT;
-
-    }
-    else if (right_on && !left_on) {
-
-        // To the left
-        this->x = -1.0;
-        this->state = MainTapeSensor::LEFT;
-
-    }
-    // At  this point, both tape sensors are off the tape
-    else if (this->state == MainTapeSensor::RIGHT) {
-
-        // Far to the right
-        this->x = FAR_OFF;
-
-    }
-    else {
-
-        // Far to the left
-        this->x = -FAR_OFF;
-
-        //pwm_start(PA_0, 1000000, 10, 10, 0);
-
-    }
-
+   if (this->x > 0) {
+       this->state = RIGHT;
+   }
+   else if (this->x < 0) {
+       this->state = LEFT;
+   }
+   if (!this->qrd1.is_on() && !this->qrd2.is_on() && !this->qrd3.is_on() &&
+        !this->qrd4.is_on() && !this->qrd5.is_on() && !this->qrd6.is_on()) {
+       if (this->state == LEFT || this->state == FAR_LEFT) {
+           this->x = -8.0;
+           this->state = FAR_LEFT;
+       }
+       if (this->state == RIGHT || this->state == FAR_RIGHT) {
+           this->x = 8.0;
+           this->state = FAR_RIGHT;
+       }
+   }
 }
-
 bool MainTapeSensor::is_both_on() {
-    return this->left_qrd.is_on() && this->right_qrd.is_on();
+    return false;
 }
 
 // For PID
@@ -99,6 +122,52 @@ double* MainTapeSensor::get_x_ptr() {
     return &(this->x);
 }
 
+bool MainTapeSensor::is_far_left() {
+    return this->state == FAR_LEFT;
+}
+
+bool MainTapeSensor::is_far_right() {
+    return this->state == FAR_RIGHT;
+}
+
 void MainTapeSensor::set_state(State state) {
     this->state = state;
+}
+
+vector<bool> MainTapeSensor::get_qrds_status() {
+
+    vector<bool> status = {};
+
+    status.push_back(this->qrd0.is_on());
+    status.push_back(this->qrd1.is_on());
+    status.push_back(this->qrd2.is_on());
+    status.push_back(this->qrd3.is_on());
+    status.push_back(this->qrd4.is_on());
+    status.push_back(this->qrd5.is_on());
+    status.push_back(this->qrd6.is_on());
+    status.push_back(this->qrd7.is_on());
+
+    return status;
+}
+
+void MainTapeSensor::init_sensor_weights() {
+
+    this->qrd1_weight = 3.0;
+    this->qrd2_weight = 2.0;
+    this->qrd3_weight = 1.0;
+    this->qrd4_weight = -1.0;
+    this->qrd5_weight = -2.0;
+    this->qrd6_weight = -3.0;
+
+}
+
+void MainTapeSensor::reset_thresholds() {
+    this->qrd0.set_on_threshold(250);
+    this->qrd1.set_on_threshold(250);
+    this->qrd2.set_on_threshold(250);
+    this->qrd3.set_on_threshold(250);
+    this->qrd4.set_on_threshold(250);
+    this->qrd5.set_on_threshold(250);
+    this->qrd6.set_on_threshold(250);
+    this->qrd7.set_on_threshold(250);
 }
