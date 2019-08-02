@@ -62,6 +62,10 @@ class IntersectionManager {
         void uturn(bool dir);
         void steer_left();
         void steer_right();
+
+        
+        int first_black_sensor();
+        int last_black_sensor();
         
 
     public:
