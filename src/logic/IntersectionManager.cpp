@@ -354,8 +354,10 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    this->reverseAndTurn(300, 300, REVERSE_RIGHT);
+                    this->reverseAndTurn(600, 300, REVERSE_RIGHT);
                     Serial.println("ending centering to post #1 now ");
+                    this->task = TASK_TO_RECOVERY;
+
 
                 }
                     break;
