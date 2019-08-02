@@ -513,6 +513,7 @@ void IntersectionManager::place_stone(int slot) {
 }
 
 // true turns the robot clockwise
+// TODO add debounce and check counter clowckwise turn
 void IntersectionManager::center_post(bool dir) {
 
     // TODO: better algo could be to move forward y until close enough
