@@ -291,7 +291,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal();
+                    grabCrystal(1);
                     openClaw();
 
                     this->motorsOff(300);
@@ -317,7 +317,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal();
+                    grabCrystal(1);
                     
                     this->reverseAndTurn(290, 500, REVERSE_LEFT);
 
