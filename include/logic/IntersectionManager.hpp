@@ -1,10 +1,19 @@
 #ifndef INTERSECTIONMANAGER
 #define INTERSECTIONMANAGER
 
+using namespace std;
+
+#define TASK_RAMP_TO_HOME 0
+#define TASK_RECOVERY_TO_GAUNT_TO_HOME 1
+#define TASK_TO_RECOVERY 3
+#define TASK_TALL_POSTS 4
+#define TASK_SINGLE_POST 5
+#define TASK_SHORT_POSTS 6
+
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
 #include "actuators/DriveSystem.hpp"
-
+#include <deque>
 
 // IntersectionManager is a logic controller for handling intersections
 class IntersectionManager {
@@ -36,6 +45,9 @@ class IntersectionManager {
         // Intersection Handler
         void handle_intersection();
         int task;
+        int getNextTask();
+        deque <int> tasksToDo;
+        
 
         bool readSerialIsectType();
         bool isectType;
