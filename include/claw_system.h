@@ -48,13 +48,13 @@
 #define CLOSED 0
 #define OPENED 1
 
-void hardwareISR();
-void zHomeISR();
-void yHomeISR();
-void zFullExtISR();
-void yFullExtISR();
-void clawPBISR();
-void clawFloorPBISR();
+// void hardwareISR();
+// void zHomeISR();
+// void yHomeISR();
+// void zFullExtISR();
+// void yFullExtISR();
+// void clawPBISR();
+// void clawFloorPBISR();
 void servoPulseShort(byte);
 void servoPulseLong(byte);
 void stepperPulse(int);

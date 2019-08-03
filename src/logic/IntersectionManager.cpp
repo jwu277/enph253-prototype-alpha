@@ -207,7 +207,7 @@ void IntersectionManager::handle_intersection() {
             delay(300);
 
             //grabCrystal();
-            openClaw();
+            //openClaw();
 
             this->drive_system->update(0.0, 0.0);
             this->drive_system->actuate();
@@ -356,14 +356,14 @@ void IntersectionManager::handle_gauntlet() {
                 this->drive_system->actuate();
                 delay(400);
 
-                closeClaw();
+                //closeClaw();
 
                 digitalWrite(STEPPERENABLE, LOW);
                 //moveZToExtreme(EXTEND);
                 homeY(false);
                 digitalWrite(STEPPERENABLE, HIGH);
                 delay(1000);
-                openClaw();
+                //openClaw();
                 digitalWrite(STEPPERENABLE, LOW);
                 //moveZToExtreme(EXTEND);
                 homeY(true);
