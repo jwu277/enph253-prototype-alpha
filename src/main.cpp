@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.2
+#define KI 0.1
 
 using namespace std;
 
@@ -137,28 +137,14 @@ void setup() {
 
     accelgyro.initialize();
 
-    // Set accelerometer range to be +- 16g
+    // // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
 
-    // while (1) {
-    //     Serial.print(analogRead(PA6));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA5));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA3));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA2));
-    //     Serial.print("       "); 
-    //     Serial.print(analogRead(PA1));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA0));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA4));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA7));
-    //     Serial.print("       ");
-    //     Serial.println();
-    // }
+enableStepper();
+    while (1) {
+        moveZToExtreme(EXTEND,2000);
+        moveZToExtreme(HOME,2000);
+    }
 
 }
 

@@ -44,7 +44,8 @@ volatile bool crystalInPouch = false;
 
 void yHomeISR()
 {
-    //Serial.println("yHomeISR");
+    Serial.println("yHomeISR");
+    
     if (yStatus == MOVING_BK)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -58,7 +59,8 @@ void yHomeISR()
 
 void yFullExtISR()
 {
-    //Serial.println("yFullExtISR");
+    Serial.println("yFullExtISR");
+    
     if (yStatus == MOVING_FWD)
     {
         pwm_stop(Y_SERVO_PWM_NAME);
@@ -460,4 +462,5 @@ void depositCrystal(int gauntletPos, bool inClaw)
 
     disableStepper();   //leaves the claw open currently
 }
+
 
