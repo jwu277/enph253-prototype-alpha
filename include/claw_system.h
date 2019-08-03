@@ -72,4 +72,4 @@ int moveZSteps(int, bool, int);
 int mmToSteps(int);
 void moveYUntilClawPressed();
 int moveZDist(bool, int, int);
-void depositCrystal(int, bool);
+void depositCrystal(int, bool, bool);

@@ -143,17 +143,42 @@ void setup() {
 
     // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
-
-    digitalWrite(STEPPERENABLE, LOW);
     
-    // moveZToExtreme(EXTEND);
-    // moveZToExtreme(HOME);
-    // moveZDist(UP, 100);
-    // delay(1000);
-    // moveZDist(DOWN, 200);
-    // moveZDist(UP, 500);
-    grabCrystal(0);
+    /*      this seems to work properly, only issue is mechanical pouch size
+
+    grabCrystal(-1);
+    delay(1000);
+    openClaw(500);
+    enableStepper();
+    moveZToExtreme(EXTEND,2000);
+    moveZToExtreme(HOME,2000);
+    closeClaw(700);
+    moveZToExtreme(EXTEND,2000);*/
+    depositCrystal(2, false, 0);
+    // depositCrystal(1, true, 1);
+    // depositCrystal(2, true, 1);
+    
+
+    
+    while(1);
     while(true) {
+        Serial.print(analogRead(PA6));
+            Serial.print("       ");
+            Serial.print(analogRead(PA5));
+            Serial.print("       ");
+            Serial.print(analogRead(PA3));
+            Serial.print("       ");
+            Serial.print(analogRead(PA2));
+            Serial.print("       "); 
+            Serial.print(analogRead(PA1));
+            Serial.print("       ");
+            Serial.print(analogRead(PA0));
+            Serial.print("       ");
+            Serial.print(analogRead(PA4));
+            Serial.print("       ");
+            Serial.print(analogRead(PA7));
+            Serial.print("       ");
+            Serial.println();
     }
 }
 

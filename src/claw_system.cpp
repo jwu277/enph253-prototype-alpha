@@ -179,6 +179,7 @@ void homeY(bool retract)
         // Serial.println("Invalid conditions for this home operation");
         pwm_stop(Y_SERVO_PWM_NAME);
     }
+    Serial.println("finished moving y");
 }
 
 void moveY(double dist)
@@ -294,12 +295,12 @@ void changeStepperDir(bool dir)
 
 void enableStepper()
 {
-    digitalWrite(STEPPERCLK, LOW);
+    digitalWrite(STEPPERENABLE, LOW);
 }
 
 void disableStepper()
 {
-    digitalWrite(STEPPERCLK, HIGH);
+    digitalWrite(STEPPERENABLE, HIGH);
 }
 
 /* 
@@ -363,7 +364,7 @@ int mmToSteps(int mm)
 //-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
 bool grabCrystal(int pillarType)
 {
-    digitalWrite(STEPPERENABLE, LOW);
+    enableStepper();
     switch(pillarType) {
         case -1: moveZToExtreme(EXTEND, 1800);
         break;
@@ -382,7 +383,7 @@ bool grabCrystal(int pillarType)
     openClaw(1300);
     findTopOfPillar(1500);
     moveY(15);
-    closeClaw(3000);
+    closeClaw(2000);
     moveZDist(UP, 50, 2500);
     homeY(true);
     
@@ -407,8 +408,10 @@ bool grabCrystal(int pillarType)
 
 // gauntlet pos: -1 for full extend, 0 for farthest two from robot, 1 for middle two, 2 for closest two 
 // inClaw is boolean for if the crystal is already in the claw or in the pouch (true iff in claw)
-void depositCrystal(int gauntletPos, bool inClaw) 
+void depositCrystal(int gauntletPos, bool inClaw, bool deleteThisParam) 
 {
+    clawRecentAction = deleteThisParam;
+    //delete the above line*********************************************************
     enableStepper();
 
     if (inClaw) {
@@ -451,7 +454,7 @@ void depositCrystal(int gauntletPos, bool inClaw)
         break;
     }
 
-    disableStepper();   //drop the claw onto the gauntlet
+    disableStepper();   //drop the claw onto the gauntlet with gravity
     delay(500);
     openClaw(500);
     enableStepper();
