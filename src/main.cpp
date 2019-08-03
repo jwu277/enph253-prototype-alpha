@@ -98,12 +98,12 @@ void setup() {
 
     // Upper assembly
     
-    attachInterrupt(ZHOME, zHomeISR, RISING);
-    attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
-    attachInterrupt(YHOME, yHomeISR, RISING);
-    attachInterrupt(YFULLEXT, yFullExtISR, RISING);
-    attachInterrupt(CLAWPB, clawPBISR, RISING);
-    attachInterrupt(CLAWFLOORPB, clawFloorPBISR, FALLING);
+    // attachInterrupt(ZHOME, zHomeISR, RISING);
+    // attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    // attachInterrupt(YHOME, yHomeISR, RISING);
+    // attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    // attachInterrupt(CLAWPB, clawPBISR, RISING);
+    // attachInterrupt(CLAWFLOORPB, clawFloorPBISR, FALLING);
 
     //stepper
     pinMode(CLAWSERVO, OUTPUT);

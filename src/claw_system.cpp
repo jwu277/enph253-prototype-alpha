@@ -2,13 +2,13 @@
 
 #include "claw_system.h"
 
-//crane pushbutton booleans
-volatile bool zIsHome = 0;
-volatile bool yIsHome = 0;
-volatile bool zIsExtended = 0;
-volatile bool yIsExtended = 0;
-volatile bool clawPBPressed = 0;
-volatile bool clawBasePBPressed = 0;
+// //crane pushbutton booleans
+// volatile bool zIsHome = 0;
+// volatile bool yIsHome = 0;
+// volatile bool zIsExtended = 0;
+// volatile bool yIsExtended = 0;
+// volatile bool clawPBPressed = 0;
+// volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
 volatile byte motTimeControl; //a byte consisting of flags for the timerISR to use in processing
@@ -27,20 +27,20 @@ volatile double yPos = 0.0;
 volatile int yStatus = NOT_MOVING;
 volatile int clawStatus = NOT_MOVING;
 volatile bool clawIsOpen = false;
+volatile bool clawRecentAction = CLOSED;    //the most recent claw action, held as a boolean
+volatile bool crystalInPouch = false;
 
-volatile bool clawRecentAction = CLOSED;
+// void zHomeISR()
+// {
+//     //Serial.println("zhome");
+//     zIsHome = true;
+// }
 
-void zHomeISR()
-{
-    //Serial.println("zhome");
-    zIsHome = true;
-}
-
-void zFullExtISR()
-{
-    //Serial.println("zFullExtISR");
-    zIsExtended = true;
-}
+// void zFullExtISR()
+// {
+//     //Serial.println("zFullExtISR");
+//     zIsExtended = true;
+// }
 
 void yHomeISR()
 {
@@ -52,8 +52,8 @@ void yHomeISR()
     }
     //Serial.println("Y=0 limit reached");
     yPos = 0;
-    yIsHome = true;
-    yIsExtended = false;
+    //yIsHome = true;
+    //yIsExtended = false;
 }
 
 void yFullExtISR()
@@ -66,21 +66,21 @@ void yFullExtISR()
     }
     //Serial.println("Y max limit reached");
     yPos = 300;
-    yIsExtended = true;
-    yIsHome = false;
+    //yIsExtended = true;
+    //yIsHome = false;
 }
 
-void clawPBISR()
-{
-    //Serial.println("clawPBISR");
-    clawPBPressed = true;
-}
+// void clawPBISR()
+// {
+//     //Serial.println("clawPBISR");
+//     clawPBPressed = true;
+// }
 
-void clawFloorPBISR()
-{
-    //Serial.println("clawFloorPBISR");
-    clawBasePBPressed = true;
-}
+// void clawFloorPBISR()
+// {
+//     //Serial.println("clawFloorPBISR");
+//     clawBasePBPressed = true;
+// }
 
 void openClaw(int duration)
 {
@@ -101,8 +101,10 @@ void openClaw(int duration)
 
     clawStatus = NOT_MOVING;
     clawIsOpen = true;
+    clawRecentAction = OPENED;
 }
 
+//duration is the time the servo is on for
 void closeClaw(int duration)
 {
 
@@ -123,6 +125,7 @@ void closeClaw(int duration)
 
     clawStatus = NOT_MOVING;
     clawIsOpen = false;
+    clawRecentAction = CLOSED;
 }
 
 void homeY(bool retract)
@@ -131,9 +134,9 @@ void homeY(bool retract)
     unsigned long timeoutNow = millis();
 
     // Serial.println("Starting Y home");
-    yIsHome = digitalRead(YHOME);
-    yIsExtended = digitalRead(YFULLEXT);
-    if (!yIsHome && retract)
+    // yIsHome = digitalRead(YHOME);
+    // yIsExtended = digitalRead(YFULLEXT);
+    if (!digitalRead(YHOME) && retract)
     {
         // Serial.println("Y not home");
         pwm_start(
@@ -144,7 +147,7 @@ void homeY(bool retract)
             1);
         yStatus = MOVING_BK;
         // Serial.println("Y homing started");
-        while (!yIsHome || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
+        while (!digitalRead(YHOME) || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
         {
             timeoutNow = millis();
         }
@@ -152,7 +155,7 @@ void homeY(bool retract)
         // Serial.print("ms for home operation: ");
         // Serial.println(timeoutNow - timeoutStart);
     }
-    else if (!yIsExtended && !retract)
+    else if (!digitalRead(YFULLEXT) && !retract)
     {
         // Serial.println("Y not extended");
         pwm_start(
@@ -163,7 +166,7 @@ void homeY(bool retract)
             1);
         yStatus = MOVING_FWD;
         // Serial.println("Y extension started");
-        while (!yIsExtended || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
+        while (!digitalRead(YFULLEXT) || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
         {
             timeoutNow = millis();
         }
@@ -211,98 +214,51 @@ void moveY(double dist)
     yPos += dist;
 }
 
-void moveYUntilClawPressed()
-{
+// void moveYUntilClawPressed()
+// {
 
-    clawPBPressed = false;
+//     clawPBPressed = false;
 
-    pwm_start(
-                Y_SERVO_PWM_NAME,
-                PWM_CLOCK_FREQ,
-                FWD_PERIOD,
-                FWD_ON_PERIOD,
-                1);
-    yStatus = MOVING_FWD;
+//     pwm_start(
+//                 Y_SERVO_PWM_NAME,
+//                 PWM_CLOCK_FREQ,
+//                 FWD_PERIOD,
+//                 FWD_ON_PERIOD,
+//                 1);
+//     yStatus = MOVING_FWD;
 
-    int run_time = 0;
+//     int run_time = 0;
 
-    while(!clawPBPressed) {  
-        run_time++;
-        delay(1);
-    }
+//     while(!clawPBPressed) {  
+//         run_time++;
+//         delay(1);
+//     }
 
-    clawPBPressed = false;
-    pwm_stop(Y_SERVO_PWM_NAME);
-    yStatus = NOT_MOVING;
-    yPos += run_time * (129.05 * 62.832) / 60000;
-}
-
-//returns true if a crystal was grabbed
-//-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
-bool grabCrystal(int pillarType)
-{
-
-    digitalWrite(STEPPERENABLE, LOW);
-    switch(pillarType) {
-        case -1: moveZToExtreme(EXTEND, 1800);
-        break;
-
-        case 0: moveZDist(UP, 270, 1900);
-        break;
-
-        case 1: moveZDist(UP, 190, 1900);
-        break;
-
-        case 2: moveZDist(UP, 130, 1900);
-        break;
-    }
-
-    moveY(65);
-    openClaw(1300);
-    findTopOfPillar(1500);
-    moveY(17);
-    closeClaw(3000);
-    moveZDist(UP, 50, 2500);
-    homeY(true);
-
-
-
-    digitalWrite(STEPPERENABLE, HIGH);
-    
-    // delay(2000);//moveZToExtreme(HOME);freefall down
-    
-    //TESTING
-    //digitalWrite(STEPPERENABLE, LOW);
-    // if (digitalRead(CLAWPB)) {
-    //     moveZToExtreme(EXTEND,2000);
-    //     clawPBPressed = false;
-    //     return true;
-    // } else {
-    //     moveZToExtreme(HOME,2000);
-    //     return false;
-    //     }
-    
-}
+//     clawPBPressed = false;
+//     pwm_stop(Y_SERVO_PWM_NAME);
+//     yStatus = NOT_MOVING;
+//     yPos += run_time * (129.05 * 62.832) / 60000;
+// }
 
 void findTopOfPillar(int delay)
 {
-    clawBasePBPressed = false;
+    //clawBasePBPressed = false;
     if (!digitalRead(CLAWFLOORPB))
         return;
     changeStepperDir(DOWN);
-    while (!clawBasePBPressed)
+    while (digitalRead(CLAWFLOORPB))
     {
         stepperPulse(delay);
     }
-    clawBasePBPressed = false;
+    //clawBasePBPressed = false;
 }
 
 //returns the number of steps moved to get to either switch
 int moveZToExtreme(bool home, int delay)
 {
     //set the home flags to false to allow for the positive edge of the interrupts to cause a rising flag
-    zIsHome = 0;
-    zIsExtended = 0;
+    // zIsHome = 0;
+    // zIsExtended = 0;
 
     int count = 0;
 
@@ -311,22 +267,22 @@ int moveZToExtreme(bool home, int delay)
         if (digitalRead(ZHOME))
             return count; //if it is sensed that z is home, quit this protocal since a rising edge interrupt can not occur
         digitalWrite(STEPPERDIR, DOWN);
-        while (!zIsHome)
+        while (!digitalRead(ZHOME))
         {
             count++;
             stepperPulse(delay);
         }
-        zIsHome = false;
+        //zIsHome = false;
     }
     else
     {
-        digitalWrite(STEPPERDIR, HIGH);
-        while (!zIsExtended)
+        digitalWrite(STEPPERDIR, UP);
+        while (!digitalRead(ZFULLEXT))
         {
             count++;
             stepperPulse(delay);
         }
-        zIsExtended = false;
+        //zIsExtended = false;
     }
     return count;
 }
@@ -360,7 +316,6 @@ void stepperPulse(int delay)
 //moves the z axis for "steps" steps
 int moveZSteps(int steps, bool dir, int delay)
 {
-
     if (dir == UP)
     {
         changeStepperDir(UP);
@@ -368,7 +323,7 @@ int moveZSteps(int steps, bool dir, int delay)
         {
             if (digitalRead(ZFULLEXT))
             {
-                zIsExtended = false;
+                //zIsExtended = false;
                 return i;
             }
             stepperPulse(delay);
@@ -382,7 +337,7 @@ int moveZSteps(int steps, bool dir, int delay)
         {
             if (digitalRead(ZHOME))
             {
-                zIsHome = false;
+                //zIsHome = false;
                 return i;
             }
             stepperPulse(delay);
@@ -403,11 +358,57 @@ int mmToSteps(int mm)
     return (float) mm * (float) 820 / (float) 299; //truncates the float, this precision is not necessary. ie 2.3 steps.
 }
 
+
+//returns true if a crystal was grabbed
+//-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
+bool grabCrystal(int pillarType)
+{
+    digitalWrite(STEPPERENABLE, LOW);
+    switch(pillarType) {
+        case -1: moveZToExtreme(EXTEND, 1800);
+        break;
+
+        case 0: moveZDist(UP, 270, 1900);
+        break;
+
+        case 1: moveZDist(UP, 190, 1900);
+        break;
+
+        case 2: moveZDist(UP, 130, 1900);
+        break;
+    }
+
+    moveY(62);
+    openClaw(1300);
+    findTopOfPillar(1500);
+    moveY(15);
+    closeClaw(3000);
+    moveZDist(UP, 50, 2500);
+    homeY(true);
+    
+    // //if you dont want to put the crystal in the pouch or if there already is one, just drop the stepper down
+    // if (!putInPouch || crystalInPouch) {   
+    //     digitalWrite(STEPPERENABLE, HIGH);
+    // //if there is no crystal in the pouch and you want the crystal in it, move z home and let go
+    // } else {
+    //     moveZToExtreme(HOME,1800);
+    //     openClaw(500);
+    // }
+
+    disableStepper();
+    
+    if (digitalRead(CLAWPB)) {
+        //clawPBPressed = false;
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // gauntlet pos: -1 for full extend, 0 for farthest two from robot, 1 for middle two, 2 for closest two 
 // inClaw is boolean for if the crystal is already in the claw or in the pouch (true iff in claw)
 void depositCrystal(int gauntletPos, bool inClaw) 
 {
-
     enableStepper();
 
     if (inClaw) {
@@ -458,5 +459,5 @@ void depositCrystal(int gauntletPos, bool inClaw)
     homeY(HOME);
 
     disableStepper();   //leaves the claw open currently
-
 }
+

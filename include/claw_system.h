@@ -44,31 +44,32 @@
 #define BK_PERIOD 2135
 #define BK_ON_PERIOD 135
 
+//information for grabbing crystal
 #define CLOSED 0
 #define OPENED 1
 
-void hardwareISR();
-void zHomeISR();
-void yHomeISR();
-void zFullExtISR();
-void yFullExtISR();
-void clawPBISR();
-void clawFloorPBISR();
+// void hardwareISR();
+// void zHomeISR();
+// void yHomeISR();
+// void zFullExtISR();
+// void yFullExtISR();
+// void clawPBISR();
+// void clawFloorPBISR();
 void servoPulseShort(byte);
 void servoPulseLong(byte);
 void stepperPulse(int);
 void homeY(bool retract);
 void moveY(double dist);
-void closeClaw(int duration);
-void openClaw(int duration);
+void closeClaw(int);
+void openClaw(int);
 int moveZToExtreme(bool, int);
 void changeStepperDir(bool);
 void findTopOfPillar(int);
 bool grabCrystal(int);
-void depositCrystal(int gauntletPos, bool inClaw);
 void enableStepper();
 void disableStepper();
 int moveZSteps(int, bool, int);
 int mmToSteps(int);
 void moveYUntilClawPressed();
 int moveZDist(bool, int, int);
+void depositCrystal(int, bool);

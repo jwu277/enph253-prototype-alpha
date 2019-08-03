@@ -96,11 +96,8 @@ bool IntersectionManager::readSerialIsectType() {
             }
         }
     }
-<<<<<<< HEAD
     // todo have a fail state
-=======
     Serial.println("Classify timed out. Returning T");
->>>>>>> 7fa71de71e0160d64cee820b95cc43e78731563c
     return T_ISECT;
 }
 
