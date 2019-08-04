@@ -565,12 +565,17 @@ bool IntersectionManager::place_stone(int slot) {
         // currently have 0.05% pwm per px
 
         // turn left
-        this->drive_system->update(-3.0, 0.4);
+        if (x < 0) {
+            this->drive_system->update(-3.1, 0.86);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.86, -3.1);
+        }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 90; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -583,7 +588,7 @@ bool IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 20) {
+                if (fabs(x) <= 12) {
                     complete = true;
                     break;
                 }
@@ -599,10 +604,15 @@ bool IntersectionManager::place_stone(int slot) {
         }
 
         // Pause motors
-        this->drive_system->update(0.0, 0.4);
+        if (x < 0) {
+            this->drive_system->update(0.0, 0.7);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.7, 0.0);
+        }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 70; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -615,7 +625,7 @@ bool IntersectionManager::place_stone(int slot) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 20) {
+                if (fabs(x) <= 12) {
                     complete = true;
                     break;
                 }
@@ -626,18 +636,21 @@ bool IntersectionManager::place_stone(int slot) {
 
         }
 
-        if (millis() - timeout > 8000) {
+        if (millis() - timeout > 15000) {
+            Serial.println("gauntlet timed out");
             return false;
         }
 
-    } while (fabs(x) > 20);
+    } while (fabs(x) > 12);
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
 
-    Serial.println("OMFG");
+    // Serial.println("OMFG");
 
     // 3. Deposit stone
+    // todo: match deposit crystal number to circle
+    // closeClaw(50);
     depositCrystal(0, true);
 
     return true;
@@ -843,4 +856,8 @@ int IntersectionManager::last_black_sensor() {
     // default return 7
     return 7;
 
+}
+
+void IntersectionManager::test_stone(int n) {
+    place_stone(n);
 }

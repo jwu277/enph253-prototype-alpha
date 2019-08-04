@@ -81,6 +81,8 @@ class IntersectionManager {
 
         // Increment turn counter
         //void increment_turn_counter();
+        
+        void test_stone(int);
 
 };
 
