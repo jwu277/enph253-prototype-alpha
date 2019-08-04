@@ -136,6 +136,9 @@ void homeY(bool retract)
     // Serial.println("Starting Y home");
     // yIsHome = digitalRead(YHOME);
     // yIsExtended = digitalRead(YFULLEXT);
+    
+    Serial.println(digitalRead(YHOME));
+
     if (!digitalRead(YHOME) && retract)
     {
         // Serial.println("Y not home");
@@ -176,10 +179,11 @@ void homeY(bool retract)
     }
     else
     {
-        // Serial.println("Invalid conditions for this home operation");
+        Serial.println("Invalid conditions for this home operation");
         pwm_stop(Y_SERVO_PWM_NAME);
     }
     Serial.println("finished moving y");
+    pwm_stop(Y_SERVO_PWM_NAME);
 }
 
 void moveY(double dist)
