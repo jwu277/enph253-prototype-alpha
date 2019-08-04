@@ -3,14 +3,17 @@
 
 using namespace std;
 
-#define TASK_RAMP_TO_HOME 0
-#define TASK_RECOVERY_TO_GAUNT_TO_HOME 1
-#define TASK_TO_RECOVERY 3
-#define TASK_TALL_POSTS 4
-#define TASK_SINGLE_POST 5
-#define TASK_SHORT_POSTS 6
-#define TASK_GAUNT_TO_HOME 10
-#define TASK_HOME_TO_GAUNT 11
+// Remember baton analogy
+
+#define TASK_R 0 // ramp to home
+
+#define TASK_S1 11 // 1 medium post, Tier 1/2/3
+#define TASK_S2A 12 // 1 tall post, Tier 2
+#define TASK_S2B 13 // 2 tall posts, Tier 3
+
+#define TASK_G1 21 // gauntlet task for S1
+#define TASK_G2 22 // gauntlet task for S1
+#define TASK_G3 23 // gauntlet task for S1
 
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
@@ -48,6 +51,7 @@ class IntersectionManager {
         // Intersection Handler
         void handle_intersection();
         int task;
+        void initialize_tasksToDo();
         int getNextTask();
         deque <int> tasksToDo;
         
