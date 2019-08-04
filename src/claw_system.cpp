@@ -11,24 +11,23 @@
 // volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
-volatile byte motTimeControl; //a byte consisting of flags for the timerISR to use in processing
-volatile int stepsLeft;       //the number of steps left for the stepper motor to move
-volatile int zTimeInc;        //the number of z time increments that have passed since the last variable reset
-volatile int yTimeInc;        //the number of y time increments passed since the last variable reset
-volatile int clawTimeInc;
-volatile int timePerInc;     //the software defined time interval of the timer interrupt
-const int timePerStep = 0;   //the user defined time per step, gives the speed of the stepper motor
-const int totalYTime = 0;    //the user defined time per step, gives the speed of the stepper motor
-const int totalClawTime = 0; //the user defined time per step, gives the speed of the stepper motor
+int stepsLeft;       //the number of steps left for the stepper motor to move
+int zTimeInc;        //the number of z time increments that have passed since the last variable reset
+int yTimeInc;        //the number of y time increments passed since the last variable reset
+int clawTimeInc;
+int timePerInc;     //the software defined time interval of the timer interrupt
+int timePerStep = 0;   //the user defined time per step, gives the speed of the stepper motor
+int totalYTime = 0;    //the user defined time per step, gives the speed of the stepper motor
+int totalClawTime = 0; //the user defined time per step, gives the speed of the stepper motor
 
 int globalcount = 0;
 //global status variables
-volatile double yPos = 0.0;
-volatile int yStatus = NOT_MOVING;
-volatile int clawStatus = NOT_MOVING;
-volatile bool clawIsOpen = false;
-volatile bool clawRecentAction = CLOSED;    //the most recent claw action, held as a boolean
-volatile bool crystalInPouch = false;
+double yPos = 0.0;
+int yStatus = NOT_MOVING;
+int clawStatus = NOT_MOVING;
+bool clawIsOpen = false;
+bool clawRecentAction = CLOSED;    //the most recent claw action, held as a boolean
+bool crystalInPouch = false;
 
 // void zHomeISR()
 // {
@@ -139,7 +138,7 @@ void homeY(bool retract)
     
     Serial.println(digitalRead(YHOME));
 
-    if (!digitalRead(YHOME) && retract)
+    if (retract)
     {
         // Serial.println("Y not home");
         pwm_start(
@@ -148,9 +147,9 @@ void homeY(bool retract)
             BK_PERIOD,
             BK_ON_PERIOD,
             1);
-        yStatus = MOVING_BK;
+        //yStatus = MOVING_BK;
         // Serial.println("Y homing started");
-        while (!digitalRead(YHOME) || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
+        while (!digitalRead(YHOME) && timeoutNow - timeoutStart <= Y_HOME_TIMEOUT)
         {
             timeoutNow = millis();
         }
@@ -158,7 +157,7 @@ void homeY(bool retract)
         // Serial.print("ms for home operation: ");
         // Serial.println(timeoutNow - timeoutStart);
     }
-    else if (!digitalRead(YFULLEXT) && !retract)
+    else if (!retract)
     {
         // Serial.println("Y not extended");
         pwm_start(
@@ -167,9 +166,9 @@ void homeY(bool retract)
             FWD_PERIOD,
             FWD_ON_PERIOD,
             1);
-        yStatus = MOVING_FWD;
+        //yStatus = MOVING_FWD;
         // Serial.println("Y extension started");
-        while (!digitalRead(YFULLEXT) || timeoutNow - timeoutStart >= Y_HOME_TIMEOUT)
+        while (!digitalRead(YFULLEXT) && timeoutNow - timeoutStart <= Y_HOME_TIMEOUT)
         {
             timeoutNow = millis();
         }
@@ -198,7 +197,7 @@ void moveY(double dist)
             BK_PERIOD,
             BK_ON_PERIOD,
             1);
-        yStatus = MOVING_BK;
+        //yStatus = MOVING_BK;
     }
     else if (dist > 0)
     {
@@ -209,7 +208,7 @@ void moveY(double dist)
             FWD_PERIOD,
             FWD_ON_PERIOD,
             1);
-        yStatus = MOVING_FWD;
+        //yStatus = MOVING_FWD;
     }
     //   Serial.print("Starting PWM for time = ");
     //   Serial.println(timeToRun);
@@ -412,15 +411,15 @@ bool grabCrystal(int pillarType)
 
 // gauntlet pos: -1 for full extend, 0 for farthest two from robot, 1 for middle two, 2 for closest two 
 // inClaw is boolean for if the crystal is already in the claw or in the pouch (true iff in claw)
-void depositCrystal(int gauntletPos, bool inClaw, bool deleteThisParam) 
+void depositCrystal(int gauntletPos, bool inClaw) 
 {
-    clawRecentAction = deleteThisParam;
     //delete the above line*********************************************************
     enableStepper();
 
     if (inClaw) {
         closeClaw(500); //make sure the claw is holding the crystal
-    } else {   
+    } 
+    else {   
         //if the claw was most recently opened it is still open, just close it
         if (clawRecentAction == OPENED) {
             moveZToExtreme(HOME,1700);
@@ -463,8 +462,9 @@ void depositCrystal(int gauntletPos, bool inClaw, bool deleteThisParam)
     openClaw(500);
     enableStepper();
     moveZDist(UP, 70, 1800);
+    delay(4000); //*****************************************************remove after replacing cap
     homeY(HOME);
-
+    Serial.println("here boi");
     disableStepper();   //leaves the claw open currently
 }
 

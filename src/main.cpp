@@ -93,12 +93,12 @@ void setup() {
 
     Serial.begin(9600);
 
+    Serial.println("fuckboi");
     // record pid tuning parameters 
     // Serial.print(kp, 5);
     // Serial.print("  ");
     // Serial.print(kd, 5);
     // Serial.println();
-
     init_sensors();
     init_actuators();
     init_logic();
@@ -154,32 +154,30 @@ void setup() {
     moveZToExtreme(HOME,2000);
     closeClaw(700);
     moveZToExtreme(EXTEND,2000);*/
-    depositCrystal(2, false, 0);
-    // depositCrystal(1, true, 1);
-    // depositCrystal(2, true, 1);
-    
+
+
 
     
-    while(1);
-    while(true) {
-        Serial.print(analogRead(PA6));
-            Serial.print("       ");
-            Serial.print(analogRead(PA5));
-            Serial.print("       ");
-            Serial.print(analogRead(PA3));
-            Serial.print("       ");
-            Serial.print(analogRead(PA2));
-            Serial.print("       "); 
-            Serial.print(analogRead(PA1));
-            Serial.print("       ");
-            Serial.print(analogRead(PA0));
-            Serial.print("       ");
-            Serial.print(analogRead(PA4));
-            Serial.print("       ");
-            Serial.print(analogRead(PA7));
-            Serial.print("       ");
-            Serial.println();
-    }
+
+    // while(true) {
+    //     Serial.print(analogRead(PA6));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA5));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA3));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA2));
+    //         Serial.print("       "); 
+    //         Serial.print(analogRead(PA1));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA0));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA4));
+    //         Serial.print("       ");
+    //         Serial.print(analogRead(PA7));
+    //         Serial.print("       ");
+    //         Serial.println();
+    // }
 }
 
 
@@ -198,14 +196,24 @@ void init_logic() {
 }
 
 void loop() {
-    // 1. Read new data from sensors
-    update_sensors();
 
-    // 2. Perform computations + update actuators in SW
-    compute();
+    
+    depositCrystal(2, false);
+    while (1) {
+        delay(1000);
+        Serial.println("infloop");
+    }
 
-    // 3. Tick the actuators in HW
-    run_actuators();
+
+
+    // // 1. Read new data from sensors
+    // update_sensors();
+
+    // // 2. Perform computations + update actuators in SW
+    // compute();
+
+    // // 3. Tick the actuators in HW
+    // run_actuators();
     
 }
 
