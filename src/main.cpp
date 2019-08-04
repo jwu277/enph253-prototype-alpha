@@ -93,7 +93,7 @@ void setup() {
 
     Serial.begin(9600);
 
-    Serial.println("fuckboi");
+    Serial.println("Serial setup running");
     // record pid tuning parameters 
     // Serial.print(kp, 5);
     // Serial.print("  ");

@@ -11,14 +11,14 @@
 // volatile bool clawBasePBPressed = 0;
 
 //timer ISR variables
-int stepsLeft;       //the number of steps left for the stepper motor to move
-int zTimeInc;        //the number of z time increments that have passed since the last variable reset
-int yTimeInc;        //the number of y time increments passed since the last variable reset
-int clawTimeInc;
-int timePerInc;     //the software defined time interval of the timer interrupt
-int timePerStep = 0;   //the user defined time per step, gives the speed of the stepper motor
-int totalYTime = 0;    //the user defined time per step, gives the speed of the stepper motor
-int totalClawTime = 0; //the user defined time per step, gives the speed of the stepper motor
+//int stepsLeft;       //the number of steps left for the stepper motor to move
+//nt zTimeInc;        //the number of z time increments that have passed since the last variable reset
+//int yTimeInc;        //the number of y time increments passed since the last variable reset
+//int clawTimeInc;
+//int timePerInc;     //the software defined time interval of the timer interrupt
+//int timePerStep = 0;   //the user defined time per step, gives the speed of the stepper motor
+//int totalYTime = 0;    //the user defined time per step, gives the speed of the stepper motor
+//int totalClawTime = 0; //the user defined time per step, gives the speed of the stepper motor
 
 int globalcount = 0;
 //global status variables
@@ -41,33 +41,33 @@ bool crystalInPouch = false;
 //     zIsExtended = true;
 // }
 
-void yHomeISR()
-{
-    //Serial.println("yHomeISR");
-    if (yStatus == MOVING_BK)
-    {
-        pwm_stop(Y_SERVO_PWM_NAME);
-        yStatus = NOT_MOVING;
-    }
-    //Serial.println("Y=0 limit reached");
-    yPos = 0;
-    //yIsHome = true;
-    //yIsExtended = false;
-}
+// void yHomeISR()
+// {
+//     //Serial.println("yHomeISR");
+//     if (yStatus == MOVING_BK)
+//     {
+//         pwm_stop(Y_SERVO_PWM_NAME);
+//         yStatus = NOT_MOVING;
+//     }
+//     //Serial.println("Y=0 limit reached");
+//     yPos = 0;
+//     //yIsHome = true;
+//     //yIsExtended = false;
+// }
 
-void yFullExtISR()
-{
-    //Serial.println("yFullExtISR");
-    if (yStatus == MOVING_FWD)
-    {
-        pwm_stop(Y_SERVO_PWM_NAME);
-        yStatus = NOT_MOVING;
-    }
-    //Serial.println("Y max limit reached");
-    yPos = 300;
-    //yIsExtended = true;
-    //yIsHome = false;
-}
+// void yFullExtISR()
+// {
+//     //Serial.println("yFullExtISR");
+//     if (yStatus == MOVING_FWD)
+//     {
+//         pwm_stop(Y_SERVO_PWM_NAME);
+//         yStatus = NOT_MOVING;
+//     }
+//     //Serial.println("Y max limit reached");
+//     yPos = 300;
+//     //yIsExtended = true;
+//     //yIsHome = false;
+// }
 
 // void clawPBISR()
 // {
@@ -135,12 +135,12 @@ void homeY(bool retract)
     // Serial.println("Starting Y home");
     // yIsHome = digitalRead(YHOME);
     // yIsExtended = digitalRead(YFULLEXT);
-    
+    Serial.print("Home Y digital read:");
     Serial.println(digitalRead(YHOME));
-
+    
     if (retract)
     {
-        // Serial.println("Y not home");
+        Serial.println("Retracting: Y not home");
         pwm_start(
             Y_SERVO_PWM_NAME,
             PWM_CLOCK_FREQ,
@@ -148,14 +148,15 @@ void homeY(bool retract)
             BK_ON_PERIOD,
             1);
         //yStatus = MOVING_BK;
-        // Serial.println("Y homing started");
+        Serial.println("Y homing PWM started");
         while (!digitalRead(YHOME) && timeoutNow - timeoutStart <= Y_HOME_TIMEOUT)
         {
+            Serial.println(timeoutNow - timeoutStart);
             timeoutNow = millis();
         }
         timeoutNow = millis();
-        // Serial.print("ms for home operation: ");
-        // Serial.println(timeoutNow - timeoutStart);
+        Serial.print("ms for home operation: ");
+        Serial.println(timeoutNow - timeoutStart);
     }
     else if (!retract)
     {
@@ -183,6 +184,7 @@ void homeY(bool retract)
     }
     Serial.println("finished moving y");
     pwm_stop(Y_SERVO_PWM_NAME);
+    Serial.println("Past PWM stop call");
 }
 
 void moveY(double dist)
@@ -214,7 +216,7 @@ void moveY(double dist)
     //   Serial.println(timeToRun);
     delay(timeToRun);
     pwm_stop(Y_SERVO_PWM_NAME);
-    yStatus = NOT_MOVING;
+    //yStatus = NOT_MOVING;
     yPos += dist;
 }
 
