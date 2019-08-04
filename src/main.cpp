@@ -141,11 +141,7 @@ void setup() {
     accelgyro.setFullScaleAccelRange(3);
 
     Serial.println("setup ran ");
-
-    intersection_manager.test_stone(5);
-
-    while(1);
-
+    
 }
 
 void init_sensors() {

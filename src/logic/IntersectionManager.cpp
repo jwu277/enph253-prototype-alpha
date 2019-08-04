@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 1000
+#define DELAY_TIME 500
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -651,7 +651,25 @@ bool IntersectionManager::place_stone(int slot) {
     // 3. Deposit stone
     // todo: match deposit crystal number to circle
     // closeClaw(50);
-    depositCrystal(0, true);
+
+    int znum = -1;
+
+    switch (slot) {
+        case 0:
+        case 5:
+            znum = 2;
+            break;
+        case 1:
+        case 4:
+            znum = 1;
+            break;
+        case 2:
+        case 3:
+            znum = 0;
+            break;
+    }
+
+    depositCrystal(znum, true);
 
     return true;
 
