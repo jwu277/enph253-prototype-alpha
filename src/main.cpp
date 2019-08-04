@@ -140,6 +140,10 @@ void setup() {
     // // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
 
+    // todo: use a digital read of thanos/methanos switch
+    // true = door side, false = window side
+    intersection_manager.set_side(true);
+
     Serial.println("setup ran ");
     
 }

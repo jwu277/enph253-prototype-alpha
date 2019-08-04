@@ -44,6 +44,10 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
 }
 
+void IntersectionManager::set_side(bool side) {
+    this->side = side;
+}
+
 void IntersectionManager::wiggle(int numOfWiggles, int wiggleHalfPeriod) {
     for (int i = 0; i < numOfWiggles; i++) {
         this->drive_system->update(0.93, -0.1);
@@ -320,7 +324,16 @@ void IntersectionManager::handle_intersection() {
     switch (this->task) {
         case TASK_R: {
             Serial.println("Off ramp, going to home");
-            this->steer_left();
+
+            if (this->side) {
+                this->steer_left();
+                this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+            }
+            else {
+                this->steer_right();
+                this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+            }
+
             this->task = this->getNextTask();
             //increments to 0  = home position
             this->intersection_count = 0;
@@ -335,8 +348,16 @@ void IntersectionManager::handle_intersection() {
 
                 case 0: {
                     Serial.println("Medium post: left turn at B");
-                    this->steer_left();
-                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
+                    if (this->side) {
+                        this->steer_left();
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    }
+                    else {
+                        this->steer_right();
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                    }
+                    
                 }
                     break;
                 
@@ -348,7 +369,12 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->update(-3.0, -3.0);
                     this->drive_system->actuate();
                     delay(200);
-                    this->drive_system->update(-3.0, 0.93);
+                    if (this->side) {
+                        this->drive_system->update(-3.0, 0.93);
+                    }
+                    else {
+                        this->drive_system->update(0.93, -3.0);
+                    }
                     this->drive_system->actuate();
                     delay(100);
                     Serial.println("starting centering to medium post ");
@@ -517,7 +543,13 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(400);
                     
-                    this->drive_system->update(-3.5, 0);
+                    if (this->side) {
+                        this->drive_system->update(-3.5, 0.0);
+                    }
+                    else {
+                        this->drive_system->update(0.0, -3.5);
+                    }
+                    
                     this->drive_system->actuate();
 
                     this->tape_sensor->update();
@@ -526,8 +558,15 @@ void IntersectionManager::handle_intersection() {
                     long gauntlet_turn_time = millis();
 
                     //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-                    while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
-                        this->tape_sensor->update();
+                    if (this->side) {
+                        while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
+                            this->tape_sensor->update();
+                        }
+                    }
+                    else {
+                        while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd4.is_on())) {
+                            this->tape_sensor->update();
+                        }
                     }
 
                     Serial.println("Gauntlet: followed back on tape");

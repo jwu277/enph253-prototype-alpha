@@ -25,6 +25,8 @@ class IntersectionManager {
 
     private:
 
+        bool side;
+
         // Modules
         MainTapeSensor* tape_sensor;
         DriveSystem* drive_system;
@@ -82,6 +84,7 @@ class IntersectionManager {
         // Update logic in SW
         void update();
 
+        void set_side(bool);
 
         // Increment turn counter
         //void increment_turn_counter();
