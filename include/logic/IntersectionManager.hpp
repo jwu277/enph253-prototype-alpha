@@ -63,7 +63,7 @@ class IntersectionManager {
         void handle_gauntlet();
 
         bool place_stone(int slot);
-        void center_post(bool dir);
+        bool center_post();
 
         void uturn(bool dir);
         void steer_left();

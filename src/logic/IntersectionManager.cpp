@@ -353,7 +353,16 @@ void IntersectionManager::handle_intersection() {
                     delay(100);
                     Serial.println("starting centering to medium post ");
 
-                    center_post(false);
+                    while (true) {
+                        
+                        if (center_post()) {
+                            break;
+                        }
+                        else {
+                            // todo: readjust and centre on post
+                        }
+
+                    }
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
@@ -585,28 +594,24 @@ void IntersectionManager::handle_gauntlet() {
 
     while (true) {
 
-        if (Serial.available() && Serial.read() == 'G') {
+        if (this->place_stone(0)) {
+            return;
+        }
+        else {
 
-            if (this->place_stone(0)) {
-                return;
-            }
-            else {
+            // TODO: incorporate failsafe with direction in mind
 
-                // TODO: incorporate failsafe with direction in mind
+            this->drive_system->update(-3.0, -3.0);
+            this->drive_system->actuate();
+            delay(300);
 
-                this->drive_system->update(-3.0, -3.0);
-                this->drive_system->actuate();
-                delay(300);
+            this->drive_system->update(0.9, 0.9);
+            this->drive_system->actuate();
+            delay(500);
 
-                this->drive_system->update(0.9, 0.9);
-                this->drive_system->actuate();
-                delay(500);
+            wiggle(10, 150);
 
-                wiggle(10, 150);
-
-                //this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-
-            }
+            //this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
         }
 
@@ -754,12 +759,7 @@ bool IntersectionManager::place_stone(int slot) {
 
 // true turns the robot clockwise
 // TODO add debounce and check counter clowckwise turn
-void IntersectionManager::center_post(bool dir) {
-
-    // TODO: better algo could be to move forward y until close enough
-    //  as y is moving, whenever x deviates too much, readjust x and then go forward in y
-
-    int mult = dir ? 1 : -1;
+bool IntersectionManager::center_post() {
 
     // 1. Minimie x
 
@@ -772,6 +772,8 @@ void IntersectionManager::center_post(bool dir) {
 
     bool complete = false;
 
+    long timeout = millis();
+
     do {
 
         // Right now: turn left wheel back to hole 0
@@ -781,11 +783,18 @@ void IntersectionManager::center_post(bool dir) {
         // ~20-25px per cm (crude estimate, height dependent, etc.)
         // currently have 0.05% pwm per px
 
-        // turn
-        this->drive_system->update(mult * 3.0, -mult * 3.0);
+        // turn left
+        if (x < 0) {
+            this->drive_system->update(-3.1, 0.86);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.86, -3.1);
+        }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 80; i++) {
+        // TODO: tune values
+
+        for (int i = 0; i < 90; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -808,10 +817,15 @@ void IntersectionManager::center_post(bool dir) {
         }
 
         // Pause motors
-        this->drive_system->update(0.0, 0.0);
+        if (x < 0) {
+            this->drive_system->update(0.0, 0.7);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.7, 0.0);
+        }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -829,12 +843,19 @@ void IntersectionManager::center_post(bool dir) {
 
         }
 
+        if (millis() - timeout > 8000) {
+            Serial.println("post timed out");
+            return false;
+        }
+
     } while (fabs(x) > 90);
+
+    Serial.println("Centred on post");
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
 
-    Serial.println("YOMFG");
+    return true;
 
 }
 
