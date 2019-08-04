@@ -118,12 +118,12 @@ void setup() {
     pinMode(STEPPERCLK, OUTPUT);
     pinMode(STEPPERDIR, OUTPUT);
     pinMode(STEPPERENABLE, OUTPUT);
-    pinMode(ZFULLEXT, INPUT);
-    pinMode(ZHOME, INPUT);
-    pinMode(YHOME, INPUT);
-    pinMode(YFULLEXT, INPUT);
-    pinMode(CLAWPB, INPUT);
-    pinMode(CLAWFLOORPB, INPUT);
+    pinMode(ZFULLEXT, INPUT_PULLDOWN);
+    pinMode(ZHOME, INPUT_PULLDOWN);
+    pinMode(YHOME, INPUT_PULLDOWN);
+    pinMode(YFULLEXT, INPUT_PULLDOWN);
+    pinMode(CLAWPB, INPUT_PULLDOWN);
+    pinMode(CLAWFLOORPB, INPUT_PULLDOWN);
     pinMode(STEPPERSLP, OUTPUT);
 
     digitalWrite(STEPPERENABLE, HIGH);

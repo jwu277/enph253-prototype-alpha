@@ -22,7 +22,7 @@
 
 int globalcount = 0;
 //global status variables
-double yPos = 0.0;
+//double yPos = 0.0;
 int yStatus = NOT_MOVING;
 int clawStatus = NOT_MOVING;
 bool clawIsOpen = false;
@@ -135,8 +135,8 @@ void homeY(bool retract)
     // Serial.println("Starting Y home");
     // yIsHome = digitalRead(YHOME);
     // yIsExtended = digitalRead(YFULLEXT);
-    Serial.print("Home Y digital read:");
-    Serial.println(digitalRead(YHOME));
+    //Serial.print("Home Y digital read:");
+    //Serial.println(digitalRead(YHOME));
     
     if (retract)
     {
@@ -148,15 +148,15 @@ void homeY(bool retract)
             BK_ON_PERIOD,
             1);
         //yStatus = MOVING_BK;
-        Serial.println("Y homing PWM started");
+        //Serial.println("Y homing PWM started");
         while (!digitalRead(YHOME) && timeoutNow - timeoutStart <= Y_HOME_TIMEOUT)
         {
-            Serial.println(timeoutNow - timeoutStart);
+            //Serial.println(timeoutNow - timeoutStart);
             timeoutNow = millis();
         }
         timeoutNow = millis();
-        Serial.print("ms for home operation: ");
-        Serial.println(timeoutNow - timeoutStart);
+        //Serial.print("ms for home operation: ");
+        //Serial.println(timeoutNow - timeoutStart);
     }
     else if (!retract)
     {
@@ -182,9 +182,9 @@ void homeY(bool retract)
         Serial.println("Invalid conditions for this home operation");
         pwm_stop(Y_SERVO_PWM_NAME);
     }
-    Serial.println("finished moving y");
+    //Serial.println("finished moving y");
     pwm_stop(Y_SERVO_PWM_NAME);
-    Serial.println("Past PWM stop call");
+    //Serial.println("Past PWM stop call");
 }
 
 void moveY(double dist)
@@ -212,12 +212,14 @@ void moveY(double dist)
             1);
         //yStatus = MOVING_FWD;
     }
-    //   Serial.print("Starting PWM for time = ");
-    //   Serial.println(timeToRun);
+    Serial.print("Starting PWM for time = ");
+    Serial.println(timeToRun);
+    
     delay(timeToRun);
+    
     pwm_stop(Y_SERVO_PWM_NAME);
     //yStatus = NOT_MOVING;
-    yPos += dist;
+    //yPos += dist;
 }
 
 // void moveYUntilClawPressed()
@@ -464,8 +466,8 @@ void depositCrystal(int gauntletPos, bool inClaw)
     openClaw(500);
     enableStepper();
     moveZDist(UP, 70, 1800);
-    delay(4000); //*****************************************************remove after replacing cap
     homeY(HOME);
+    //moveY(-300);
     Serial.println("here boi");
     disableStepper();   //leaves the claw open currently
 }
