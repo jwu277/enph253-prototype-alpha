@@ -18,7 +18,6 @@
 #define STEPPERENABLE PB12
 #define STEPPERDIR PA11
 #define STEPPERCLK PA15
-#define STEPPERSLEEP PA12
 
 //boolean definitions
 #define UP 1

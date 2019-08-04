@@ -109,7 +109,6 @@ void setup() {
     pinMode(CLAWSERVO, OUTPUT);
     pinMode(YSERVO, OUTPUT);
     pinMode(STEPPERCLK, OUTPUT);
-    pinMode(STEPPERSLEEP, OUTPUT);
     pinMode(STEPPERDIR, OUTPUT);
     pinMode(STEPPERENABLE, OUTPUT);
     pinMode(ZFULLEXT, INPUT);
@@ -119,8 +118,9 @@ void setup() {
     pinMode(CLAWPB, INPUT);
     pinMode(CLAWFLOORPB, INPUT);
 
+    // NOTE: deleted STEPPERSLP
+
     digitalWrite(STEPPERENABLE, HIGH);
-    digitalWrite(STEPPERSLEEP, HIGH);
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
@@ -140,11 +140,7 @@ void setup() {
     // // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
 
-enableStepper();
-    while (1) {
-        moveZToExtreme(EXTEND,2000);
-        moveZToExtreme(HOME,2000);
-    }
+    Serial.println("setup ran ");
 
 }
 
