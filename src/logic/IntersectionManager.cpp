@@ -690,6 +690,7 @@ void IntersectionManager::handle_intersection() {
                 case 3: {
                     // Drive straight through T intersection that we were at before
                     this->motorsOff(300);
+                    this->intersection_count++;
                 }
                     break;
 
@@ -928,7 +929,7 @@ void IntersectionManager::handle_intersection() {
 }
 
 void IntersectionManager::initialize_tasksToDo() {
-    this->tasksToDo.push_back(TASK_S1);
+    //this->tasksToDo.push_back(TASK_S1);
     this->tasksToDo.push_back(TASK_S2B);
 }
 
