@@ -347,13 +347,14 @@ void IntersectionManager::handle_intersection() {
             switch(this->intersection_count) {
 
                 case 0: {
-                    Serial.println("Medium post: left turn at B");
 
                     if (this->side) {
+                        Serial.println("Medium post: left turn at B");
                         this->steer_left();
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                     }
                     else {
+                        Serial.println("Medium post: right turn at B");
                         this->steer_right();
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
