@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 500
+#define DELAY_TIME 600
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -1158,14 +1158,14 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // TODO: tune values
 
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < 75; i++) {
 
             if (Serial.read() == 'P') {
 
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 90) {
+                if (fabs(x) <= 50) {
                     complete = true;
                     break;
                 }
@@ -1196,7 +1196,7 @@ bool IntersectionManager::center_post(bool init_dir) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 90) {
+                if (fabs(x) <= 50) {
                     complete = true;
                     break;
                 }
@@ -1212,7 +1212,7 @@ bool IntersectionManager::center_post(bool init_dir) {
             return false;
         }
 
-    } while (fabs(x) > 90);
+    } while (fabs(x) > 50);
 
     Serial.println("Centred on post");
 

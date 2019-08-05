@@ -15,7 +15,7 @@
 #include <queue>
 #include <numeric>
 
-#define INTEGRAL_HISTORY 60
+#define INTEGRAL_HISTORY 100
 
 using namespace std;
 

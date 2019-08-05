@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.01
+#define KI 0.1
 
 using namespace std;
 
@@ -79,7 +79,7 @@ void setup() {
     //TUNING PID
     // double kp = (0.4 * analogRead(PA_6)) / 1024;
     // double kd = (1.0 * analogRead(PA_7)) / 1024;
-    double kp = 0.3;
+    double kp = 0.4;
     double kd = 0.0;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
