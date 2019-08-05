@@ -937,7 +937,7 @@ void IntersectionManager::steer_left() {
     this->drive_system->actuate();
 
     long timeout = millis();
-    // Do until qrd6 is on tape
+    // Do until qrd5 is on tape
     while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
@@ -972,7 +972,7 @@ void IntersectionManager::steer_right() {
     this->drive_system->actuate();
 
     long timeout = millis();
-    // Do until qrd6 is on tape
+    // Do until qrd1 is on tape
     while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
