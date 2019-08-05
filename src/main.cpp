@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.1
+#define KI 0.01
 
 using namespace std;
 
@@ -79,7 +79,7 @@ void setup() {
     //TUNING PID
     // double kp = (0.4 * analogRead(PA_6)) / 1024;
     // double kd = (1.0 * analogRead(PA_7)) / 1024;
-    double kp = 0.39961;
+    double kp = 0.3;
     double kd = 0.0;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
@@ -196,10 +196,10 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*0.07, -3.3);
+        drive_system.update(0.74+pid_output*0.4, -2.8);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-3.3, 0.74-pid_output*0.07);
+        drive_system.update(-2.8, 0.74-pid_output*0.4);
     }
 
     accelgyro.getAcceleration(&ax, &ay, &az);

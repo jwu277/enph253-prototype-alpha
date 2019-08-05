@@ -3,7 +3,7 @@
 #include "actuators/DriveSystem.hpp"
 
 // Base driving pwm for motors
-#define BASE_DRIVE 0.92
+#define BASE_DRIVE 0.90
 
 // Constructor
 DriveSystem::DriveSystem(PinName left_motor_forward, PinName left_motor_reverse,
