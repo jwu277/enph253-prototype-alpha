@@ -387,7 +387,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post()) {
+                        if (center_post(!(this->side))) {
                             break;
                         }
                         else {
@@ -674,10 +674,9 @@ bool IntersectionManager::place_stone(int slot) {
     // TODO: use flag to set init state
 
     // initial values should fail the while loop checks
-    bool init_mode = true;
 
-    int x = 0;
-    int y = 0;
+    int x = slot <= 2 ? -999 : 999;
+    int y = 69420;
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
@@ -688,19 +687,6 @@ bool IntersectionManager::place_stone(int slot) {
     long timeout = millis();
 
     do {
-
-        if (init_mode) {
-
-            if (Serial.read() == 'G') {
-                init_mode = false;
-            }
-            else if (millis() - timeout >= 3000) {
-                return false;
-            }
-
-            continue;
-
-        }
 
         // Right now: turn left wheel back to hole 0
 
@@ -820,16 +806,16 @@ bool IntersectionManager::place_stone(int slot) {
 
 }
 
-// true turns the robot clockwise
+// true turns the robot cw initially, ccw for false
 // TODO add debounce and check counter clowckwise turn
-bool IntersectionManager::center_post() {
+bool IntersectionManager::center_post(bool init_dir) {
 
     // 1. Minimie x
 
     // initial values should fail the while loop checks
     // todo: set flag for init
-    int x = 999;
-    int y = 999;
+    int x = init_dir ? 999 : -999;
+    int y = 69420;
 
     Serial.println("Initiating post-centering sequence...");
 
