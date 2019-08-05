@@ -668,8 +668,13 @@ bool IntersectionManager::place_stone(int slot) {
     // TODO: use flag to set init state
 
     // initial values should fail the while loop checks
-    int x = 999;
-    int y = 999;
+    bool init_mode = true;
+
+    int x = 0;
+    int y = 0;
+
+    this->drive_system->update(0.0, 0.0);
+    this->drive_system->actuate();
 
     Serial.println("Initiating deposit sequence...");
 
@@ -677,6 +682,19 @@ bool IntersectionManager::place_stone(int slot) {
     long timeout = millis();
 
     do {
+
+        if (init_mode) {
+
+            if (Serial.read() == 'G') {
+                init_mode = false;
+            }
+            else if (millis() - timeout >= 3000) {
+                return false;
+            }
+
+            continue;
+
+        }
 
         // Right now: turn left wheel back to hole 0
 
