@@ -545,9 +545,18 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("Initiating gauntlet sequence...");
 
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    
+                    this->tape_sensor->update();
+                    // ensure all (6) QRDs are off tape to begin turning back on
+                    while (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
+                        this->tape_sensor->update();
+                    }
+
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(400);
+                    delay(300);
                     
                     if (this->side) {
                         this->drive_system->update(-3.5, 0.0);
