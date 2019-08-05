@@ -770,6 +770,15 @@ void IntersectionManager::handle_intersection() {
                         Serial.println("At gauntlet");
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
+
+                        this->drive_system->update(-2.8, -2.8);
+                        this->drive_system->actuate();
+                        delay(600);
+
+                        this->drive_system->update(0.93, 0.93);
+                        this->drive_system->actuate();
+                        delay(800);
+
                         this->wiggle(10, 150);
                         this->handle_gauntlet(2);
                         handling_gauntlet = false;
