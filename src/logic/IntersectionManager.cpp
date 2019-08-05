@@ -409,7 +409,6 @@ void IntersectionManager::handle_intersection() {
                     Serial.println("ending centering to medium post, going back to gauntlet ");
                     
                     this->intersection_count++;
-                    this->task = TASK_G1;
 
                 }
                     break;
@@ -420,9 +419,9 @@ void IntersectionManager::handle_intersection() {
                     this->intersection_count = 0;
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
-                    break;
 
                 }
+                    break;
 
             }
 
