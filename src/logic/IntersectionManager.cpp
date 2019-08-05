@@ -929,7 +929,7 @@ void IntersectionManager::handle_intersection() {
 
 void IntersectionManager::initialize_tasksToDo() {
     this->tasksToDo.push_back(TASK_S1);
-    //this->tasksToDo.push_back(TASK_S2A);
+    this->tasksToDo.push_back(TASK_S2B);
 }
 
 int IntersectionManager::getNextTask() {
