@@ -144,6 +144,8 @@ void setup() {
     // true = door side, false = window side
     intersection_manager.set_side(true);
 
+    closeClaw(1);
+
     Serial.println("setup ran ");
     
 }
