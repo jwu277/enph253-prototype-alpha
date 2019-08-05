@@ -432,6 +432,12 @@ void IntersectionManager::handle_intersection() {
 
                     // Drive straight through B(Y); test if this requires a steer
                     this->intersection_count = 0;
+                    //driveforwardabit
+                    this->drive_system->update(0.9, 0.9);
+                    this->drive_system->actuate();
+                    delay(100);
+                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
 
@@ -771,11 +777,13 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
 
+                        delay(200);
+
                         this->drive_system->update(-2.8, -2.8);
                         this->drive_system->actuate();
                         delay(600);
 
-                        this->drive_system->update(0.93, 0.93);
+                        this->drive_system->update(0.90, 0.90);
                         this->drive_system->actuate();
                         delay(800);
 
@@ -1030,7 +1038,7 @@ bool IntersectionManager::place_stone(int slot) {
 
         // TODO: tune values
 
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < 80; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1167,7 +1175,7 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // TODO: tune values
 
-        for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < 60; i++) {
 
             if (Serial.read() == 'P') {
 
