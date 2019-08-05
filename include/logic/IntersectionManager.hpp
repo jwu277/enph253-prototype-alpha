@@ -12,8 +12,8 @@ using namespace std;
 #define TASK_S2B 13 // 2 tall posts, Tier 3
 
 #define TASK_G1 21 // gauntlet task for S1
-#define TASK_G2 22 // gauntlet task for S1
-#define TASK_G3 23 // gauntlet task for S1
+#define TASK_G2A 22 // gauntlet task for S2
+#define TASK_G2B 23 // gauntlet task for S2,3
 
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"

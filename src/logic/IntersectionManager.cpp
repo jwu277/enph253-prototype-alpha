@@ -12,6 +12,9 @@
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
 
+#define DOOR_SIDE true
+#define WINDOW_SIDE false
+
 #define Y_ISECT true
 #define T_ISECT false
 
@@ -325,7 +328,7 @@ void IntersectionManager::handle_intersection() {
         case TASK_R: {
             Serial.println("Off ramp, going to home");
 
-            if (this->side) {
+            if (this->side == DOOR_SIDE) {
                 this->steer_left();
                 this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             }
@@ -342,13 +345,13 @@ void IntersectionManager::handle_intersection() {
         
         case TASK_S1: {
             
-            Serial.println("Performing task medium post");
+            Serial.println("In task medium post");
 
             switch(this->intersection_count) {
 
                 case 0: {
 
-                    if (this->side) {
+                    if (this->side == DOOR_SIDE) {
                         Serial.println("Medium post: left turn at B");
                         this->steer_left();
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
@@ -372,7 +375,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->update(-3.0, -3.0);
                     this->drive_system->actuate();
                     delay(200);
-                    if (this->side) {
+                    if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.0, 0.93);
                     }
                     else {
@@ -406,7 +409,12 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    this->reverseAndTurn(600, 300, REVERSE_LEFT);
+                    if (this->side == DOOR_SIDE) {
+                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
+                    }
+                    else {
+                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
+                    }
                     Serial.println("ending centering to medium post, going back to gauntlet ");
                     
                     this->intersection_count++;
@@ -416,7 +424,7 @@ void IntersectionManager::handle_intersection() {
                 
                 case 2: {
 
-                    // Drive straight through B(Y)
+                    // Drive straight through B(Y); test if this requires a steer
                     this->intersection_count = 0;
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
@@ -428,115 +436,240 @@ void IntersectionManager::handle_intersection() {
 
         }
             break;
-        
-        // case TASK_S2A: {
 
-        //     Serial.println("Performing tall posts task");
-        //     switch (this->intersection_count) {
-        //         case 0: {
-        //             Serial.println("Tall posts task: first Isect, slight right");
-        //             //slight right at first Y intersection
-        //             this->drive_system->update(0.94, 0.98);
-        //             this->drive_system->actuate();
-        //             delay(100);
-        //             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
-        //         }
-        //             break;
-        //         case 1: {
-        //             //turn right to find first post, wiggle, grab stone, U turn and keep going
-        //             Serial.println("Tall posts task: first T, turn right");
-        //             this->motorsOff(300);
+        case TASK_S2A: {
+            Serial.println("In task 1 tall post");
 
-        //             this->drive_system->update(-3.0, -3.0);
-        //             this->drive_system->actuate();
-        //             delay(200);
-        //             this->drive_system->update(0.93, -3.0);
-        //             this->drive_system->actuate();
-        //             delay(100);
-        //             Serial.println("starting centering to post #1 now ");
+            switch(this->intersection_count) {
+                case 0: {
+                    if (this->side == DOOR_SIDE) {
+                        Serial.println("Tall post: slight right at B");
+                        this->steer_right(); //may need to hardcode this to be a slight turn instead
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                    }
+                    else {
+                        Serial.println("Tall post: slight left at B");
+                        this->steer_left();
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    }
 
-        //             center_post(true);
-
-        //             this->drive_system->update(0.86, 0.86);
-        //             this->drive_system->actuate();
-        //             delay(350);
-
-        //             this->wiggle(12,120);
-
-        //             this->motorsOff(300);
-
-        //             grabCrystal(0);
-        //             //openClaw(); // for now todo
-
-        //             this->motorsOff(300);
-
-        //             this->reverseAndTurn(600, 300, REVERSE_RIGHT);
-        //             Serial.println("ending centering to post #1 now, going back to recovery ");
-        //             this->task = TASK_TO_RECOVERY;
-
-
-        //         }
-        //             break;
-
-        //         case 2: {
-        //             this->motorsOff(300);
-        //             this->drive_system->update(-3.0, -3.0);
-        //             this->drive_system->actuate();
-        //             delay(200);
-        //             this->drive_system->update(0.93, -3.0);
-        //             this->drive_system->actuate();
-        //             delay(100);
-        //             Serial.println("starting centering to posts #2 now ");
-
-
-        //             center_post(true);
-        //             this->drive_system->update(0.86, 0.86);
-        //             this->drive_system->actuate();
-        //             delay(350);
-
-        //             this->wiggle(12,120);
-
-        //             this->motorsOff(300);
-
-        //             grabCrystal(0);
+                    this->intersection_count++;
                     
-        //             this->reverseAndTurn(290, 500, REVERSE_LEFT);
-
-        //             this->tasksToDo.pop_back();
-        //             this->task = TASK_TO_RECOVERY;
-        //             this->intersection_count = -1;
-        //             Serial.println("gauntlet time ");
-
-        //         }
-        //             break;
-        //     }
-        // }
-        //     break;
-        // case TASK_TO_RECOVERY:
-        // {
-        //     Serial.println("Encountered intersection in recovery");
-        //     isectType = readSerialIsectType();
-        //     if (isectType == Y_ISECT) {
-        //         Serial.println("detected y intersection ");
-
-        //         // this->motorsOff(300);
+                }
+                    break;
                 
-        //         this->drive_system->update(0.94, 0.94);
-        //         this->drive_system->actuate();
-        //         delay(100);
+                case 1: {
+                    Serial.println("Grabbing tall stone");
 
-        //         this->task = TASK_RECOVERY_TO_GAUNT_TO_HOME;
-        //         this->intersection_count = -1;
-        //     }
-        //     else {
-        //         Serial.println("Detected T intersection, coasting");
-        //         this->motorsOff(300);
-        //     }
-        // }
-        //     break;
+                    this->motorsOff(300);
 
-        case TASK_G1:
-        {
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(200);
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(0.93, -3.0); // turn right
+                    }
+                    else {
+                        this->drive_system->update(-3.0, 0.93); // turn left
+                    }
+                    this->drive_system->actuate();
+                    delay(100);
+                    Serial.println("starting centering to tall post ");
+
+                    while (true) {
+                        
+                        if (center_post()) {
+                            break;
+                        }
+                        else {
+                            // todo: readjust and centre on post
+                        }
+
+                    }
+
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(350);
+
+                    this->wiggle(12,120);
+
+                    this->motorsOff(300);
+
+                    grabCrystal(0);
+                    //openClaw(); // for now todo
+
+                    this->motorsOff(300);
+                    if (this->side == DOOR_SIDE) {
+                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
+                    }
+                    else {
+                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
+                    }
+                    Serial.println("ending centering to tall post, going back to gauntlet ");
+                    
+                    this->intersection_count++;
+
+                }
+                    break;
+                
+                case 2: {
+
+                    // Drive straight through B(Y) 
+                    this->intersection_count = 0;
+                    this->tasksToDo.pop_back();
+                    this->task = TASK_G2; // handoff to G1 task
+                }
+                    break;
+            }
+        }
+            break;
+
+        case TASK_S2B: {
+            Serial.println("In task 2 tall posts");
+
+            switch(this->intersection_count) {
+                case 0: {
+                    if (this->side == DOOR_SIDE) {
+                        Serial.println("Tall post: slight right at B");
+                        this->steer_right(); //may need to hardcode this to be a slight turn instead
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                    }
+                    else {
+                        Serial.println("Tall post: slight left at B");
+                        this->steer_left();
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    }
+
+                    this->intersection_count++;
+                    
+                }
+                    break;
+                
+                case 1: {
+                    Serial.println("Grabbing first tall stone");
+
+                    this->motorsOff(300);
+
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(200);
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(0.93, -3.0); // turn right
+                    }
+                    else {
+                        this->drive_system->update(-3.0, 0.93); // turn left
+                    }
+                    this->drive_system->actuate();
+                    delay(100);
+                    Serial.println("starting centering to tall post ");
+
+                    while (true) {
+                        
+                        if (center_post()) {
+                            break;
+                        }
+                        else {
+                            // todo: readjust and centre on post
+                        }
+
+                    }
+
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(350);
+
+                    this->wiggle(12,120);
+
+                    this->motorsOff(300);
+
+                    grabCrystal(0);
+                    //openClaw(); // for now todo
+
+                    this->motorsOff(300);
+                    if (this->side == DOOR_SIDE) {
+                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
+                    }
+                    else {
+                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
+                    }
+                    
+                    this->intersection_count++;
+
+                }
+                    break;
+
+                case 2: {
+                    Serial.println("Grabbing second tall stone");
+
+                    this->motorsOff(300);
+
+                    this->drive_system->update(-3.0, -3.0);
+                    this->drive_system->actuate();
+                    delay(200);
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(0.93, -3.0); // turn right
+                    }
+                    else {
+                        this->drive_system->update(-3.0, 0.93); // turn left
+                    }
+                    this->drive_system->actuate();
+                    delay(100);
+                    Serial.println("starting centering to tall post ");
+
+                    while (true) {
+                        
+                        if (center_post()) {
+                            break;
+                        }
+                        else {
+                            // todo: readjust and centre on post
+                        }
+
+                    }
+
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(350);
+
+                    this->wiggle(12,120);
+
+                    this->motorsOff(300);
+
+                    grabCrystal(0);
+                    //openClaw(); // for now todo
+
+                    this->motorsOff(300);
+                    if (this->side == DOOR_SIDE) {
+                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
+                    }
+                    else {
+                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
+                    }
+                    
+                    this->intersection_count++;
+
+                }
+                    break;
+
+                case 3: {
+                    // Drive straight through T intersection that we were at before
+                    this->motorsOff(300);
+                }
+                    break;
+
+                case 4: {
+
+                    // Drive straight through B(Y) 
+                    this->intersection_count = 0;
+                    this->tasksToDo.pop_back();
+                    this->task = TASK_G3; // handoff to G1 task
+                }
+                    break;
+            }
+        }
+            break;
+        
+        case TASK_G1: {
             switch (this->intersection_count) {
                 case 0: {
 
@@ -546,7 +679,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(400);
                     
-                    if (this->side) {
+                    if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.0);
                     }
                     else {
@@ -561,7 +694,7 @@ void IntersectionManager::handle_intersection() {
                     long gauntlet_turn_time = millis();
 
                     //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
-                    if (this->side) {
+                    if (this->side == DOOR_SIDE) {
                         while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
                             this->tape_sensor->update();
                         }
@@ -592,6 +725,145 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
                         this->wiggle(10, 150);
+                        this->handle_gauntlet();
+                        handling_gauntlet = false;
+                        this->task = this->getNextTask();
+
+                    }
+
+                }
+                    break;
+            
+            }
+        }
+            break;
+
+        case TASK_G2A: {
+            switch (this->intersection_count) {
+                case 0: {
+
+                    Serial.println("Initiating gauntlet sequence...");
+
+                    this->drive_system->update(0.0, 0.0);
+                    this->drive_system->actuate();
+                    delay(400);
+                    
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(-3.5, 0.0);
+                    }
+                    else {
+                        this->drive_system->update(0.0, -3.5);
+                    }
+                    
+                    this->drive_system->actuate();
+
+                    this->tape_sensor->update();
+
+                    // TODO: timeout?
+                    long gauntlet_turn_time = millis();
+
+                    //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
+                    if (this->side == DOOR_SIDE) {
+                        while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
+                            this->tape_sensor->update();
+                        }
+                    }
+                    else {
+                        while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd4.is_on())) {
+                            this->tape_sensor->update();
+                        }
+                    }
+
+                    Serial.println("Gauntlet: followed back on tape");
+
+                    this->drive_system->set_speed_add(-0.04);
+
+                    this->intersection_count++; //using isect count as a means to keep track of state
+                    handling_gauntlet = true;
+                    gauntlet_timer = millis();
+
+                }
+                    break;
+                
+                case 1: {
+
+                    // currently assuming CV sees the gauntlet
+
+                    if (millis() - gauntlet_timer >= 1000) {
+                        Serial.println("At gauntlet");
+                        this->intersection_count++;
+                        this->drive_system->set_speed_add(0.0);
+                        this->wiggle(10, 150);
+                        this->handle_gauntlet();
+                        handling_gauntlet = false;
+                        this->task = this->getNextTask();
+
+                    }
+
+                }
+                    break;
+            
+            }
+        }
+            break;
+
+        case TASK_G2B: {
+            switch (this->intersection_count) {
+                case 0: {
+
+                    Serial.println("Initiating gauntlet sequence...");
+
+                    this->drive_system->update(0.0, 0.0);
+                    this->drive_system->actuate();
+                    delay(400);
+                    
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(-3.5, 0.0);
+                    }
+                    else {
+                        this->drive_system->update(0.0, -3.5);
+                    }
+                    
+                    this->drive_system->actuate();
+
+                    this->tape_sensor->update();
+
+                    // TODO: timeout?
+                    long gauntlet_turn_time = millis();
+
+                    //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
+                    if (this->side == DOOR_SIDE) {
+                        while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
+                            this->tape_sensor->update();
+                        }
+                    }
+                    else {
+                        while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd4.is_on())) {
+                            this->tape_sensor->update();
+                        }
+                    }
+
+                    Serial.println("Gauntlet: followed back on tape");
+
+                    this->drive_system->set_speed_add(-0.04);
+
+                    this->intersection_count++; //using isect count as a means to keep track of state
+                    handling_gauntlet = true;
+                    gauntlet_timer = millis();
+
+                }
+                    break;
+                
+                case 1: {
+
+                    // currently assuming CV sees the gauntlet
+
+                    if (millis() - gauntlet_timer >= 1000) {
+                        Serial.println("At gauntlet");
+                        this->intersection_count++;
+                        this->drive_system->set_speed_add(0.0);
+                        this->wiggle(10, 150);
+                        this->handle_gauntlet();
                         this->handle_gauntlet();
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
