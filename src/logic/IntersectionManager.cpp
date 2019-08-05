@@ -604,7 +604,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
                         this->wiggle(10, 150);
-                        this->handle_gauntlet();
+                        this->handle_gauntlet(2);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -644,11 +644,11 @@ int IntersectionManager::getNextTask() {
     return retVal;
 }
 
-void IntersectionManager::handle_gauntlet() {
+void IntersectionManager::handle_gauntlet(int slot) {
 
     while (true) {
 
-        if (this->place_stone(0)) {
+        if (this->place_stone(slot)) {
             return;
         }
         else {
