@@ -153,6 +153,9 @@ void IntersectionManager::update() {
             this->handle_intersection();
             last_intersection_time = new_time;
         }
+        else {
+            last_intersection_time = millis();
+        }
     }
 }
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
@@ -387,7 +390,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post()) {
+                        if (center_post(!(this->side))) {
                             break;
                         }
                         else {
@@ -675,9 +678,18 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("Initiating gauntlet sequence...");
 
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    
+                    this->tape_sensor->update();
+                    // ensure all (6) QRDs are off tape to begin turning back on
+                    while (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
+                        this->tape_sensor->update();
+                    }
+
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(400);
+                    delay(300);
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.0);
@@ -725,7 +737,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
                         this->wiggle(10, 150);
-                        this->handle_gauntlet();
+                        this->handle_gauntlet(2);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -904,11 +916,11 @@ int IntersectionManager::getNextTask() {
     return retVal;
 }
 
-void IntersectionManager::handle_gauntlet() {
+void IntersectionManager::handle_gauntlet(int slot) {
 
     while (true) {
 
-        if (this->place_stone(0)) {
+        if (this->place_stone(slot)) {
             return;
         }
         else {
@@ -943,10 +955,9 @@ bool IntersectionManager::place_stone(int slot) {
     // TODO: use flag to set init state
 
     // initial values should fail the while loop checks
-    bool init_mode = true;
 
-    int x = 0;
-    int y = 0;
+    int x = slot <= 2 ? -999 : 999;
+    int y = 69420;
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
@@ -957,19 +968,6 @@ bool IntersectionManager::place_stone(int slot) {
     long timeout = millis();
 
     do {
-
-        if (init_mode) {
-
-            if (Serial.read() == 'G') {
-                init_mode = false;
-            }
-            else if (millis() - timeout >= 3000) {
-                return false;
-            }
-
-            continue;
-
-        }
 
         // Right now: turn left wheel back to hole 0
 
@@ -1089,16 +1087,16 @@ bool IntersectionManager::place_stone(int slot) {
 
 }
 
-// true turns the robot clockwise
+// true turns the robot cw initially, ccw for false
 // TODO add debounce and check counter clowckwise turn
-bool IntersectionManager::center_post() {
+bool IntersectionManager::center_post(bool init_dir) {
 
     // 1. Minimie x
 
     // initial values should fail the while loop checks
     // todo: set flag for init
-    int x = 999;
-    int y = 999;
+    int x = init_dir ? 999 : -999;
+    int y = 69420;
 
     Serial.println("Initiating post-centering sequence...");
 
