@@ -150,6 +150,9 @@ void IntersectionManager::update() {
             this->handle_intersection();
             last_intersection_time = new_time;
         }
+        else {
+            last_intersection_time = millis();
+        }
     }
 }
 //Y intersection defined as at least 2 subsequent black with at least one white followed by at least 2 subsequent black
