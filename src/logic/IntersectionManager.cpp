@@ -12,6 +12,9 @@
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
 
+#define INIT_TURN_LEFT false
+#define INIT_TURN_RIGHT true
+
 #define DOOR_SIDE true
 #define WINDOW_SIDE false
 
@@ -481,11 +484,21 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post()) {
-                            break;
+                        if (this->side == DOOR_SIDE) {
+                            if (center_post(INIT_TURN_RIGHT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
                         else {
-                            // todo: readjust and centre on post
+                            if (center_post(INIT_TURN_LEFT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
 
                     }
@@ -520,7 +533,7 @@ void IntersectionManager::handle_intersection() {
                     // Drive straight through B(Y) 
                     this->intersection_count = 0;
                     this->tasksToDo.pop_back();
-                    this->task = TASK_G2; // handoff to G1 task
+                    this->task = TASK_G2A; // handoff to G1 task
                 }
                     break;
             }
@@ -568,11 +581,21 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post()) {
-                            break;
+                        if (this->side == DOOR_SIDE) {
+                            if (center_post(INIT_TURN_RIGHT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
                         else {
-                            // todo: readjust and centre on post
+                            if (center_post(INIT_TURN_LEFT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
 
                     }
@@ -621,11 +644,21 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post()) {
-                            break;
+                        if (this->side == DOOR_SIDE) {
+                            if (center_post(INIT_TURN_RIGHT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
                         else {
-                            // todo: readjust and centre on post
+                            if (center_post(INIT_TURN_LEFT)) {
+                                break;
+                            }
+                            else {
+                                // todo: readjust and centre on post
+                            }
                         }
 
                     }
@@ -665,7 +698,7 @@ void IntersectionManager::handle_intersection() {
                     // Drive straight through B(Y) 
                     this->intersection_count = 0;
                     this->tasksToDo.pop_back();
-                    this->task = TASK_G3; // handoff to G1 task
+                    this->task = TASK_G2B; // handoff to G1 task
                 }
                     break;
             }
@@ -806,7 +839,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
                         this->wiggle(10, 150);
-                        this->handle_gauntlet();
+                        this->handle_gauntlet(1);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -875,8 +908,8 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(0.0);
                         this->wiggle(10, 150);
-                        this->handle_gauntlet();
-                        this->handle_gauntlet();
+                        this->handle_gauntlet(1);
+                        this->handle_gauntlet(0);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
