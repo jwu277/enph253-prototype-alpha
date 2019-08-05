@@ -371,6 +371,8 @@ int mmToSteps(int mm)
 //-1 for fully extending, 0 for tallest, 1 for medium, 2 for smallest
 bool grabCrystal(int pillarType)
 {
+    homeY(HOME);
+    
     enableStepper();
     switch(pillarType) {
         case -1: moveZToExtreme(EXTEND, 1800);

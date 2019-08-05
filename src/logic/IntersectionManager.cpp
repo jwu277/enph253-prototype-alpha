@@ -357,6 +357,8 @@ void IntersectionManager::handle_intersection() {
                         this->steer_right();
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
+
+                    this->intersection_count++;
                     
                 }
                     break;
@@ -398,7 +400,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal(0);
+                    grabCrystal(1);
                     //openClaw(); // for now todo
 
                     this->motorsOff(300);
@@ -407,6 +409,7 @@ void IntersectionManager::handle_intersection() {
                     Serial.println("ending centering to medium post, going back to gauntlet ");
                     
                     this->intersection_count++;
+                    this->task = TASK_G1;
 
                 }
                     break;
