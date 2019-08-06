@@ -809,7 +809,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->wiggle(10, 150);
+                        this->wiggle(6, 150);
                         this->handle_gauntlet(2);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
@@ -1275,16 +1275,21 @@ void IntersectionManager::steer_left() {
         this->tape_sensor->update();
     }
 
+    delay(100);
+
     int qrd_idx = this->first_black_sensor();
 
     Serial.println("steering left");
 
-    this->drive_system->update(-2.7, 0.93);
+    this->drive_system->update(-2.6, 0.92);
     this->drive_system->actuate();
 
     long timeout = millis();
     
-    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
+    while ((qrd_idx <= 5) && (millis() - timeout <= 600)) {
+        if (millis() - timeout > 600) {
+            Serial.println("steer left timed out");
+        }
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
@@ -1309,17 +1314,21 @@ void IntersectionManager::steer_right() {
     while (!this->at_y_intersection_lenient()) {
         this->tape_sensor->update();
     }
+    delay(100);
 
     Serial.println("steering right");
 
     int qrd_idx = 7 - this->last_black_sensor();
 
-    this->drive_system->update(0.93, -2.7);
+    this->drive_system->update(0.92, -2.6);
     this->drive_system->actuate();
 
     long timeout = millis();
     
-    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
+    while ((qrd_idx <= 5) && (millis() - timeout <= 600)) {
+        if (millis() - timeout > 600) {
+            Serial.println("steer right timed out");
+        }
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
