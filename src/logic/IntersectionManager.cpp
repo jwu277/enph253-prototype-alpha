@@ -444,6 +444,8 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
+                    this->drive_system->set_speed_add(-0.05);
+
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
 
@@ -721,6 +723,8 @@ void IntersectionManager::handle_intersection() {
         case TASK_G1: {
             switch (this->intersection_count) {
                 case 0: {
+
+                    this->drive_system->set_speed_add(0.0);
 
                     Serial.println("Initiating gauntlet sequence...");
 

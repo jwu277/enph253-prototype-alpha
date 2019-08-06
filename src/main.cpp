@@ -126,7 +126,6 @@ void setup() {
 
     // closeClaw();
 
-
     // Hardware test
     //test_hardware();
 
