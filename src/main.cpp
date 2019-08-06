@@ -126,22 +126,40 @@ void setup() {
 
     // closeClaw();
 
+    pinMode(PB10, INPUT_PULLUP);
+
     // Hardware test
     //test_hardware();
 
     // I2C for accelerometer
-    Wire.setSDA(PB11);
-    Wire.setSCL(PB10);
-    Wire.begin();
+    // Wire.setSDA(PB11);
+    // Wire.setSCL(PB10);
+    // Wire.begin();
 
-    accelgyro.initialize();
+    // accelgyro.initialize();
 
     // // Set accelerometer range to be +- 16g
-    accelgyro.setFullScaleAccelRange(3);
+    // accelgyro.setFullScaleAccelRange(3);
 
     // todo: use a digital read of thanos/methanos switch
     // true = door side, false = window side
-    intersection_manager.set_side(true);
+    int thanos_counter = 0;
+    bool last_state = false;
+    while (thanos_counter < 10) {
+        if (digitalRead(PB10) == last_state) {
+            thanos_counter++;
+        }
+        else {
+            last_state = digitalRead(PB10);
+            thanos_counter = 0;
+            Serial.println("Thanos switch got an inconsistent read");
+        }
+    }
+
+    Serial.println("Running on side: ");
+    Serial.println(last_state ? "DOOR" : "WINDOW");
+
+    intersection_manager.set_side(last_state);
 
     closeClaw(1);
 
