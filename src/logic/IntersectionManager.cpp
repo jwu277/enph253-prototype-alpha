@@ -785,13 +785,29 @@ void IntersectionManager::handle_intersection() {
 
                         delay(200);
 
-                        this->drive_system->update(-2.8, -2.8);
+                        this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         delay(600);
 
-                        this->drive_system->update(0.90, 0.90);
+                        this->drive_system->update(0.0, 0.0);
                         this->drive_system->actuate();
-                        delay(800);
+                        delay(200);
+
+                        gauntlet_timer = millis();
+
+                    }
+
+                }
+                    break;
+
+                case 2: {
+
+                    // currently assuming CV sees the gauntlet
+
+                    if (millis() - gauntlet_timer >= 1000) {
+                        Serial.println("At gauntlet");
+                        this->intersection_count = 0;
+                        this->drive_system->set_speed_add(0.0);
 
                         this->wiggle(10, 150);
                         this->handle_gauntlet(2);
@@ -1172,10 +1188,10 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.0, 0.86);
+            this->drive_system->update(-3.06, 0.86);
         }
         else if (x > 0) {
-            this->drive_system->update(0.86, -3.0);
+            this->drive_system->update(0.86, -3.06);
         }
         this->drive_system->actuate();
 
@@ -1267,8 +1283,8 @@ void IntersectionManager::steer_left() {
     this->drive_system->actuate();
 
     long timeout = millis();
-    // Do until qrd5 is on tape
-    while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
+    
+    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
@@ -1302,8 +1318,8 @@ void IntersectionManager::steer_right() {
     this->drive_system->actuate();
 
     long timeout = millis();
-    // Do until qrd1 is on tape
-    while ((qrd_idx <= 4) || (millis() - timeout <= 600)) {
+    
+    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 

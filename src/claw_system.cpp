@@ -391,6 +391,7 @@ bool grabCrystal(int pillarType)
     moveY(68);
     openClaw(1300);
     findTopOfPillar(1500);
+    moveZDist(UP,2,2000);
     moveY(35);
     closeClaw(3000);
     moveZDist(UP, 50, 2500);
