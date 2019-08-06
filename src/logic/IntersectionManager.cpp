@@ -71,7 +71,7 @@ void IntersectionManager::reverseAndTurn(int reverseTime, int turnTime, bool dir
     this->drive_system->actuate();
     delay(reverseTime);
     if (dir == REVERSE_RIGHT) {
-        this->drive_system->update(.98, -3.0);
+        this->drive_system->update(.98, -3.2);
         this->drive_system->actuate();
         delay(turnTime);
         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
@@ -419,7 +419,7 @@ void IntersectionManager::handle_intersection() {
                         this->reverseAndTurn(600, 300, REVERSE_LEFT);
                     }
                     else {
-                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
+                        this->reverseAndTurn(630, 350, REVERSE_RIGHT);
                     }
                     Serial.println("ending centering to medium post, going back to gauntlet ");
                     
