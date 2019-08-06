@@ -336,11 +336,11 @@ void IntersectionManager::handle_intersection() {
 
             if (this->side == DOOR_SIDE) {
                 this->steer_left();
-                this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
             }
             else {
                 this->steer_right();
-                this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
             }
 
             this->task = this->getNextTask();
@@ -730,7 +730,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
-                    delay(50);
+                    delay(150);
                     this->tape_sensor->update();
                     // ensure all (6) QRDs are off tape to begin turning back on
                     while (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
@@ -739,7 +739,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(100);
+                    delay(200);
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.9);
@@ -1192,10 +1192,10 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.06, 0.86);
+            this->drive_system->update(-3.3, 0.92);
         }
         else if (x > 0) {
-            this->drive_system->update(0.86, -3.06);
+            this->drive_system->update(0.92, -3.3);
         }
         this->drive_system->actuate();
 
