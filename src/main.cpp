@@ -130,6 +130,9 @@ void setup() {
     // Hardware test
     //test_hardware();
 
+    pinMode(PB11, INPUT_PULLUP);
+    pinMode(PB10, INPUT_PULLUP);
+
     // I2C for accelerometer
     Wire.setSDA(PB11);
     Wire.setSCL(PB10);
