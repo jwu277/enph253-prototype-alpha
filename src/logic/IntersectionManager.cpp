@@ -1319,12 +1319,12 @@ void IntersectionManager::steer_right() {
 
     int qrd_idx = 7 - this->last_black_sensor();
 
-    this->drive_system->update(0.92, -2.6);
+    this->drive_system->update(0.93, -2.7);
     this->drive_system->actuate();
 
     long timeout = millis();
     
-    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
+    while ((qrd_idx <= 4) || (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
