@@ -200,7 +200,12 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             if (count + 1 < length) Serial.print(" ");
         #endif
     }
-    if (timeout > 0 && millis() - t1 >= timeout && count < length) count = -1; // timeout
+    if (timeout > 0 && millis() - t1 >= timeout) {
+        if (count < length) {
+            count = -1; // timeout
+        }
+        Serial.println("Accel timed out");
+    } 
 
     Wire.endTransmission();
 
@@ -506,7 +511,6 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 
     void Fastwire::setup(int khz, boolean pullup) {
         TWCR = 0;
-        // TODO: add support for other MCUs, this is ATmega328+compatible only
         if (pullup)
             PORTC |= ((1 << 4) | (1 << 5));
         else

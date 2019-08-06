@@ -16,7 +16,6 @@
 
 //Stepper motors
 #define STEPPERENABLE PB12
-#define STEPPERSLEEP PA12
 #define STEPPERDIR PA11
 #define STEPPERCLK PA15
 
@@ -44,26 +43,32 @@
 #define BK_PERIOD 2135
 #define BK_ON_PERIOD 135
 
-void hardwareISR();
-void zHomeISR();
-void yHomeISR();
-void zFullExtISR();
-void yFullExtISR();
-void clawPBISR();
-void clawFloorPBISR();
+//information for grabbing crystal
+#define CLOSED 0
+#define OPENED 1
+
+// void hardwareISR();
+// void zHomeISR();
+// void yHomeISR();
+// void zFullExtISR();
+// void yFullExtISR();
+// void clawPBISR();
+// void clawFloorPBISR();
 void servoPulseShort(byte);
 void servoPulseLong(byte);
-void stepperPulse();
+void stepperPulse(int);
 void homeY(bool retract);
 void moveY(double dist);
-void closeClaw();
-void openClaw();
-void moveZToExtreme(bool);
+void closeClaw(int);
+void openClaw(int);
+int moveZToExtreme(bool, int);
 void changeStepperDir(bool);
-void findTopOfPillar();
-void grabCrystal();
+void findTopOfPillar(int);
+bool grabCrystal(int);
 void enableStepper();
 void disableStepper();
-void moveZSteps(int, bool);
+int moveZSteps(int, bool, int);
 int mmToSteps(int);
 void moveYUntilClawPressed();
+int moveZDist(bool, int, int);
+void depositCrystal(int, bool);

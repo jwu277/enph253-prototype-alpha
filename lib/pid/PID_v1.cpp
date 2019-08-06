@@ -92,7 +92,7 @@ bool PID::Compute()
             integral_queue.push(val);
         }
 
-        outputSum = ki * outputSum;
+        outputSum = ki * outputSum * timeChange;
 
       /*Add Proportional on Measurement, if P_ON_M is specified*/
       if(!pOnE) outputSum-= kp * dInput;
@@ -106,7 +106,7 @@ bool PID::Compute()
       else output = 0;
 
       /*Compute Rest of PID Output*/
-      output += outputSum - kd * dInput;
+      output += outputSum - kd * dInput / timeChange;
 
         if(output > outMax) output = outMax;
       else if(output < outMin) output = outMin;

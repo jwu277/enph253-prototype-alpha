@@ -25,7 +25,7 @@
 // PID Parameters
 //#define KP 0.2
 //#define KD 0.2
-#define KI 0.2
+#define KI 0.1
 
 using namespace std;
 
@@ -79,7 +79,7 @@ void setup() {
     //TUNING PID
     // double kp = (0.4 * analogRead(PA_6)) / 1024;
     // double kd = (1.0 * analogRead(PA_7)) / 1024;
-    double kp = 0.39961;
+    double kp = 0.4;
     double kd = 0.0;
 
     drive_pid = PID(pid_input, &pid_output, &pid_setpoint, kp, KI, kd, DIRECT);
@@ -98,18 +98,17 @@ void setup() {
 
     // Upper assembly
     
-    attachInterrupt(ZHOME, zHomeISR, RISING);
-    attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
-    attachInterrupt(YHOME, yHomeISR, RISING);
-    attachInterrupt(YFULLEXT, yFullExtISR, RISING);
-    attachInterrupt(CLAWPB, clawPBISR, RISING);
-    attachInterrupt(CLAWFLOORPB, clawFloorPBISR, RISING);
+    // attachInterrupt(ZHOME, zHomeISR, RISING);
+    // attachInterrupt(ZFULLEXT, zFullExtISR, RISING);
+    // attachInterrupt(YHOME, yHomeISR, RISING);
+    // attachInterrupt(YFULLEXT, yFullExtISR, RISING);
+    // attachInterrupt(CLAWPB, clawPBISR, RISING);
+    // attachInterrupt(CLAWFLOORPB, clawFloorPBISR, FALLING);
 
     //stepper
     pinMode(CLAWSERVO, OUTPUT);
     pinMode(YSERVO, OUTPUT);
     pinMode(STEPPERCLK, OUTPUT);
-    pinMode(STEPPERSLEEP, OUTPUT);
     pinMode(STEPPERDIR, OUTPUT);
     pinMode(STEPPERENABLE, OUTPUT);
     pinMode(ZFULLEXT, INPUT);
@@ -119,8 +118,9 @@ void setup() {
     pinMode(CLAWPB, INPUT);
     pinMode(CLAWFLOORPB, INPUT);
 
+    // NOTE: deleted STEPPERSLP
+
     digitalWrite(STEPPERENABLE, HIGH);
-    digitalWrite(STEPPERSLEEP, HIGH);
     digitalWrite(STEPPERDIR, UP);
     digitalWrite(STEPPERCLK, LOW);
 
@@ -137,29 +137,17 @@ void setup() {
 
     accelgyro.initialize();
 
-    // Set accelerometer range to be +- 16g
+    // // Set accelerometer range to be +- 16g
     accelgyro.setFullScaleAccelRange(3);
 
-    // while (1) {
-    //     Serial.print(analogRead(PA6));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA5));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA3));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA2));
-    //     Serial.print("       "); 
-    //     Serial.print(analogRead(PA1));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA0));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA4));
-    //     Serial.print("       ");
-    //     Serial.print(analogRead(PA7));
-    //     Serial.print("       ");
-    //     Serial.println();
-    // }
+    // todo: use a digital read of thanos/methanos switch
+    // true = door side, false = window side
+    intersection_manager.set_side(true);
 
+    closeClaw(1);
+
+    Serial.println("setup ran ");
+    
 }
 
 void init_sensors() {
@@ -208,25 +196,31 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*0.07, -3.3);
+        drive_system.update(0.74+pid_output*0.4, -2.8);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-3.3, 0.74-pid_output*0.07);
+        drive_system.update(-2.8, 0.74-pid_output*0.4);
     }
 
-    accelgyro.getAcceleration(&ax, &ay, &az);
+    delay(2);
 
-    if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
-        if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
-            // TODO: collision handling
+    // long accel_time = millis();
+    // accelgyro.getAcceleration(&ax, &ay, &az);
+    // if (millis() - accel_time >= 10) {
+    //     Serial.println("Accel gone over time");
+    // }
 
-            // Serial.println("BUMP");
-            // Serial.println(ax * CONVERSION_FACTOR);
-            // Serial.println(ay * CONVERSION_FACTOR);
-            // Serial.println();
-            accel_trigger_time = millis();
-        }
-    }
+    // if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
+    //     if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
+    //         // TODO: collision handling
+
+    //         // Serial.println("BUMP");
+    //         // Serial.println(ax * CONVERSION_FACTOR);
+    //         // Serial.println(ay * CONVERSION_FACTOR);
+    //         // Serial.println();
+    //         accel_trigger_time = millis();
+    //     }
+    // }
 
 }
 
@@ -331,10 +325,13 @@ void test_hardware() {
         drive_system.actuate();
         delay(300);
 
-        moveZToExtreme(EXTEND);
+        moveZToExtreme(EXTEND,2000);
         homeY(true);
         homeY(false);
-        moveZToExtreme(HOME);
+        moveZToExtreme(HOME, 2000);
+
+        openClaw(2000);
+        closeClaw(1300);
 
     }
 }
