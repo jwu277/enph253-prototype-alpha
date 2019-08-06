@@ -195,10 +195,10 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*0.4, -2.8);
+        drive_system.update(0.74+pid_output*0.2, -2.8);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.8, 0.74-pid_output*0.4);
+        drive_system.update(-2.8, 0.74-pid_output*0.2);
     }
 
     delay(2);
