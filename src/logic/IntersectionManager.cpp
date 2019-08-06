@@ -787,7 +787,7 @@ void IntersectionManager::handle_intersection() {
 
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(600);
+                        delay(400);
 
                         this->drive_system->update(0.0, 0.0);
                         this->drive_system->actuate();
@@ -1284,7 +1284,7 @@ void IntersectionManager::steer_left() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 2) || (millis() - timeout <= 600)) {
+    while ((qrd_idx <= 3) || (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
