@@ -1194,8 +1194,9 @@ bool IntersectionManager::center_post(bool init_dir) {
         if (x < 0) {
             this->drive_system->update(-3.3, 0.92);
         }
+        //turn right
         else if (x > 0) {
-            this->drive_system->update(0.92, -3.3);
+            this->drive_system->update(0.91, -3.2);
         }
         this->drive_system->actuate();
 
