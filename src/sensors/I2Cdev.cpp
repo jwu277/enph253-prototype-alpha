@@ -200,7 +200,12 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             if (count + 1 < length) Serial.print(" ");
         #endif
     }
-    if (timeout > 0 && millis() - t1 >= timeout && count < length) count = -1; // timeout
+    if (timeout > 0 && millis() - t1 >= timeout) {
+        if (count < length) {
+            count = -1; // timeout
+        }
+        Serial.println("Accel timed out");
+    } 
 
     Wire.endTransmission();
 

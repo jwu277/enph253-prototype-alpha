@@ -202,19 +202,25 @@ void compute() {
         drive_system.update(-2.8, 0.74-pid_output*0.4);
     }
 
-    accelgyro.getAcceleration(&ax, &ay, &az);
+    delay(2);
 
-    if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
-        if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
-            // TODO: collision handling
+    // long accel_time = millis();
+    // accelgyro.getAcceleration(&ax, &ay, &az);
+    // if (millis() - accel_time >= 10) {
+    //     Serial.println("Accel gone over time");
+    // }
 
-            // Serial.println("BUMP");
-            // Serial.println(ax * CONVERSION_FACTOR);
-            // Serial.println(ay * CONVERSION_FACTOR);
-            // Serial.println();
-            accel_trigger_time = millis();
-        }
-    }
+    // if (millis() - accel_trigger_time >= ACCEL_DEBOUNCE) {
+    //     if (fabs(ax) * CONVERSION_FACTOR >= 8 || fabs(ay) * CONVERSION_FACTOR >= 12) {
+    //         // TODO: collision handling
+
+    //         // Serial.println("BUMP");
+    //         // Serial.println(ax * CONVERSION_FACTOR);
+    //         // Serial.println(ay * CONVERSION_FACTOR);
+    //         // Serial.println();
+    //         accel_trigger_time = millis();
+    //     }
+    // }
 
 }
 

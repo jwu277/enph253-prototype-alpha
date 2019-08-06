@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 600
+#define DELAY_TIME 800
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -432,11 +432,17 @@ void IntersectionManager::handle_intersection() {
 
                     // Drive straight through B(Y); test if this requires a steer
                     this->intersection_count = 0;
-                    //driveforwardabit
+                    // driveforwardabit
                     this->drive_system->update(0.9, 0.9);
                     this->drive_system->actuate();
                     delay(100);
-                    this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
+                    if (this->side == DOOR_SIDE) {
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    }
+                    else {
+                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                    }
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
@@ -720,7 +726,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
-                    
+                    delay(50);
                     this->tape_sensor->update();
                     // ensure all (6) QRDs are off tape to begin turning back on
                     while (!(this->tape_sensor->is_far_left() || this->tape_sensor->is_far_right())) {
@@ -732,10 +738,10 @@ void IntersectionManager::handle_intersection() {
                     delay(300);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.0);
+                        this->drive_system->update(-3.5, 0.86);
                     }
                     else {
-                        this->drive_system->update(0.0, -3.5);
+                        this->drive_system->update(0.86, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1166,10 +1172,10 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.1, 0.86);
+            this->drive_system->update(-3.0, 0.86);
         }
         else if (x > 0) {
-            this->drive_system->update(0.86, -3.1);
+            this->drive_system->update(0.86, -3.0);
         }
         this->drive_system->actuate();
 

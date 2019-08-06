@@ -388,11 +388,11 @@ bool grabCrystal(int pillarType)
         break;
     }
 
-    moveY(62);
+    moveY(68);
     openClaw(1300);
     findTopOfPillar(1500);
-    moveY(23);
-    closeClaw(2000);
+    moveY(35);
+    closeClaw(3000);
     moveZDist(UP, 50, 2500);
     homeY(true);
     
@@ -465,7 +465,7 @@ void depositCrystal(int gauntletPos, bool inClaw)
 
     disableStepper();   //drop the claw onto the gauntlet with gravity
     delay(500);
-    openClaw(500);
+    openClaw(1000);
     enableStepper();
     moveZDist(UP, 70, 1800);
     homeY(HOME);
