@@ -1304,6 +1304,7 @@ void IntersectionManager::steer_left() {
 void IntersectionManager::steer_right() {
 
     // Sneak: just make the array backwards compared to steer_left
+    //array has been inverted
     QrdSensor* qrds[8] = {&this->tape_sensor->qrd7, &this->tape_sensor->qrd6,
                           &this->tape_sensor->qrd5, &this->tape_sensor->qrd4,
                           &this->tape_sensor->qrd3, &this->tape_sensor->qrd2,
@@ -1324,7 +1325,7 @@ void IntersectionManager::steer_right() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 4) || (millis() - timeout <= 400)) {
+    while ((qrd_idx <= 3) || (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
