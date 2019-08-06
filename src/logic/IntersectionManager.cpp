@@ -739,13 +739,13 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(300);
+                    delay(100);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.86);
+                        this->drive_system->update(-3.5, 0.9);
                     }
                     else {
-                        this->drive_system->update(0.86, -3.5);
+                        this->drive_system->update(0.9, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -757,12 +757,12 @@ void IntersectionManager::handle_intersection() {
 
                     //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
                     if (this->side == DOOR_SIDE) {
-                        while (!(this->tape_sensor->qrd2.is_on() && this->tape_sensor->qrd3.is_on())) {
+                        while (!(this->tape_sensor->qrd4.is_on() && this->tape_sensor->qrd5.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
                     else {
-                        while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd4.is_on())) {
+                        while (!(this->tape_sensor->qrd3.is_on() && this->tape_sensor->qrd2.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
