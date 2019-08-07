@@ -444,11 +444,11 @@ void depositCrystal(int gauntletPos, bool inClaw)
     switch(gauntletPos) {
         case -1: moveZToExtreme(EXTEND, 2000);
         break;
-        case 0: moveZDist(UP, 10, 2000);
+        case 0: moveZDist(UP, 60, 2200);
         break;
-        case 1: moveZDist(UP, 10, 2000);
+        case 1: moveZDist(UP, 60, 2200);
         break;
-        case 2:moveZDist(UP, 10, 2000);
+        case 2:moveZDist(UP, 60, 2200);
         break;
     }
 

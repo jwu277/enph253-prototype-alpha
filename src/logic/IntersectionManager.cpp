@@ -608,10 +608,10 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(200);
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(0.93, -3.0); // turn right
+                        this->drive_system->update(0.91, -2.9); // turn right
                     }
                     else {
-                        this->drive_system->update(-3.0, 0.93); // turn left
+                        this->drive_system->update(-2.9, 0.91); // turn left
                     }
                     this->drive_system->actuate();
                     delay(100);
@@ -651,9 +651,16 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
                     if (this->side == DOOR_SIDE) {
+                    
+                        this->drive_system->update(0.86, 0.86);
+                        this->drive_system->actuate();
+                        delay(350);
                         this->reverseAndTurn(600, 300, REVERSE_RIGHT);
                     }
                     else {
+                        this->drive_system->update(-3.0, 0);
+                        this->drive_system->actuate();
+                        delay(150);
                         this->reverseAndTurn(600, 300, REVERSE_LEFT);
                     }
                     
@@ -1340,7 +1347,7 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.3, 0.92);
+            this->drive_system->update(-3.2, 0.91);
         }
         //turn right
         else if (x > 0) {
