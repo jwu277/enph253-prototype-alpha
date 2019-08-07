@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-int DELAY_TIME = 3500;
+int DELAY_TIME = 3000;
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -28,6 +28,8 @@ unsigned long last_intersection_time = millis();
 unsigned long gauntlet_timer;
 
 bool handling_gauntlet = false;
+
+bool off_ramp = false;
 
 // Constructor
 IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
@@ -144,7 +146,7 @@ void IntersectionManager::update() {
     //     this->handle_gauntlet();
     // } 
 
-    if (this->at_t_intersection() || this->at_y_intersection() || handling_gauntlet) {
+    if ((this->at_t_intersection() && off_ramp) || this->at_y_intersection() || handling_gauntlet) {
 
         unsigned long new_time = millis();
         if (handling_gauntlet) {
@@ -152,7 +154,12 @@ void IntersectionManager::update() {
         }
         //Debounce in case intersection triggered by accident due to oscilation 
         else if (new_time - last_intersection_time >= DELAY_TIME) {
-            Serial.println("At intersection");
+            if (this->at_t_intersection()) {
+                Serial.println("At T intersection");
+            }
+            if (this->at_y_intersection()) {
+                Serial.println("At Y intersection");
+            }
             this->handle_intersection();
             last_intersection_time = new_time;
         }
@@ -332,6 +339,7 @@ bool IntersectionManager::at_t_intersection() {
 void IntersectionManager::handle_intersection() {
     switch (this->task) {
         case TASK_R: {
+            off_ramp = true;
             Serial.println("Off ramp, going to home");
             DELAY_TIME = 800;
             if (this->side == DOOR_SIDE) {
@@ -1025,7 +1033,7 @@ void IntersectionManager::handle_intersection() {
                         if (this->side == DOOR_SIDE) {
                             this->drive_system->update(-3.2, 0.94);
                             this->drive_system->actuate();
-                            delay(100);
+                            delay(200);
                             // this->steer_left();
 
                             this->tape_sensor->update();
@@ -1037,15 +1045,15 @@ void IntersectionManager::handle_intersection() {
 
                             Serial.println("Back on tape for S2");
 
-                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                         }
                         else {
                                 
-                            this->drive_system->update(0.92, -3.2);
+                            this->drive_system->update(0.94, -3.2);
                             this->drive_system->actuate();
-                            delay(100);
+                            delay(200);
                             // this->steer_right();
-                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
                             this->tape_sensor->update();
                             // idea: timeout if we need to
