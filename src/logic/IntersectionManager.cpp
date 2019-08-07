@@ -157,7 +157,7 @@ void IntersectionManager::update() {
     //     this->handle_gauntlet();
     // } 
 
-    if ((this->at_t_intersection() && off_ramp) || this->at_y_intersection() || handling_gauntlet) {
+    if (this->at_t_intersection() || (this->at_y_intersection() && off_ramp) || handling_gauntlet) {
 
         unsigned long new_time = millis();
         if (handling_gauntlet) {
