@@ -504,8 +504,8 @@ void IntersectionManager::handle_intersection() {
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(400);
-                        this->drive_system->update(0.90, -2.8);
+                        delay(300);
+                        this->drive_system->update(0.89, -2.7);
                         this->drive_system->actuate();
                         delay(250);
                     }
