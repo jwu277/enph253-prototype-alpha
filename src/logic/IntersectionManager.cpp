@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-#define DELAY_TIME 800
+int DELAY_TIME = 800;
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -485,6 +485,8 @@ void IntersectionManager::handle_intersection() {
 
                     this->intersection_count++;
                     this->drive_system->set_speed_add(-0.05);
+
+                    DELAY_TIME = 200;
                     
                 }
                     break;
@@ -492,6 +494,7 @@ void IntersectionManager::handle_intersection() {
                 case 1: {
 
                     this->drive_system->set_speed_add(0.0);
+                    DELAY_TIME = 800;
 
                     Serial.println("Grabbing tall stone");
 
