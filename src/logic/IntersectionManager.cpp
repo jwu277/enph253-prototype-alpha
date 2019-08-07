@@ -595,7 +595,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
 
                         // wait till side qrds are on T to stop reverse 
-                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<400)) {
+                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000)) {
                             this->tape_sensor->update();
                         }
                         // delay(240);
@@ -610,7 +610,7 @@ void IntersectionManager::handle_intersection() {
                         // delay(220);
 
                         // wait till side qrds are on T to stop reverse 
-                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<400)) {
+                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000)) {
                             this->tape_sensor->update();
                         }
 
