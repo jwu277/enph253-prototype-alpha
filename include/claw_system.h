@@ -63,7 +63,7 @@ void closeClaw(int);
 void openClaw(int);
 int moveZToExtreme(bool, int);
 void changeStepperDir(bool);
-void findTopOfPillar(int);
+bool findTopOfPillar(int);
 bool grabCrystal(int);
 void enableStepper();
 void disableStepper();

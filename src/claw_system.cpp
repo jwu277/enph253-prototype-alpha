@@ -248,16 +248,27 @@ void moveY(double dist)
 //     yPos += run_time * (129.05 * 62.832) / 60000;
 // }
 
-void findTopOfPillar(int delay)
+// true = success, false = timed out
+bool findTopOfPillar(int delay)
 {
     //clawBasePBPressed = false;
     if (!digitalRead(CLAWFLOORPB))
-        return;
+        return true;
     changeStepperDir(DOWN);
+
+    long z_timeout = millis();
+
     while (digitalRead(CLAWFLOORPB))
     {
         stepperPulse(delay);
+        if (millis() - z_timeout >= 1000) {
+            Serial.println("Z grab crystal timed out");
+            return false;
+        }
     }
+
+    return true;
+
     //clawBasePBPressed = false;
 }
 
@@ -390,7 +401,15 @@ bool grabCrystal(int pillarType)
 
     moveY(68);
     openClaw(1800);
-    findTopOfPillar(1500);
+
+    if (!findTopOfPillar(1500)) {
+        moveZDist(UP, 5, 2200);
+        moveY(-10);
+        moveZDist(DOWN, 10, 2200);
+        moveY(10);
+        findTopOfPillar(1500);
+    }
+
     moveZDist(UP,5,2200);
     moveY(35);
     closeClaw(3000);
