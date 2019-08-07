@@ -469,7 +469,7 @@ void IntersectionManager::handle_intersection() {
 
                         this->drive_system->update(0.94, 0.90);
                         this->drive_system->actuate();
-                        delay(100);
+                        delay(150);
 
 
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
@@ -498,7 +498,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(400);
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(0.93, -3.3);
+                        this->drive_system->update(0.95, -3.3);
                     }
                     else {
                         this->drive_system->update(-3.3, 0.93);
@@ -890,9 +890,9 @@ void IntersectionManager::handle_intersection() {
                         
 
                         if (this->side == DOOR_SIDE) {
-                            this->drive_system->update(-3.2, 0.94);
+                            this->drive_system->update(-2.8, 0.90);
                             this->drive_system->actuate();
-                            delay(300);
+                            delay(100);
                             // this->steer_left();
 
                             this->tape_sensor->update();
