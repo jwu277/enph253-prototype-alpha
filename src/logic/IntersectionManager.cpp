@@ -46,9 +46,7 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
     this->isectType = T_ISECT; // why this init value?
 
-    // S2A testing
-    this->drive_system->set_speed_add(-0.04);
-    this->task = TASK_G1;
+    this->task = TASK_R;
 
 }
 
@@ -892,6 +890,15 @@ void IntersectionManager::handle_intersection() {
 
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
+
+                        // this->drive_system->update(0.0, 1.0);
+                        // this->drive_system->actuate();
+                        // delay(600);
+
+                        // this->drive_system->update(1.0, 0.0);
+                        // this->drive_system->actuate();
+                        // delay(600);
+
                         this->intersection_count++;
                         this->drive_system->set_speed_add(-0.04);
 
@@ -918,6 +925,15 @@ void IntersectionManager::handle_intersection() {
 
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
+
+                        // this->drive_system->update(0.0, 1.0);
+                        // this->drive_system->actuate();
+                        // delay(600);
+
+                        // this->drive_system->update(1.0, 0.0);
+                        // this->drive_system->actuate();
+                        // delay(600);
+
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
@@ -1199,7 +1215,7 @@ void IntersectionManager::handle_intersection() {
 }
 
 void IntersectionManager::initialize_tasksToDo() {
-    //this->tasksToDo.push_back(TASK_S1);
+    this->tasksToDo.push_back(TASK_S1);
     this->tasksToDo.push_back(TASK_S2A);
 }
 
