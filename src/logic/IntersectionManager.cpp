@@ -416,11 +416,50 @@ void IntersectionManager::handle_intersection() {
                     this->motorsOff(300);
 
                     if (this->side == DOOR_SIDE) {
-                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
+
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
+
+                        this->drive_system->update(-3.1, 0.89);
+                        this->drive_system->actuate();
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd5.is_on()) {
+                            this->tape_sensor->update();
+                        }
+                        Serial.println("Closed loop QRD turning complete");
+
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+                        this->drive_system->update(0.89, -3.1);
+                        this->drive_system->actuate();
+                        delay(70);
+
                     }
                     else {
-                        this->reverseAndTurn(630, 350, REVERSE_RIGHT);
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
+
+                        this->drive_system->update(0.89, -3.1);
+                        this->drive_system->actuate();
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd2.is_on()) {
+                            this->tape_sensor->update();
+                        }
+
+                        Serial.println("Closed loop QRD turning complete");
+
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
+                        this->drive_system->update(-3.1, 0.89);
+                        this->drive_system->actuate();
+                        delay(70);
+
                     }
+
                     Serial.println("ending centering to medium post, going back to gauntlet ");
                     
                     this->intersection_count++;
