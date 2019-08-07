@@ -62,9 +62,9 @@ class IntersectionManager {
         bool isectType;
 
         // temp function?
-        void handle_gauntlet(int);
+        void handle_gauntlet(int slot, bool inClaw);
 
-        bool place_stone(int slot);
+        bool place_stone(int slot, bool inClaw);
         bool center_post(bool);
 
         void uturn(bool dir);
