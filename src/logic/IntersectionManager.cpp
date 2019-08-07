@@ -498,12 +498,14 @@ void IntersectionManager::handle_intersection() {
                     delay(400);
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(0.95, -3.3);
+                        this->drive_system->actuate();
+                        delay(200);
                     }
                     else {
                         this->drive_system->update(-3.3, 0.93);
+                        this->drive_system->actuate();
+                        delay(100);
                     }
-                    this->drive_system->actuate();
-                    delay(100);
                     Serial.println("starting centering to tall post ");
 
                     while (true) {
@@ -540,6 +542,9 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(350);
                         this->reverseAndTurn(200, 300, REVERSE_RIGHT);
+
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
                     }
                     else {
                         this->drive_system->update(-3.0, -3.0);
