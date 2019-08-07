@@ -499,17 +499,20 @@ void IntersectionManager::handle_intersection() {
                     Serial.println("Grabbing tall stone");
 
                     this->motorsOff(300);
+                    unsigned long t_timeout = millis();
+
 
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        while(!this->tape_sensor->qrd7.is_on()||!this->tape_sensor->qrd6.is_on()||!this->tape_sensor->qrd5.is_on()) {
+
+                        // wait till side qrds are on T to stop reverse 
+                        while(!this->tape_sensor->qrd7.is_on()||!this->tape_sensor->qrd6.is_on()||!this->tape_sensor->qrd5.is_on()||(millis()-t_timeout>240)) {
                             this->tape_sensor->update();
                         }
-                        // wait till side qrds are on at the same time to get back on the T tape strip 
                         // delay(240);
-                        this->drive_system->update(0.89, -2.7);
+                        this->drive_system->update(0.93, -2.6);
                         this->drive_system->actuate();
                         delay(250);
                         
@@ -518,8 +521,9 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         // delay(220);
-                        // wait till side qrds are on at the same time to get back on the T tape strip 
-                        while(!this->tape_sensor->qrd2.is_on()||!this->tape_sensor->qrd1.is_on()||!this->tape_sensor->qrd0.is_on()) {
+
+                        // wait till side qrds are on T to stop reverse 
+                        while(!this->tape_sensor->qrd2.is_on()||!this->tape_sensor->qrd1.is_on()||!this->tape_sensor->qrd0.is_on()||(millis()-t_timeout>240 )) {
                             this->tape_sensor->update();
                         }
 
