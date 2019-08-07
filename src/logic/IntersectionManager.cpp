@@ -622,7 +622,7 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
-                    this->drive_system->set_speed_add(-0.04);
+                    this->drive_system->set_speed_add(-0.03);
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_G2A; // handoff to G2A task
@@ -1531,7 +1531,7 @@ void IntersectionManager::steer_left() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 3) || (millis() - timeout <= 400)) {
+    while ((qrd_idx <= 3) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
@@ -1567,7 +1567,7 @@ void IntersectionManager::steer_right() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 3) || (millis() - timeout <= 400)) {
+    while ((qrd_idx <= 3) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
