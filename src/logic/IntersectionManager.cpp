@@ -429,8 +429,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         Serial.println("Closed loop QRD turning complete");
-
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
                         this->drive_system->update(0.89, -3.1);
                         this->drive_system->actuate();
@@ -451,8 +450,7 @@ void IntersectionManager::handle_intersection() {
                         }
 
                         Serial.println("Closed loop QRD turning complete");
-
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
                         this->drive_system->update(-3.1, 0.89);
                         this->drive_system->actuate();
