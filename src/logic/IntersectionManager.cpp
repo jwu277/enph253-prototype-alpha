@@ -508,7 +508,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post((this->side), 45)) {
+                        if (center_post((this->side), this->side ? 45 : 60)) {
                             break;
                         }
                         else {
@@ -648,7 +648,7 @@ void IntersectionManager::handle_intersection() {
                             }
                         }
                         else {
-                            if (center_post(INIT_TURN_LEFT, 45)) {
+                            if (center_post(INIT_TURN_LEFT, 60)) {
                                 break;
                             }
                             else {
