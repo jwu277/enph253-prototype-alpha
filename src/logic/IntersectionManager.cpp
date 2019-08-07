@@ -536,6 +536,8 @@ void IntersectionManager::handle_intersection() {
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
 
+                    DELAY_TIME = 500;
+
                 }
                     break;
 
@@ -922,6 +924,8 @@ void IntersectionManager::handle_intersection() {
         case TASK_G1: {
             switch (this->intersection_count) {
                 case 0: {
+
+                    DELAY_TIME = 800;
 
                     this->drive_system->set_speed_add(0.0);
 
