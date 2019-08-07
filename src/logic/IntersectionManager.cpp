@@ -1375,7 +1375,7 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.1, 0.91);
+            this->drive_system->update(-3.0, 0.90);
         }
         //turn right
         else if (x > 0) {
