@@ -1048,7 +1048,7 @@ void IntersectionManager::handle_intersection() {
                         if (this->side == DOOR_SIDE) {
                             this->drive_system->update(-3.2, 0.94);
                             this->drive_system->actuate();
-                            delay(130);
+                            delay(200);
                             // this->steer_left();
 
                             this->tape_sensor->update();
@@ -1060,15 +1060,19 @@ void IntersectionManager::handle_intersection() {
 
                             Serial.println("Back on tape for S2");
 
-                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                            this->drive_system->update(0.94, -3.2);
+                            this->drive_system->actuate();
+                            delay(60);
+
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                         }
                         else {
                                 
                             this->drive_system->update(0.94, -3.2);
                             this->drive_system->actuate();
-                            delay(130);
+                            delay(200);
                             // this->steer_right();
-                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
                             this->tape_sensor->update();
                             // idea: timeout if we need to
@@ -1076,6 +1080,10 @@ void IntersectionManager::handle_intersection() {
                                 delay(1);
                                 this->tape_sensor->update();
                             }
+
+                            this->drive_system->update(-3.2, 0.94);
+                            this->drive_system->actuate();
+                            delay(60);
 
                             Serial.println("Back on tape for S2");
 
