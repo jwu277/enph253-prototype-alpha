@@ -375,23 +375,23 @@ bool grabCrystal(int pillarType)
     
     enableStepper();
     switch(pillarType) {
-        case -1: moveZToExtreme(EXTEND, 1800);
+        case -1: moveZToExtreme(EXTEND, 2200);
         break;
 
-        case 0: moveZDist(UP, 270, 1900);
+        case 0: moveZDist(UP, 270, 2200);
         break;
 
-        case 1: moveZDist(UP, 190, 1900);
+        case 1: moveZDist(UP, 190, 2200);
         break;
 
-        case 2: moveZDist(UP, 130, 1900);
+        case 2: moveZDist(UP, 130, 2200);
         break;
     }
 
     moveY(68);
     openClaw(1800);
     findTopOfPillar(1500);
-    moveZDist(UP,2,2000);
+    moveZDist(UP,5,2200);
     moveY(35);
     closeClaw(3000);
     moveZDist(UP, 50, 2500);

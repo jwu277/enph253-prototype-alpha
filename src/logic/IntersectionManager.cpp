@@ -472,7 +472,7 @@ void IntersectionManager::handle_intersection() {
                         delay(150);
 
 
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                     }
                     else {
                         Serial.println("Tall post: slight left at B");
