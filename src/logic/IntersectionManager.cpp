@@ -425,7 +425,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd5.is_on()) {
+                        while(!this->tape_sensor->qrd2.is_on()) {
                             this->tape_sensor->update();
                         }
                         Serial.println("Closed loop QRD turning complete");
@@ -446,7 +446,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd2.is_on()) {
+                        while(!this->tape_sensor->qrd5.is_on()) {
                             this->tape_sensor->update();
                         }
 
