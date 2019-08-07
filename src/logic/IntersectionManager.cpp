@@ -484,11 +484,15 @@ void IntersectionManager::handle_intersection() {
                     }
 
                     this->intersection_count++;
+                    this->drive_system->set_speed_add(-0.03);
                     
                 }
                     break;
                 
                 case 1: {
+
+                    this->drive_system->set_speed_add(0.0);
+
                     Serial.println("Grabbing tall stone");
 
                     this->motorsOff(300);
@@ -919,7 +923,7 @@ void IntersectionManager::handle_intersection() {
                         
 
                         if (this->side == DOOR_SIDE) {
-                            this->drive_system->update(-2.8, 0.90);
+                            this->drive_system->update(-3.0, 0.91);
                             this->drive_system->actuate();
                             delay(100);
                             // this->steer_left();
@@ -937,9 +941,9 @@ void IntersectionManager::handle_intersection() {
                         }
                         else {
                                 
-                            this->drive_system->update(0.94, -3.2);
+                            this->drive_system->update(0.91, -3.0);
                             this->drive_system->actuate();
-                            delay(300);
+                            delay(100);
                             // this->steer_right();
                             this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
