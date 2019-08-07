@@ -1017,7 +1017,7 @@ void IntersectionManager::handle_intersection() {
                         
 
                         if (this->side == DOOR_SIDE) {
-                            this->drive_system->update(-3.2, 0.92);
+                            this->drive_system->update(-3.2, 0.94);
                             this->drive_system->actuate();
                             delay(100);
                             // this->steer_left();
