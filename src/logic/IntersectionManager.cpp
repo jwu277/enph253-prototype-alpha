@@ -377,18 +377,47 @@ void IntersectionManager::handle_intersection() {
                     Serial.println("Grabbing medium stone");
 
                     this->motorsOff(300);
+                    unsigned long t_timeout = millis();
 
-                    this->drive_system->update(-3.0, -3.0);
-                    this->drive_system->actuate();
-                    delay(400);
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.0, 0.93);
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+
+                        // wait till side qrds are on T to stop reverse 
+                        while(this->tape_sensor->qrd2.is_on()||this->tape_sensor->qrd1.is_on()||this->tape_sensor->qrd0.is_on()||(millis()-t_timeout<400 )) {
+                            this->tape_sensor->update();
+                        }
+                        // delay(240);
+                        this->drive_system->update(-2.6, 0.93);
+                        this->drive_system->actuate();
+                        delay(250);
+                        
                     }
                     else {
-                        this->drive_system->update(0.93, -3.0);
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        // delay(220);
+
+                        // wait till side qrds are on T to stop reverse 
+                        while(this->tape_sensor->qrd7.is_on()||this->tape_sensor->qrd6.is_on()||this->tape_sensor->qrd5.is_on()||(millis()-t_timeout<400)) {
+                            this->tape_sensor->update();
+                        }
+
+                        this->drive_system->update(0.89, -2.7);
+                        this->drive_system->actuate();
+                        delay(250);
                     }
-                    this->drive_system->actuate();
-                    delay(100);
+                    // this->drive_system->update(-3.0, -3.0);
+                    // this->drive_system->actuate();
+                    // delay(400);
+                    // if (this->side == DOOR_SIDE) {
+                    //     this->drive_system->update(-3.0, 0.93);
+                    // }
+                    // else {
+                    //     this->drive_system->update(0.93, -3.0);
+                    // }
+                    // this->drive_system->actuate();
+                    // delay(100);
                     Serial.println("starting centering to medium post ");
 
                     while (true) {
@@ -425,12 +454,11 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd5.is_on()) {
+                        while(!this->tape_sensor->qrd2.is_on()) {
                             this->tape_sensor->update();
                         }
                         Serial.println("Closed loop QRD turning complete");
-
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
                         this->drive_system->update(0.89, -3.1);
                         this->drive_system->actuate();
@@ -446,13 +474,12 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd2.is_on()) {
+                        while(!this->tape_sensor->qrd5.is_on()) {
                             this->tape_sensor->update();
                         }
 
                         Serial.println("Closed loop QRD turning complete");
-
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
                         this->drive_system->update(-3.1, 0.89);
                         this->drive_system->actuate();
