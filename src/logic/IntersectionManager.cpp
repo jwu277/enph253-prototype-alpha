@@ -444,7 +444,7 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
-                    this->drive_system->set_speed_add(-0.05);
+                    this->drive_system->set_speed_add(-0.025);
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
