@@ -493,15 +493,19 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    this->drive_system->update(-3.0, -3.0);
-                    this->drive_system->actuate();
-                    delay(400);
+                    
                     if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
                         this->drive_system->update(0.95, -3.3);
                         this->drive_system->actuate();
                         delay(200);
                     }
                     else {
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
                         this->drive_system->update(-3.3, 0.93);
                         this->drive_system->actuate();
                         delay(100);
@@ -538,10 +542,13 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(300);
 
-                        this->drive_system->update(0.86, -3.3);
+                        this->drive_system->update(0.93, -3.3);
                         this->drive_system->actuate();
-                        delay(350);
-                        this->reverseAndTurn(200, 300, REVERSE_RIGHT);
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd4.is_on()) {
+                            this->tape_sensor->update();
+                        }
 
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
 
@@ -550,10 +557,17 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         delay(300);
-                        this->drive_system->update(-3.3, 0.86);
+
+                        this->drive_system->update(-3.3, 0.93);
                         this->drive_system->actuate();
-                        delay(350);
-                        this->reverseAndTurn(200, 300, REVERSE_LEFT);
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd3.is_on()) {
+                            this->tape_sensor->update();
+                        }
+
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
                     }
 
                     // if (this->side == DOOR_SIDE) {
@@ -854,7 +868,7 @@ void IntersectionManager::handle_intersection() {
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
                         this->intersection_count++;
-                        this->drive_system->set_speed_add(0.0);
+                        this->drive_system->set_speed_add(-0.04);
 
                         delay(200);
 
@@ -1006,7 +1020,7 @@ void IntersectionManager::handle_intersection() {
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
                         this->intersection_count++;
-                        this->drive_system->set_speed_add(0.0);
+                        this->drive_system->set_speed_add(-0.04);
 
                         delay(200);
 
