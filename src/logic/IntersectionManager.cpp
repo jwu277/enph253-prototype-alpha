@@ -484,7 +484,7 @@ void IntersectionManager::handle_intersection() {
                     }
 
                     this->intersection_count++;
-                    this->drive_system->set_speed_add(-0.05);
+                    this->drive_system->set_speed_add(-0.025);
 
                     DELAY_TIME = 200;
                     
@@ -512,7 +512,7 @@ void IntersectionManager::handle_intersection() {
                     else {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(240);
+                        delay(210);
                         this->drive_system->update(-2.7, 0.89);
                         this->drive_system->actuate();
                         delay(250);
