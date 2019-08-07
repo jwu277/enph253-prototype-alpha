@@ -58,10 +58,10 @@ void IntersectionManager::set_side(bool side) {
 
 void IntersectionManager::hard_wiggle(int numOfWiggles, int wiggleHalfPeriod) {
     for (int i = 0; i < numOfWiggles; i++) {
-        this->drive_system->update(1.0, -0.1);
+        this->drive_system->update(1.0, 0.0);
         this->drive_system->actuate();
         delay(wiggleHalfPeriod);
-        this->drive_system->update(-0.1, 1.0);
+        this->drive_system->update(0.0, 1.0);
         this->drive_system->actuate();
         delay(wiggleHalfPeriod);
     }
