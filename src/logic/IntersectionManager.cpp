@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-int DELAY_TIME = 800;
+int DELAY_TIME = 3500;
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -333,7 +333,7 @@ void IntersectionManager::handle_intersection() {
     switch (this->task) {
         case TASK_R: {
             Serial.println("Off ramp, going to home");
-
+            DELAY_TIME = 800;
             if (this->side == DOOR_SIDE) {
                 this->steer_left();
                 this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
