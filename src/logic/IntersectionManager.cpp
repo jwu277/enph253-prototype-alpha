@@ -512,7 +512,7 @@ void IntersectionManager::handle_intersection() {
                     else {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(210);
+                        delay(220);
                         this->drive_system->update(-2.7, 0.89);
                         this->drive_system->actuate();
                         delay(250);
@@ -587,13 +587,6 @@ void IntersectionManager::handle_intersection() {
                         delay(70);
 
                     }
-
-                    // if (this->side == DOOR_SIDE) {
-                    //     this->reverseAndTurn(600, 300, REVERSE_RIGHT);
-                    // }
-                    // else {
-                    //     this->reverseAndTurn(630, 350, REVERSE_LEFT);
-                    // }
                     Serial.println("ending centering to tall post, going back to gauntlet ");
                     
                     this->intersection_count++;
@@ -617,7 +610,7 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
-                    this->drive_system->set_speed_add(-0.08);
+                    this->drive_system->set_speed_add(-0.04);
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_G2A; // handoff to G2A task
