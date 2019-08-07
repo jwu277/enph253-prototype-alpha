@@ -7,7 +7,7 @@
 #include "claw_system.h"
 
 #define TURN_COUNTER_MAX 100
-int DELAY_TIME = 2000;
+int DELAY_TIME = 3500;
 
 #define REVERSE_LEFT false
 #define REVERSE_RIGHT true
@@ -385,7 +385,7 @@ void IntersectionManager::handle_intersection() {
 
                         // wait till side qrds are on T to stop reverse 
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<800)) {
+                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
                             this->tape_sensor->update();
                         }
                         // delay(240);
@@ -401,10 +401,10 @@ void IntersectionManager::handle_intersection() {
 
                         // wait till side qrds are on T to stop reverse 
                         this->tape_sensor->update();
-                        
-                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<800 )) {
+                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
                             this->tape_sensor->update();
                         }
+
                         this->drive_system->update(0.89, -2.7);
                         this->drive_system->actuate();
                         delay(250);
