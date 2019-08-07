@@ -46,6 +46,7 @@ class IntersectionManager {
 
         //Frequently used movement functions
         void wiggle(int numOfWiggles, int wiggleHalfPeriod);
+        void hard_wiggle(int numOfWiggles, int wiggleHalfPeriod);
         void reverseAndTurn(int reverseTime, int turnTime, bool dir);
         void motorsOff(int duration);
 

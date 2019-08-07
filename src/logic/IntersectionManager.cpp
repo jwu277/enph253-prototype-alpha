@@ -56,6 +56,17 @@ void IntersectionManager::set_side(bool side) {
     this->side = side;
 }
 
+void IntersectionManager::hard_wiggle(int numOfWiggles, int wiggleHalfPeriod) {
+    for (int i = 0; i < numOfWiggles; i++) {
+        this->drive_system->update(1.0, -0.1);
+        this->drive_system->actuate();
+        delay(wiggleHalfPeriod);
+        this->drive_system->update(-0.1, 1.0);
+        this->drive_system->actuate();
+        delay(wiggleHalfPeriod);
+    }
+}
+
 void IntersectionManager::wiggle(int numOfWiggles, int wiggleHalfPeriod) {
     for (int i = 0; i < numOfWiggles; i++) {
         this->drive_system->update(0.93, -0.1);
@@ -1019,7 +1030,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->wiggle(10, 150);
+                        this->hard_wiggle(10, 150);
                         this->handle_gauntlet(2, true);
 
                         closeClaw(1500);
@@ -1033,7 +1044,7 @@ void IntersectionManager::handle_intersection() {
                         if (this->side == DOOR_SIDE) {
                             this->drive_system->update(-3.2, 0.94);
                             this->drive_system->actuate();
-                            delay(200);
+                            delay(130);
                             // this->steer_left();
 
                             this->tape_sensor->update();
@@ -1051,7 +1062,7 @@ void IntersectionManager::handle_intersection() {
                                 
                             this->drive_system->update(0.94, -3.2);
                             this->drive_system->actuate();
-                            delay(200);
+                            delay(130);
                             // this->steer_right();
                             this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
@@ -1136,42 +1147,51 @@ void IntersectionManager::handle_intersection() {
                 }
                     break;
                 
+                // case 1: {
+
+                //     // currently assuming CV sees the gauntlet
+
+                //     if (millis() - gauntlet_timer >= 1000) {
+                //         Serial.println("At gauntlet");
+                //         this->intersection_count++;
+                //         this->drive_system->set_speed_add(-0.04);
+
+                //         // delay(200);
+
+                //         this->drive_system->update(-3.0, -3.0);
+                //         this->drive_system->actuate();
+                //         delay(400);
+
+                //         this->drive_system->update(0.0, 0.0);
+                //         this->drive_system->actuate();
+                //         delay(200);
+
+                //         gauntlet_timer = millis();
+
+                //     }
+
+                // }
+                //     break;
+
                 case 1: {
 
                     // currently assuming CV sees the gauntlet
 
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
-                        this->intersection_count++;
-                        this->drive_system->set_speed_add(-0.04);
 
-                        // delay(200);
-
-                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->update(0.0, 1.0);
                         this->drive_system->actuate();
-                        delay(400);
+                        delay(600);
 
-                        this->drive_system->update(0.0, 0.0);
+                        this->drive_system->update(1.0, 0.0);
                         this->drive_system->actuate();
-                        delay(200);
+                        delay(600);
 
-                        gauntlet_timer = millis();
-
-                    }
-
-                }
-                    break;
-
-                case 2: {
-
-                    // currently assuming CV sees the gauntlet
-
-                    if (millis() - gauntlet_timer >= 1000) {
-                        Serial.println("At gauntlet");
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->wiggle(10, 150);
+                        this->hard_wiggle(10, 150);
                         this->handle_gauntlet(3, true);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
