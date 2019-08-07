@@ -484,7 +484,7 @@ void IntersectionManager::handle_intersection() {
                     }
 
                     this->intersection_count++;
-                    this->drive_system->set_speed_add(-0.03);
+                    this->drive_system->set_speed_add(-0.05);
                     
                 }
                     break;
