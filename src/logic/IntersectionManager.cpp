@@ -478,9 +478,9 @@ void IntersectionManager::handle_intersection() {
                         
                         this->drive_system->update(0.90, 0.94);
                         this->drive_system->actuate();
-                        delay(100);
+                        delay(150);
 
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
                     this->intersection_count++;
@@ -512,10 +512,10 @@ void IntersectionManager::handle_intersection() {
                     else {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(400);
-                        this->drive_system->update(-3.0, 0.92);
+                        delay(240);
+                        this->drive_system->update(-2.7, 0.89);
                         this->drive_system->actuate();
-                        delay(100);
+                        delay(250);
                     }
                     Serial.println("starting centering to tall post ");
 
