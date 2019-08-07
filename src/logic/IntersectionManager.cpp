@@ -505,9 +505,9 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         delay(400);
-                        this->drive_system->update(0.92, -3.0);
+                        this->drive_system->update(0.90, -2.8);
                         this->drive_system->actuate();
-                        delay(200);
+                        delay(250);
                     }
                     else {
                         this->drive_system->update(-3.0, -3.0);
@@ -617,7 +617,7 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
-                    this->drive_system->set_speed_add(-0.05);
+                    this->drive_system->set_speed_add(-0.08);
 
                     this->tasksToDo.pop_back();
                     this->task = TASK_G2A; // handoff to G2A task
@@ -888,7 +888,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(-0.04);
 
-                        delay(200);
+                        // delay(200);
 
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
@@ -1040,7 +1040,7 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count++;
                         this->drive_system->set_speed_add(-0.04);
 
-                        delay(200);
+                        // delay(200);
 
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
