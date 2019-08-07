@@ -637,7 +637,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(350);
 
-                    this->wiggle(4,120);
+                    this->wiggle(12,120);
 
                     this->motorsOff(300);
 
@@ -795,7 +795,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(350);
 
-                    this->wiggle(4,120);
+                    this->wiggle(12,120);
 
                     this->motorsOff(300);
 
@@ -878,7 +878,7 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->actuate();
                     delay(350);
 
-                    this->wiggle(4,120);
+                    this->wiggle(12,120);
 
                     this->motorsOff(300);
 
@@ -1037,7 +1037,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(2, true);
+                        this->handle_gauntlet(this->side ? 2 : 3, true);
 
                         closeClaw(1500);
 
@@ -1206,7 +1206,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(3, true);
+                        this->handle_gauntlet(this->side ? 3 : 2, true);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
