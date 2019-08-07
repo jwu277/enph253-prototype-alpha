@@ -790,6 +790,9 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(350);
                         this->reverseAndTurn(200, 300, REVERSE_RIGHT);
+                        this->drive_system->update(0.90, 0.90);
+                        this->drive_system->actuate();
+                        delay(50);
                     }
                     else {
                         this->drive_system->update(-3.0, -3.0);
@@ -799,6 +802,9 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(350);
                         this->reverseAndTurn(200, 300, REVERSE_LEFT);
+                        this->drive_system->update(0.90, 0.90);
+                        this->drive_system->actuate();
+                        delay(50);
                     }
                     
                     this->intersection_count++;
