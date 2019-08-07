@@ -923,6 +923,41 @@ void IntersectionManager::handle_intersection() {
                 }
                     break;
                 
+                // case 1: {
+
+                //     // currently assuming CV sees the gauntlet
+
+                //     if (millis() - gauntlet_timer >= 1000) {
+                //         Serial.println("At gauntlet");
+
+                //         // this->drive_system->update(0.0, 1.0);
+                //         // this->drive_system->actuate();
+                //         // delay(600);
+
+                //         // this->drive_system->update(1.0, 0.0);
+                //         // this->drive_system->actuate();
+                //         // delay(600);
+
+                //         this->intersection_count++;
+                //         this->drive_system->set_speed_add(-0.04);
+
+                //         // delay(200);
+
+                //         this->drive_system->update(-3.0, -3.0);
+                //         this->drive_system->actuate();
+                //         delay(400);
+
+                //         this->drive_system->update(0.0, 0.0);
+                //         this->drive_system->actuate();
+                //         delay(200);
+
+                //         gauntlet_timer = millis();
+
+                //     }
+
+                // }
+                //     break;
+
                 case 1: {
 
                     // currently assuming CV sees the gauntlet
@@ -930,48 +965,13 @@ void IntersectionManager::handle_intersection() {
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
 
-                        // this->drive_system->update(0.0, 1.0);
-                        // this->drive_system->actuate();
-                        // delay(600);
-
-                        // this->drive_system->update(1.0, 0.0);
-                        // this->drive_system->actuate();
-                        // delay(600);
-
-                        this->intersection_count++;
-                        this->drive_system->set_speed_add(-0.04);
-
-                        // delay(200);
-
-                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->update(0.0, 1.0);
                         this->drive_system->actuate();
-                        delay(400);
+                        delay(600);
 
-                        this->drive_system->update(0.0, 0.0);
+                        this->drive_system->update(1.0, 0.0);
                         this->drive_system->actuate();
-                        delay(200);
-
-                        gauntlet_timer = millis();
-
-                    }
-
-                }
-                    break;
-
-                case 2: {
-
-                    // currently assuming CV sees the gauntlet
-
-                    if (millis() - gauntlet_timer >= 1000) {
-                        Serial.println("At gauntlet");
-
-                        // this->drive_system->update(0.0, 1.0);
-                        // this->drive_system->actuate();
-                        // delay(600);
-
-                        // this->drive_system->update(1.0, 0.0);
-                        // this->drive_system->actuate();
-                        // delay(600);
+                        delay(600);
 
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
@@ -988,7 +988,7 @@ void IntersectionManager::handle_intersection() {
                         
 
                         if (this->side == DOOR_SIDE) {
-                            this->drive_system->update(-3.0, 0.91);
+                            this->drive_system->update(-3.2, 0.92);
                             this->drive_system->actuate();
                             delay(100);
                             // this->steer_left();
@@ -1006,7 +1006,7 @@ void IntersectionManager::handle_intersection() {
                         }
                         else {
                                 
-                            this->drive_system->update(0.91, -3.0);
+                            this->drive_system->update(0.92, -3.2);
                             this->drive_system->actuate();
                             delay(100);
                             // this->steer_right();
