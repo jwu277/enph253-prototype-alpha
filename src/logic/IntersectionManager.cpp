@@ -887,7 +887,7 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.9);
+                        this->drive_system->update(-3.5, 0.93);
                     }
                     else {
                         this->drive_system->update(0.9, -3.5);
