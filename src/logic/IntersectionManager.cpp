@@ -395,7 +395,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post(!(this->side))) {
+                        if (center_post(!(this->side), 60)) {
                             break;
                         }
                         else {
@@ -508,7 +508,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post((this->side))) {
+                        if (center_post((this->side), 45)) {
                             break;
                         }
                         else {
@@ -640,7 +640,7 @@ void IntersectionManager::handle_intersection() {
                     while (true) {
                         
                         if (this->side == DOOR_SIDE) {
-                            if (center_post(INIT_TURN_RIGHT)) {
+                            if (center_post(INIT_TURN_RIGHT, 45)) {
                                 break;
                             }
                             else {
@@ -648,7 +648,7 @@ void IntersectionManager::handle_intersection() {
                             }
                         }
                         else {
-                            if (center_post(INIT_TURN_LEFT)) {
+                            if (center_post(INIT_TURN_LEFT, 45)) {
                                 break;
                             }
                             else {
@@ -717,7 +717,7 @@ void IntersectionManager::handle_intersection() {
                     while (true) {
                         
                         if (this->side == DOOR_SIDE) {
-                            if (center_post(INIT_TURN_LEFT)) {
+                            if (center_post(INIT_TURN_LEFT, 45)) {
                                 break;
                             }
                             else {
@@ -725,7 +725,7 @@ void IntersectionManager::handle_intersection() {
                             }
                         }
                         else {
-                            if (center_post(INIT_TURN_RIGHT)) {
+                            if (center_post(INIT_TURN_RIGHT, 45)) {
                                 break;
                             }
                             else {
@@ -1247,7 +1247,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
         // TODO: tune values
 
-        for (int i = 0; i < 80; i++) {
+        for (int i = 0; i < 60; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1260,7 +1260,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 12) {
+                if (fabs(x) <= 8) {
                     complete = true;
                     break;
                 }
@@ -1297,7 +1297,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 12) {
+                if (fabs(x) <= 8) {
                     complete = true;
                     break;
                 }
@@ -1313,7 +1313,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
             return false;
         }
 
-    } while (fabs(x) > 12);
+    } while (fabs(x) > 8);
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
@@ -1348,7 +1348,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
 // true turns the robot cw initially, ccw for false
 // TODO add debounce and check counter clowckwise turn
-bool IntersectionManager::center_post(bool init_dir) {
+bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
     // 1. Minimie x
 
@@ -1384,7 +1384,7 @@ bool IntersectionManager::center_post(bool init_dir) {
 
         // TODO: tune values
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < duty_val; i++) {
 
             if (Serial.read() == 'P') {
 
