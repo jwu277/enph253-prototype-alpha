@@ -629,7 +629,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(400);
 
-                        this->drive_system->update(0.89, -3.1);
+                        this->drive_system->update(0.93, -3.1);
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
