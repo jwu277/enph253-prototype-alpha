@@ -77,9 +77,9 @@ void IntersectionManager::reverseAndTurn(int reverseTime, int turnTime, bool dir
         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
     }
     else {
-        this->drive_system->update(-3.0, .98);
+        this->drive_system->update(-3.2, .98);
         this->drive_system->actuate();
-        delay(turnTime);
+        delay(turnTime+50);
         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
     }    
 }
