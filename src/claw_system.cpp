@@ -468,9 +468,9 @@ void depositCrystal(int gauntletPos, bool inClaw)
     delay(500);
     openClaw(1400);
     enableStepper();
-    moveZDist(UP, 70, 1800);
+    moveZDist(UP, 70, 2200);
     homeY(HOME);
     //moveY(-300);
-    Serial.println("here boi");
+    Serial.println("deposited");
     disableStepper();   //leaves the claw open currently
 }
