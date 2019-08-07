@@ -471,7 +471,6 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(150);
 
-
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                     }
                     else {
@@ -1285,7 +1284,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 70; i++) {
+        for (int i = 0; i < 60; i++) {
 
             if (Serial.read() == 'G') {
 
