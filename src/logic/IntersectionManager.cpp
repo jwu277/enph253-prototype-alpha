@@ -498,7 +498,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         delay(400);
-                        this->drive_system->update(0.95, -3.3);
+                        this->drive_system->update(0.92, -3.0);
                         this->drive_system->actuate();
                         delay(200);
                     }
@@ -506,7 +506,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
                         delay(400);
-                        this->drive_system->update(-3.3, 0.93);
+                        this->drive_system->update(-3.0, 0.92);
                         this->drive_system->actuate();
                         delay(100);
                     }
@@ -542,11 +542,11 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(300);
 
-                        this->drive_system->update(0.93, -3.3);
+                        this->drive_system->update(0.90, -3.2);
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd4.is_on()) {
+                        while(!this->tape_sensor->qrd5.is_on()) {
                             this->tape_sensor->update();
                         }
 
@@ -558,11 +558,11 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(300);
 
-                        this->drive_system->update(-3.3, 0.93);
+                        this->drive_system->update(-3.2, 0.90);
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd3.is_on()) {
+                        while(!this->tape_sensor->qrd2.is_on()) {
                             this->tape_sensor->update();
                         }
 
@@ -1279,7 +1279,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 8) {
+                if (fabs(x) <= 12) {
                     complete = true;
                     break;
                 }
@@ -1316,7 +1316,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 8) {
+                if (fabs(x) <= 12) {
                     complete = true;
                     break;
                 }
@@ -1332,7 +1332,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
             return false;
         }
 
-    } while (fabs(x) > 8);
+    } while (fabs(x) > 12);
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
