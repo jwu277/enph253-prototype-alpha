@@ -515,7 +515,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal(1);
+                    grabCrystal(0);
                     //openClaw(); // for now todo
 
                     this->motorsOff(300);
@@ -834,6 +834,51 @@ void IntersectionManager::handle_intersection() {
 
                         this->wiggle(10, 150);
                         this->handle_gauntlet(2, true);
+
+                        closeClaw(1500);
+
+
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
+                        
+
+                        if (this->side == DOOR_SIDE) {
+                            this->drive_system->update(-3.2, 0.94);
+                            this->drive_system->actuate();
+                            delay(300);
+                            // this->steer_left();
+
+                            this->tape_sensor->update();
+                            // idea: timeout if we need to
+                            while(!this->tape_sensor->qrd3.is_on()) {
+                                delay(1);
+                                this->tape_sensor->update();
+                            }
+
+                            Serial.println("Back on tape for S2");
+
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                        }
+                        else {
+                                
+                            this->drive_system->update(0.94, -3.2);
+                            this->drive_system->actuate();
+                            delay(300);
+                            // this->steer_right();
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+                            this->tape_sensor->update();
+                            // idea: timeout if we need to
+                            while(!this->tape_sensor->qrd4.is_on()) {
+                                delay(1);
+                                this->tape_sensor->update();
+                            }
+
+                            Serial.println("Back on tape for S2");
+
+                        }
+
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -1252,7 +1297,6 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
     }
 
     depositCrystal(znum, inClaw);
-    Serial.println("Line 1255");
     return true;
 
 }
