@@ -46,6 +46,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
     this->isectType = T_ISECT; // why this init value?
 
+    // S2A testing
+    this->drive_system->set_speed_add(-0.04);
     this->task = TASK_G1;
 
 }
@@ -464,12 +466,21 @@ void IntersectionManager::handle_intersection() {
                 case 0: {
                     if (this->side == DOOR_SIDE) {
                         Serial.println("Tall post: slight right at B");
-                        this->steer_right(); //may need to hardcode this to be a slight turn instead
+
+                        this->drive_system->update(0.94, 0.90);
+                        this->drive_system->actuate();
+                        delay(100);
+
+
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
                     else {
                         Serial.println("Tall post: slight left at B");
-                        this->steer_left();
+                        
+                        this->drive_system->update(0.90, 0.94);
+                        this->drive_system->actuate();
+                        delay(100);
+
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                     }
 
