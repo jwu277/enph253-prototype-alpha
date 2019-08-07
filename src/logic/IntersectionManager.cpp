@@ -1565,12 +1565,12 @@ void IntersectionManager::steer_left() {
 
     Serial.println("steering left");
 
-    this->drive_system->update(-2.7, 0.93);
+    this->drive_system->update(-3.0, 0.94);
     this->drive_system->actuate();
 
     long timeout = millis();
     
-    while ((qrd_idx <= 3) && (millis() - timeout <= 400)) {
+    while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
@@ -1601,12 +1601,12 @@ void IntersectionManager::steer_right() {
 
     int qrd_idx = 7 - this->last_black_sensor();
 
-    this->drive_system->update(0.93, -2.7);
+    this->drive_system->update(0.94, -3.0);
     this->drive_system->actuate();
 
     long timeout = millis();
     
-    while ((qrd_idx <= 3) && (millis() - timeout <= 400)) {
+    while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
