@@ -463,9 +463,9 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
-                    delay(600);
+                    delay(500);
 
                     this->wiggle(12,120);
 
@@ -653,9 +653,9 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
-                    delay(600);
+                    delay(500);
 
                     this->wiggle(12,120);
 
@@ -854,9 +854,9 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
-                    delay(600);
+                    delay(500);
 
                     this->wiggle(12,120);
 
