@@ -512,6 +512,11 @@ void IntersectionManager::handle_intersection() {
                     }
 
                     Serial.println("ending centering to medium post, going back to gauntlet ");
+
+                    // get a push
+                    this->drive_system->update(0.93, 0.93);
+                    this->drive_system->actuate();
+                    delay(80);
                     
                     this->intersection_count++;
 
