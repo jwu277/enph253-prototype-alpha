@@ -1039,7 +1039,6 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->hard_wiggle(4, 150);
                         this->handle_gauntlet(this->side ? 3 : 2, true);
 
                         closeClaw(1500);
@@ -1208,7 +1207,6 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->hard_wiggle(4, 150);
                         this->handle_gauntlet(this->side ? 4 : 1, true);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
@@ -1315,7 +1313,6 @@ void IntersectionManager::handle_intersection() {
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->wiggle(4, 150);
                         this->handle_gauntlet(3, true);
                         this->handle_gauntlet(4, false);
                         handling_gauntlet = false;
@@ -1374,7 +1371,6 @@ void IntersectionManager::handle_gauntlet(int slot, bool inClaw) {
             this->drive_system->actuate();
             delay(500);
 
-            wiggle(4, 150);
 
             //this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
 
