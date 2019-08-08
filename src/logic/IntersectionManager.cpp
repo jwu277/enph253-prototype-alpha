@@ -455,7 +455,7 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
                     delay(350);
 
@@ -639,7 +639,7 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
                     delay(350);
 
@@ -939,7 +939,7 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("Initiating gauntlet sequence...");
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
                     delay(150);
                     this->tape_sensor->update();
@@ -948,15 +948,19 @@ void IntersectionManager::handle_intersection() {
                         this->tape_sensor->update();
                     }
 
+                    this->drive_system->update(0.88, 0.88);
+                    this->drive_system->actuate();
+                    delay(100);
+
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.94);
+                        this->drive_system->update(-3.5, 1.0);
                     }
                     else {
-                        this->drive_system->update(0.94, -3.5);
+                        this->drive_system->update(1.0, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -968,19 +972,19 @@ void IntersectionManager::handle_intersection() {
 
                     //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
                     if (this->side == DOOR_SIDE) {
-                        while (!(this->tape_sensor->qrd4.is_on() && this->tape_sensor->qrd5.is_on())) {
+                        while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd6.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
                     else {
-                        while (!(this->tape_sensor->qrd3.is_on() && this->tape_sensor->qrd2.is_on())) {
+                        while (!(this->tape_sensor->qrd1.is_on() && this->tape_sensor->qrd2.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
 
                     Serial.println("Gauntlet: followed back on tape");
 
-                    this->drive_system->set_speed_add(-0.04);
+                    this->drive_system->set_speed_add(-0.02);
 
                     this->intersection_count++;
                     handling_gauntlet = true;
@@ -1117,7 +1121,7 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("Initiating gauntlet sequence...");
 
-                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->update(0.88, 0.88);
                     this->drive_system->actuate();
                     delay(150);
                     this->tape_sensor->update();
@@ -1126,15 +1130,19 @@ void IntersectionManager::handle_intersection() {
                         this->tape_sensor->update();
                     }
 
+                    this->drive_system->update(0.88, 0.88);
+                    this->drive_system->actuate();
+                    delay(100);
+
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.94);
+                        this->drive_system->update(-3.5, 1.0);
                     }
                     else {
-                        this->drive_system->update(0.94, -3.5);
+                        this->drive_system->update(1.0, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1146,19 +1154,19 @@ void IntersectionManager::handle_intersection() {
 
                     //TODO add failsafe timeout if we dont reach this condition so we dont drive off course
                     if (this->side == DOOR_SIDE) {
-                        while (!(this->tape_sensor->qrd4.is_on() && this->tape_sensor->qrd5.is_on())) {
+                        while (!(this->tape_sensor->qrd6.is_on() && this->tape_sensor->qrd5.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
                     else {
-                        while (!(this->tape_sensor->qrd3.is_on() && this->tape_sensor->qrd2.is_on())) {
+                        while (!(this->tape_sensor->qrd1.is_on() && this->tape_sensor->qrd2.is_on())) {
                             this->tape_sensor->update();
                         }
                     }
 
                     Serial.println("Gauntlet: followed back on tape");
 
-                    this->drive_system->set_speed_add(-0.04);
+                    this->drive_system->set_speed_add(-0.02);
 
                     this->intersection_count++;
                     handling_gauntlet = true;
@@ -1420,16 +1428,16 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.1, 0.86);
+            this->drive_system->update(-3.1, 0.88);
         }
         else if (x > 0) {
-            this->drive_system->update(0.86, -3.1);
+            this->drive_system->update(0.88, -3.1);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 180; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1459,14 +1467,14 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
         // Pause motors
         if (x < 0) {
-            this->drive_system->update(0.0, 0.7);
+            this->drive_system->update(0.0, 0.0);
         }
         else if (x > 0) {
-            this->drive_system->update(0.7, 0.0);
+            this->drive_system->update(0.0, 0.0);
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 180; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1556,17 +1564,17 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-2.9, 0.89);
+            this->drive_system->update(-2.8 - fabs(x) * 0.33, 0.87 + fabs(x) * 0.1);
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.89, -2.9);
+            this->drive_system->update(0.87 + fabs(x) * 0.1, -2.8 - fabs(x) * 0.33);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val; i++) {
+        for (int i = 0; i < duty_val * 2; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -1577,6 +1585,16 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
                     complete = true;
                     break;
                 }
+
+                if (x < 0) {
+                    this->drive_system->update(-2.8 - fabs(x) * 0.33, 0.87 + fabs(x) * 0.1);
+                }
+                //turn right
+                else if (x > 0) {
+                    this->drive_system->update(0.87 + fabs(x) * 0.1, -2.8 - fabs(x) * 0.33);
+                }
+                
+                this->drive_system->actuate();
 
             }
 
@@ -1590,14 +1608,14 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // Pause motors
         if (x < 0) {
-            this->drive_system->update(0.0, 0.7);
+            this->drive_system->update(0.0, 0.0);
         }
         else if (x > 0) {
-            this->drive_system->update(0.7, 0.0);
+            this->drive_system->update(0.0, 0.0);
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 35; i++) {
+        for (int i = 0; i < 120; i++) {
 
             if (Serial.read() == 'P') {
 
