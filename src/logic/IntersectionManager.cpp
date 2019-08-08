@@ -1556,17 +1556,17 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.0, 0.90);
+            this->drive_system->update(-3.2, 0.92);
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.90, -3.0);
+            this->drive_system->update(0.92, -3.2);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val * 5; i++) {
+        for (int i = 0; i < duty_val * 7; i++) {
 
             if (Serial.read() == 'P') {
 
