@@ -786,9 +786,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(-2.7, 0.90);
+                        this->drive_system->update(-3.0, 0.90);
                         this->drive_system->actuate();
-                        delay(250);
+                        delay(300);
                         
                     }
                     else {
@@ -803,9 +803,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(0.90, -2.7);
+                        this->drive_system->update(0.90, -3.0);
                         this->drive_system->actuate();
-                        delay(250);
+                        delay(300);
                     }
                     // this->drive_system->update(-3.0, -3.0);
                     // this->drive_system->actuate();
@@ -1561,7 +1561,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val * 1.5; i++) {
+        for (int i = 0; i < duty_val * 2; i++) {
 
             if (Serial.read() == 'P') {
 
