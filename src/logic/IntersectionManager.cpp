@@ -1500,6 +1500,95 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
     this->drive_system->actuate();
     delay(400);
 
+    // align a second time
+    do {
+
+        // Right now: turn left wheel back to hole 0
+
+        // May be useful to find post when lost
+
+        // ~20-25px per cm (crude estimate, height dependent, etc.)
+        // currently have 0.05% pwm per px
+
+        // turn left
+        if (x < 0) {
+            this->drive_system->update(-3.1, 0.0);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.0, -3.1);
+        }
+        this->drive_system->actuate();
+
+        // TODO: tune values
+
+        for (int i = 0; i < 90; i++) {
+
+            if (Serial.read() == 'G') {
+
+                // Go through the slots before it
+                for (int i = 0; i < slot; i++) {
+                    Serial.readStringUntil(',');
+                    Serial.readStringUntil(';');
+                }
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 7) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (complete) {
+            break;
+        }
+
+        // Pause motors
+        if (x < 0) {
+            this->drive_system->update(0.0, 0.0);
+        }
+        else if (x > 0) {
+            this->drive_system->update(0.0, 0.0);
+        }
+        this->drive_system->actuate();
+
+        for (int i = 0; i < 90; i++) {
+
+            if (Serial.read() == 'G') {
+
+                // Go through the slots before it
+                for (int i = 0; i < slot; i++) {
+                    Serial.readStringUntil(',');
+                    Serial.readStringUntil(';');
+                }
+
+                x = Serial.readStringUntil(',').toInt();
+                y = Serial.readStringUntil(';').toInt();
+
+                if (fabs(x) <= 7) {
+                    complete = true;
+                    break;
+                }
+
+            }
+
+            delay(1);
+
+        }
+
+        if (millis() - timeout > 15000) {
+            Serial.println("gauntlet timed out");
+            return false;
+        }
+
+    } while (fabs(x) > 7);
+
     // Serial.println("OMFG");
 
     // 3. Deposit stone
