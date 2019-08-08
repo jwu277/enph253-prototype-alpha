@@ -234,7 +234,7 @@ bool IntersectionManager::at_y_intersection() {
 
     it = qrds_status.end();
     bool val3 = *it;
-    advance(it, -2);
+    advance(it, -3);
     bool val4 = *it;
 
     bool cond2 = (val1 && val2) || (val3 && val4);
@@ -299,7 +299,7 @@ bool IntersectionManager::at_y_intersection_lenient() {
     it = qrds_status.end();
     advance(it, -1);
     bool val3 = *it;
-    advance(it, -2);
+    advance(it, -3);
     bool val4 = *it;
 
     bool cond2 = (val1 && val2) || (val3 && val4);
@@ -408,7 +408,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(-2.6, 0.93);
+                        this->drive_system->update(-2.5, 0.9);
                         this->drive_system->actuate();
                         delay(250);
                         
