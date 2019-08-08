@@ -612,7 +612,7 @@ void IntersectionManager::handle_intersection() {
                         // delay(240);
                         this->drive_system->update(0.95, -2.8);
                         this->drive_system->actuate();
-                        delay(280);
+                        delay(320);
                         
                     }
                     else {
@@ -629,7 +629,7 @@ void IntersectionManager::handle_intersection() {
 
                         this->drive_system->update(0.95, -2.8);
                         this->drive_system->actuate();
-                        delay(280);
+                        delay(320);
                     }
                     Serial.println("starting centering to tall post ");
 
@@ -1573,7 +1573,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val * 2.5; i++) {
+        for (int i = 0; i < duty_val * 3.5; i++) {
 
             if (Serial.read() == 'P') {
 
