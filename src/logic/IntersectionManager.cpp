@@ -953,10 +953,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.94);
+                        this->drive_system->update(-3.5, 0.95);
                     }
                     else {
-                        this->drive_system->update(0.94, -3.5);
+                        this->drive_system->update(0.95, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1131,10 +1131,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.94);
+                        this->drive_system->update(-3.5, 0.95);
                     }
                     else {
-                        this->drive_system->update(0.94, -3.5);
+                        this->drive_system->update(0.95, -3.5);
                     }
                     
                     this->drive_system->actuate();
