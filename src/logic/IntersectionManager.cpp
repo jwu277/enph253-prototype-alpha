@@ -1551,11 +1551,11 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.0, 0.90);
+            this->drive_system->update(-2.8, 0.90);
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.90, -3.0);
+            this->drive_system->update(0.90, -2.8);
         }
         this->drive_system->actuate();
 
@@ -1575,7 +1575,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
             }
 
-            delay(1);
+            delay(2);
 
         }
 
