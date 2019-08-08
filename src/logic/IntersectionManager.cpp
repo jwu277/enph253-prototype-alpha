@@ -1688,6 +1688,7 @@ void IntersectionManager::steer_left() {
 
     long timeout = millis();
     
+    this->tape_sensor->update();
     while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
@@ -1724,6 +1725,7 @@ void IntersectionManager::steer_right() {
 
     long timeout = millis();
     
+    this->tape_sensor->update();
     while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
         // TODO: maybe set far off state
         this->tape_sensor->update();
