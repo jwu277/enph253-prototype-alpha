@@ -157,7 +157,7 @@ void IntersectionManager::update() {
     //     this->handle_gauntlet();
     // } 
 
-    if (this->at_t_intersection() || (this->at_y_intersection() && off_ramp) || handling_gauntlet) {
+    if (this->at_t_intersection() || this->at_y_intersection() || handling_gauntlet) {
 
         unsigned long new_time = millis();
         if (handling_gauntlet) {
@@ -953,7 +953,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.5, 0.93);
                     }
                     else {
-                        this->drive_system->update(0.9, -3.5);
+                        this->drive_system->update(0.93, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1128,10 +1128,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.9);
+                        this->drive_system->update(-3.5, 0.93);
                     }
                     else {
-                        this->drive_system->update(0.9, -3.5);
+                        this->drive_system->update(0.93, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1557,13 +1557,13 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.91, -3.2);
+            this->drive_system->update(0.90, -3.0);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val; i++) {
+        for (int i = 0; i < duty_val * 1.5; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -1587,14 +1587,14 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // Pause motors
         if (x < 0) {
-            this->drive_system->update(0.0, 0.7);
+            this->drive_system->update(0.0, 0.0);
         }
         else if (x > 0) {
-            this->drive_system->update(0.7, 0.0);
+            this->drive_system->update(0.0, 0.0);
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 60; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -1650,7 +1650,13 @@ void IntersectionManager::steer_left() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
+    this->tape_sensor->update();
+    while ((qrd_idx <= 5) && (millis() - timeout <= 600)) {
+
+        if (millis() - timeout > 600) {
+            Serial.println("steer left timed out");
+        }
+
         // TODO: maybe set far off state
         this->tape_sensor->update();
 
@@ -1686,8 +1692,14 @@ void IntersectionManager::steer_right() {
 
     long timeout = millis();
     
-    while ((qrd_idx <= 5) && (millis() - timeout <= 400)) {
+    this->tape_sensor->update();
+    while ((qrd_idx <= 5) && (millis() - timeout <= 600)) {
         // TODO: maybe set far off state
+
+        if (millis() - timeout > 600) {
+            Serial.println("steer right timed out");
+        }
+
         this->tape_sensor->update();
 
         if ((*qrds[qrd_idx]).is_on()) {
