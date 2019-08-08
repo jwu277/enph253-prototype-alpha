@@ -140,7 +140,6 @@ void homeY(bool retract)
     
     if (retract)
     {
-        Serial.println("Retracting: Y not home");
         pwm_start(
             Y_SERVO_PWM_NAME,
             PWM_CLOCK_FREQ,
@@ -212,8 +211,8 @@ void moveY(double dist)
             1);
         //yStatus = MOVING_FWD;
     }
-    Serial.print("Starting PWM for time = ");
-    Serial.println(timeToRun);
+    //Serial.print("Starting PWM for time = ");
+    //Serial.println(timeToRun);
     
     delay(timeToRun);
     
