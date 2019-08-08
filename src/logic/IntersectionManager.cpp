@@ -1315,8 +1315,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 2 : 3
-                        , true);
+                        this->handle_gauntlet(this->side ? 2 : 3, true);
                         
                         // end program
                         this->drive_system->update(0.0, 0.0);
