@@ -237,7 +237,7 @@ bool IntersectionManager::at_y_intersection() {
 
     it = qrds_status.end();
     bool val3 = *it;
-    advance(it, -2);
+    advance(it, -3);
     bool val4 = *it;
 
     bool cond2 = (val1 && val2) || (val3 && val4);
@@ -310,7 +310,7 @@ bool IntersectionManager::at_y_intersection_lenient() {
     it = qrds_status.end();
     advance(it, -1);
     bool val3 = *it;
-    advance(it, -2);
+    advance(it, -3);
     bool val4 = *it;
 
     bool cond2 = (val1 && val2) || (val3 && val4);
@@ -610,9 +610,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(0.95, -2.8);
+                        this->drive_system->update(-2.8, 0.95);
                         this->drive_system->actuate();
-                        delay(320);
+                        delay(280);
                         
                     }
                     else {
@@ -627,9 +627,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(0.95, -2.8);
+                        this->drive_system->update(-2.8, 0.95);
                         this->drive_system->actuate();
-                        delay(320);
+                        delay(280);
                     }
                     Serial.println("starting centering to tall post ");
 
@@ -798,7 +798,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(-3.0, 0.90);
+                        this->drive_system->update(-3.0, 0.92);
                         this->drive_system->actuate();
                         delay(300);
                         
@@ -815,9 +815,10 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(0.90, -3.0);
+                        this->drive_system->update(0.92, -3.0);
                         this->drive_system->actuate();
                         delay(300);
+
                     }
                     // this->drive_system->update(-3.0, -3.0);
                     // this->drive_system->actuate();
@@ -912,8 +913,6 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("pushing through medium T to gauntlet");
 
-                    this->drive_system->update(0.86, 0.86);
-                    this->drive_system->actuate();
                     delay(80);
 
                     this->far_off_add = 0.0;
@@ -1316,7 +1315,8 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 5 : 0, true);
+                        this->handle_gauntlet(this->side ? 2 : 3
+                        , true);
                         
                         // end program
                         this->drive_system->update(0.0, 0.0);
@@ -1505,9 +1505,9 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
     this->drive_system->actuate();
     delay(100);
 
-    this->drive_system->update(0.88, 0.88);
+    this->drive_system->update(0.90, 0.90);
     this->drive_system->actuate();
-    delay(2000);
+    delay(1500);
 
     // 3. Deposit stone
     // todo: match deposit crystal number to circle
@@ -1563,17 +1563,17 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-2.8, 0.90);
+            this->drive_system->update(-3.0, 0.92);
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.90, -2.8);
+            this->drive_system->update(0.92, -3.0);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val * 3.5; i++) {
+        for (int i = 0; i < duty_val * 2; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -1604,7 +1604,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 60; i++) {
 
             if (Serial.read() == 'P') {
 
