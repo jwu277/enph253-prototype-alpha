@@ -975,11 +975,13 @@ void IntersectionManager::handle_intersection() {
                         while (!(this->tape_sensor->qrd5.is_on() && this->tape_sensor->qrd6.is_on())) {
                             this->tape_sensor->update();
                         }
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
                     }
                     else {
                         while (!(this->tape_sensor->qrd1.is_on() && this->tape_sensor->qrd2.is_on())) {
                             this->tape_sensor->update();
                         }
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
                     Serial.println("Gauntlet: followed back on tape");
@@ -1032,7 +1034,7 @@ void IntersectionManager::handle_intersection() {
 
                     // currently assuming CV sees the gauntlet
 
-                    if (millis() - gauntlet_timer >= 1000) {
+                    if (millis() - gauntlet_timer >= 1400) {
                         Serial.println("At gauntlet");
 
                         this->drive_system->update(0.0, 1.0);
@@ -1047,7 +1049,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 2 : 3, true);
+                        this->handle_gauntlet(this->side ? 1 : 4, true);
 
                         closeClaw(1500);
 
@@ -1205,7 +1207,7 @@ void IntersectionManager::handle_intersection() {
 
                     // currently assuming CV sees the gauntlet
 
-                    if (millis() - gauntlet_timer >= 1000) {
+                    if (millis() - gauntlet_timer >= 1400) {
                         Serial.println("At gauntlet");
 
                         this->drive_system->update(0.0, 1.0);
