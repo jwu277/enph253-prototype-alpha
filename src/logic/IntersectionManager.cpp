@@ -1040,7 +1040,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 2 : 3, true);
+                        this->handle_gauntlet(this->side ? 3 : 2, true);
 
                         closeClaw(1500);
 
@@ -1209,7 +1209,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 3 : 2, true);
+                        this->handle_gauntlet(this->side ? 4 : 1, true);
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -1417,16 +1417,16 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.1, 0.86);
+            this->drive_system->update(-3.1, 0.0);
         }
         else if (x > 0) {
-            this->drive_system->update(0.86, -3.1);
+            this->drive_system->update(0.0, -3.1);
         }
         this->drive_system->actuate();
 
         // TODO: tune values
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 90; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1456,14 +1456,14 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
         // Pause motors
         if (x < 0) {
-            this->drive_system->update(0.0, 0.7);
+            this->drive_system->update(0.0, 0.0);
         }
         else if (x > 0) {
-            this->drive_system->update(0.7, 0.0);
+            this->drive_system->update(0.0, 0.0);
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 90; i++) {
 
             if (Serial.read() == 'G') {
 
@@ -1496,6 +1496,11 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
+    delay(100);
+
+    this->drive_system->update(0.87, 0.87);
+    this->drive_system->actuate();
+    delay(400);
 
     // Serial.println("OMFG");
 
