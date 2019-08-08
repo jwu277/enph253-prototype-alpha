@@ -173,6 +173,7 @@ void IntersectionManager::update() {
             if (this->at_y_intersection()) {
                 Serial.println("At Y intersection");
             }
+            this->tape_sensor->print_qrds();
             this->handle_intersection();
             last_intersection_time = new_time;
         }

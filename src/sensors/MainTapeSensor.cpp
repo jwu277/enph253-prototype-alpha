@@ -171,3 +171,24 @@ void MainTapeSensor::reset_thresholds() {
     this->qrd6.set_on_threshold(250);
     this->qrd7.set_on_threshold(250);
 }
+
+void MainTapeSensor::print_qrds() {
+    this->update();
+    Serial.print(qrd0.get_value());
+    Serial.print("    ");
+    Serial.print(qrd1.get_value());
+    Serial.print("    ");
+    Serial.print(qrd2.get_value());
+    Serial.print("    ");
+    Serial.print(qrd3.get_value());
+    Serial.print("    ");
+    Serial.print(qrd4.get_value());
+    Serial.print("    ");
+    Serial.print(qrd5.get_value());
+    Serial.print("    ");
+    Serial.print(qrd6.get_value());
+    Serial.print("    ");
+    Serial.print(qrd7.get_value());
+    Serial.print("    ");
+    Serial.println();
+}

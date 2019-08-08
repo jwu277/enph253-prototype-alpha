@@ -57,6 +57,8 @@ class MainTapeSensor: public BaseSensor {
 
         void reset_thresholds();
 
+        void print_qrds();
+
     private:
 
         //QrdSensor left_qrd;
