@@ -522,7 +522,7 @@ void IntersectionManager::handle_intersection() {
                     // driveforwardabit
                     this->drive_system->update(0.9, 0.9);
                     this->drive_system->actuate();
-                    delay(200);
+                    delay(100);
 
                     if (this->side == DOOR_SIDE) {
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
