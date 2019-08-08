@@ -725,21 +725,24 @@ void IntersectionManager::handle_intersection() {
             }
         }
             break;
-
-        case TASK_S2B: {
-            Serial.println("In task 2 tall posts");
+        
+        case TASK_S3: {
+            
+            Serial.println("In task medium post");
 
             switch(this->intersection_count) {
+
                 case 0: {
+
                     if (this->side == DOOR_SIDE) {
-                        Serial.println("Tall post: slight right at B");
-                        this->steer_right(); //may need to hardcode this to be a slight turn instead
-                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
-                    }
-                    else {
-                        Serial.println("Tall post: slight left at B");
+                        Serial.println("Small post: left turn at B");
                         this->steer_left();
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                    }
+                    else {
+                        Serial.println("Small post: right turn at B");
+                        this->steer_right();
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
                     this->intersection_count++;
@@ -748,48 +751,74 @@ void IntersectionManager::handle_intersection() {
                     break;
                 
                 case 1: {
-                    Serial.println("Driving through first T isect");
 
-                    this->motorsOff(300);
-                    this->intersection_count++;
-                }
-                    break;
-
-                case 2: {
-                    Serial.println("Grabbing far tall stone");
-
-                    this->motorsOff(300);
-
-                    this->drive_system->update(-3.0, -3.0);
-                    this->drive_system->actuate();
-                    delay(200);
-                    if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(0.91, -2.9); // turn right
-                    }
-                    else {
-                        this->drive_system->update(-2.9, 0.91); // turn left
-                    }
+                    this->drive_system->update(0.93, 0.93);
                     this->drive_system->actuate();
                     delay(100);
-                    Serial.println("starting centering to tall post ");
+
+                    Serial.println("pushing through medium T to stone");
+
+                    this->intersection_count++;
+
+                }
+                    break;
+                
+                case 2: {
+                    Serial.println("Grabbing small stone");
+
+                    this->motorsOff(300);
+                    unsigned long t_timeout = millis();
+
+                    if (this->side == DOOR_SIDE) {
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+
+                        // wait till side qrds are on T to stop reverse 
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
+                            this->tape_sensor->update();
+                        }
+                        // delay(240);
+                        this->drive_system->update(-2.6, 0.93);
+                        this->drive_system->actuate();
+                        delay(250);
+                        
+                    }
+                    else {
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        // delay(220);
+
+                        // wait till side qrds are on T to stop reverse 
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
+                            this->tape_sensor->update();
+                        }
+
+                        this->drive_system->update(0.89, -2.7);
+                        this->drive_system->actuate();
+                        delay(250);
+                    }
+                    // this->drive_system->update(-3.0, -3.0);
+                    // this->drive_system->actuate();
+                    // delay(400);
+                    // if (this->side == DOOR_SIDE) {
+                    //     this->drive_system->update(-3.0, 0.93);
+                    // }
+                    // else {
+                    //     this->drive_system->update(0.93, -3.0);
+                    // }
+                    // this->drive_system->actuate();
+                    // delay(100);
+                    Serial.println("starting centering to small post ");
 
                     while (true) {
                         
-                        if (this->side == DOOR_SIDE) {
-                            if (center_post(INIT_TURN_RIGHT, 45)) {
-                                break;
-                            }
-                            else {
-                                // todo: readjust and centre on post
-                            }
+                        if (center_post(!(this->side), 60)) {
+                            break;
                         }
                         else {
-                            if (center_post(INIT_TURN_LEFT, 60)) {
-                                break;
-                            }
-                            else {
-                                // todo: readjust and centre on post
-                            }
+                            // todo: readjust and centre on post
                         }
 
                     }
@@ -802,36 +831,55 @@ void IntersectionManager::handle_intersection() {
 
                     this->motorsOff(300);
 
-                    grabCrystal(0);
-                    openClaw(500);
+                    grabCrystal(2);
+                    //openClaw(); // for now todo
 
                     this->motorsOff(300);
+
                     if (this->side == DOOR_SIDE) {
 
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(300);
+                        delay(400);
 
-                        this->drive_system->update(0.86, -3.0);
+                        this->drive_system->update(-3.1, 0.89);
                         this->drive_system->actuate();
-                        delay(350);
-                        this->reverseAndTurn(200, 300, REVERSE_RIGHT);
-                        this->drive_system->update(0.90, 0.90);
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd2.is_on()) {
+                            this->tape_sensor->update();
+                        }
+                        Serial.println("Closed loop QRD turning complete");
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+
+                        this->drive_system->update(0.89, -3.1);
                         this->drive_system->actuate();
-                        delay(50);
+                        delay(70);
+
                     }
                     else {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
-                        delay(300);
-                        this->drive_system->update(-3.0, 0.86);
+                        delay(400);
+
+                        this->drive_system->update(0.89, -3.1);
                         this->drive_system->actuate();
-                        delay(350);
-                        this->reverseAndTurn(200, 300, REVERSE_LEFT);
-                        this->drive_system->update(0.90, 0.90);
+                        
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd5.is_on()) {
+                            this->tape_sensor->update();
+                        }
+
+                        Serial.println("Closed loop QRD turning complete");
+                        this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+                        this->drive_system->update(-3.1, 0.89);
                         this->drive_system->actuate();
-                        delay(50);
+                        delay(70);
+
                     }
+
+                    Serial.println("ending centering to medium post, going back to gauntlet ");
                     
                     this->intersection_count++;
 
@@ -840,66 +888,17 @@ void IntersectionManager::handle_intersection() {
 
                 case 3: {
 
-                    Serial.println("Getting closer tall post");
-                    this->motorsOff(300);
+                    Serial.println("pushing through medium T to gauntlet");
 
-                    this->drive_system->update(-3.0, -3.0);
-                    this->drive_system->actuate();
-                    delay(200);
-                    if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.0, 0.93); // turn right
-                    }
-                    else {
-                        this->drive_system->update(0.93, -3.0); // turn left
-                    }
+                    this->drive_system->update(0.93, 0.93);
                     this->drive_system->actuate();
                     delay(100);
-                    Serial.println("starting centering to tall post ");
 
-                    while (true) {
-                        
-                        if (this->side == DOOR_SIDE) {
-                            if (center_post(INIT_TURN_LEFT, 45)) {
-                                break;
-                            }
-                            else {
-                                // todo: readjust and centre on post
-                            }
-                        }
-                        else {
-                            if (center_post(INIT_TURN_RIGHT, 45)) {
-                                break;
-                            }
-                            else {
-                                // todo: readjust and centre on post
-                            }
-                        }
-
-                    }
-
-                    this->drive_system->update(0.86, 0.86);
-                    this->drive_system->actuate();
-                    delay(350);
-
-                    this->wiggle(12,120);
-
-                    this->motorsOff(300);
-
-                    grabCrystal(0);
-                    //openClaw(); // for now todo
-
-                    this->motorsOff(300);
-                    if (this->side == DOOR_SIDE) {
-                        this->reverseAndTurn(600, 300, REVERSE_RIGHT);
-                    }
-                    else {
-                        this->reverseAndTurn(600, 300, REVERSE_LEFT);
-                    }
-                    
                     this->intersection_count++;
+
                 }
                     break;
-
+                
                 case 4: {
 
                     // Drive straight through B(Y)
@@ -916,13 +915,18 @@ void IntersectionManager::handle_intersection() {
                          this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
                     }
 
-                    this->drive_system->set_speed_add(-0.05);
+                    this->drive_system->set_speed_add(-0.025);
 
                     this->tasksToDo.pop_back();
-                    this->task = TASK_G2B; // handoff to G1 task
+                    this->task = TASK_G3; // handoff to G3 task
+
+                    DELAY_TIME = 500;
+
                 }
                     break;
+
             }
+
         }
             break;
         
@@ -985,41 +989,6 @@ void IntersectionManager::handle_intersection() {
 
                 }
                     break;
-                
-                // case 1: {
-
-                //     // currently assuming CV sees the gauntlet
-
-                //     if (millis() - gauntlet_timer >= 1000) {
-                //         Serial.println("At gauntlet");
-
-                //         // this->drive_system->update(0.0, 1.0);
-                //         // this->drive_system->actuate();
-                //         // delay(600);
-
-                //         // this->drive_system->update(1.0, 0.0);
-                //         // this->drive_system->actuate();
-                //         // delay(600);
-
-                //         this->intersection_count++;
-                //         this->drive_system->set_speed_add(-0.04);
-
-                //         // delay(200);
-
-                //         this->drive_system->update(-3.0, -3.0);
-                //         this->drive_system->actuate();
-                //         delay(400);
-
-                //         this->drive_system->update(0.0, 0.0);
-                //         this->drive_system->actuate();
-                //         delay(200);
-
-                //         gauntlet_timer = millis();
-
-                //     }
-
-                // }
-                //     break;
 
                 case 1: {
 
@@ -1162,32 +1131,6 @@ void IntersectionManager::handle_intersection() {
 
                 }
                     break;
-                
-                // case 1: {
-
-                //     // currently assuming CV sees the gauntlet
-
-                //     if (millis() - gauntlet_timer >= 1000) {
-                //         Serial.println("At gauntlet");
-                //         this->intersection_count++;
-                //         this->drive_system->set_speed_add(-0.04);
-
-                //         // delay(200);
-
-                //         this->drive_system->update(-3.0, -3.0);
-                //         this->drive_system->actuate();
-                //         delay(400);
-
-                //         this->drive_system->update(0.0, 0.0);
-                //         this->drive_system->actuate();
-                //         delay(200);
-
-                //         gauntlet_timer = millis();
-
-                //     }
-
-                // }
-                //     break;
 
                 case 1: {
 
@@ -1220,7 +1163,7 @@ void IntersectionManager::handle_intersection() {
         }
             break;
 
-        case TASK_G2B: {
+        case TASK_G3: {
             switch (this->intersection_count) {
                 case 0: {
 
@@ -1277,44 +1220,33 @@ void IntersectionManager::handle_intersection() {
 
                 }
                     break;
-                
+
                 case 1: {
 
                     // currently assuming CV sees the gauntlet
 
                     if (millis() - gauntlet_timer >= 1000) {
                         Serial.println("At gauntlet");
-                        this->intersection_count++;
-                        this->drive_system->set_speed_add(0.0);
 
-                        delay(200);
-
-                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->update(0.0, 1.0);
                         this->drive_system->actuate();
-                        delay(400);
+                        delay(600);
 
-                        this->drive_system->update(0.0, 0.0);
+                        this->drive_system->update(1.0, 0.0);
                         this->drive_system->actuate();
-                        delay(200);
+                        delay(600);
 
-                        gauntlet_timer = millis();
-
-                    }
-
-                }
-                    break;
-
-                case 2: {
-
-                    // currently assuming CV sees the gauntlet
-
-                    if (millis() - gauntlet_timer >= 1000) {
-                        Serial.println("At gauntlet");
                         this->intersection_count = 0;
                         this->drive_system->set_speed_add(0.0);
 
-                        this->handle_gauntlet(3, true);
-                        this->handle_gauntlet(4, false);
+                        this->hard_wiggle(4, 150);
+                        this->handle_gauntlet(this->side ? 5 : 0, true);
+                        
+                        // end program
+                        this->drive_system->update(0.0, 0.0);
+                        this->drive_system->actuate();
+                        delay(69696969);
+
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 

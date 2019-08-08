@@ -9,11 +9,11 @@ using namespace std;
 
 #define TASK_S1 11 // 1 medium post, Tier 1/2/3
 #define TASK_S2A 12 // 1 tall post, Tier 2
-#define TASK_S2B 13 // 2 tall posts, Tier 3
+#define TASK_S3 13 // small post, Tier 3
 
 #define TASK_G1 21 // gauntlet task for S1
 #define TASK_G2A 22 // gauntlet task for S2
-#define TASK_G2B 23 // gauntlet task for S2,3
+#define TASK_G3 23 // gauntlet task for S3
 
 #include "sensors/MainTapeSensor.hpp"
 #include "sensors/SideTapeSensor.hpp"
