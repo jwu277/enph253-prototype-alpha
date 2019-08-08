@@ -419,9 +419,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(-2.6, 0.9);
+                        this->drive_system->update(-2.7, 0.89);
                         this->drive_system->actuate();
-                        delay(250);
+                        delay(200);
                         
                     }
                     else {
@@ -437,7 +437,7 @@ void IntersectionManager::handle_intersection() {
 
                         this->drive_system->update(0.89, -2.7);
                         this->drive_system->actuate();
-                        delay(250);
+                        delay(200);
                     }
                     // this->drive_system->update(-3.0, -3.0);
                     // this->drive_system->actuate();
