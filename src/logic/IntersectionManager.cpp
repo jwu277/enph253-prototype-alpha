@@ -420,7 +420,7 @@ void IntersectionManager::handle_intersection() {
 
                         // wait till side qrds are on T to stop reverse 
                         this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
+                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd5.is_on()&&(millis()-t_timeout<2000)) {
                             this->tape_sensor->update();
                         }
 
@@ -776,12 +776,12 @@ void IntersectionManager::handle_intersection() {
                         delay(100);
 
                         // wait till side qrds are on T to stop reverse 
-                        // this->tape_sensor->update();
-                        // while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
-                        //     this->tape_sensor->update();
-                        // }
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
+                            this->tape_sensor->update();
+                        }
                         // delay(240);
-                        this->drive_system->update(-2.6, 0.93);
+                        this->drive_system->update(-2.7, 0.90);
                         this->drive_system->actuate();
                         delay(250);
                         
@@ -793,12 +793,12 @@ void IntersectionManager::handle_intersection() {
                         // delay(220);
 
                         // wait till side qrds are on T to stop reverse 
-                        // this->tape_sensor->update();
-                        // while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
-                        //     this->tape_sensor->update();
-                        // }
+                        this->tape_sensor->update();
+                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd5.is_on()&&(millis()-t_timeout<2000)) {
+                            this->tape_sensor->update();
+                        }
 
-                        this->drive_system->update(0.89, -2.7);
+                        this->drive_system->update(0.90, -2.7);
                         this->drive_system->actuate();
                         delay(250);
                     }
@@ -1154,6 +1154,58 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->handle_gauntlet(this->side ? 4 : 1, true);
+
+                        closeClaw(1500);
+
+                        this->drive_system->update(-3.0, -3.0);
+                        this->drive_system->actuate();
+                        delay(400);
+                        
+
+                        if (this->side == DOOR_SIDE) {
+                            this->drive_system->update(-3.2, 0.94);
+                            this->drive_system->actuate();
+                            delay(200);
+                            // this->steer_left();
+
+                            this->tape_sensor->update();
+                            // idea: timeout if we need to
+                            while(!this->tape_sensor->qrd3.is_on()) {
+                                delay(1);
+                                this->tape_sensor->update();
+                            }
+
+                            Serial.println("Back on tape for S2");
+
+                            this->drive_system->update(0.94, -3.2);
+                            this->drive_system->actuate();
+                            delay(60);
+
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
+                        }
+                        else {
+                                
+                            this->drive_system->update(0.94, -3.2);
+                            this->drive_system->actuate();
+                            delay(200);
+                            // this->steer_right();
+                            this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
+
+                            this->tape_sensor->update();
+                            // idea: timeout if we need to
+                            while(!this->tape_sensor->qrd4.is_on()) {
+                                delay(1);
+                                this->tape_sensor->update();
+                            }
+
+                            this->drive_system->update(-3.2, 0.94);
+                            this->drive_system->actuate();
+                            delay(60);
+
+                            Serial.println("Back on tape for S2");
+
+                        }
+
                         handling_gauntlet = false;
                         this->task = this->getNextTask();
 
@@ -1243,7 +1295,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 5 : 0, true);
+                        this->handle_gauntlet(this->side ? 2 : 3, true);
                         
                         // end program
                         this->drive_system->update(0.0, 0.0);
@@ -1432,9 +1484,9 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
     this->drive_system->actuate();
     delay(100);
 
-    this->drive_system->update(0.87, 0.87);
+    this->drive_system->update(0.88, 0.88);
     this->drive_system->actuate();
-    delay(400);
+    delay(1200);
 
     // 3. Deposit stone
     // todo: match deposit crystal number to circle
