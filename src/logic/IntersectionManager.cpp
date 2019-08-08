@@ -1398,6 +1398,8 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
     this->drive_system->actuate();
 
     Serial.println("Initiating deposit sequence...");
+    Serial.print("Slot #: ");
+    Serial.println(slot);
 
     bool complete = false;
     long timeout = millis();
