@@ -242,6 +242,14 @@ bool IntersectionManager::at_y_intersection() {
 
     bool cond2 = (val1 && val2) || (val3 && val4);
 
+    if (cond || cond2) {
+        for (vector<bool>::iterator it = qrds_status.begin(); it != qrds_status.end(); it++) {
+            Serial.print(*it ? "T" : "F");
+            Serial.print("   ");
+        }
+        Serial.println();
+    }
+
     return cond || cond2;
 
 }
