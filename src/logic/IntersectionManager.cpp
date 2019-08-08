@@ -465,7 +465,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
-                    delay(350);
+                    delay(600);
 
                     this->wiggle(12,120);
 
@@ -531,9 +531,18 @@ void IntersectionManager::handle_intersection() {
                     // Drive straight through B(Y)
                     this->intersection_count = 0;
                     // driveforwardabit
-                    this->drive_system->update(0.94, 0.84);
+                    if (this->side) {
+                        this->drive_system->update(0.94, 0.84);
+                    }
+                    else {
+                        this->drive_system->update(0.84, 0.94);
+                    }
                     this->drive_system->actuate();
-                    delay(200);
+                    
+                    for (int i = 0; i < 180; i++) {
+                        this->tape_sensor->update();
+                        delay(1);
+                    }
 
                     if (this->side == DOOR_SIDE) {
                         this->tape_sensor->set_state(MainTapeSensor::FAR_LEFT);
@@ -610,7 +619,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
                         // delay(240);
-                        this->drive_system->update(-2.8, 0.95);
+                        this->drive_system->update(-2.8, 0.93);
                         this->drive_system->actuate();
                         delay(280);
                         
@@ -627,7 +636,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(-2.8, 0.95);
+                        this->drive_system->update(-2.8, 0.93);
                         this->drive_system->actuate();
                         delay(280);
                     }
@@ -646,7 +655,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
-                    delay(350);
+                    delay(600);
 
                     this->wiggle(12,120);
 
@@ -685,7 +694,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->actuate();
                         delay(400);
 
-                        this->drive_system->update(-3.1, 0.89);
+                        this->drive_system->update(-3.1, 0.93);
                         this->drive_system->actuate();
                         
                         this->tape_sensor->update();
@@ -847,7 +856,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.86, 0.86);
                     this->drive_system->actuate();
-                    delay(350);
+                    delay(600);
 
                     this->wiggle(12,120);
 
