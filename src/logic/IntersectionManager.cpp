@@ -953,7 +953,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(-3.5, 0.93);
                     }
                     else {
-                        this->drive_system->update(0.9, -3.5);
+                        this->drive_system->update(0.93, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1128,10 +1128,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.9);
+                        this->drive_system->update(-3.5, 0.93);
                     }
                     else {
-                        this->drive_system->update(0.9, -3.5);
+                        this->drive_system->update(0.93, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1570,7 +1570,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 50) {
+                if (fabs(x) <= 30) {
                     complete = true;
                     break;
                 }
@@ -1601,7 +1601,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
                 x = Serial.readStringUntil(',').toInt();
                 y = Serial.readStringUntil(';').toInt();
 
-                if (fabs(x) <= 50) {
+                if (fabs(x) <= 30) {
                     complete = true;
                     break;
                 }
@@ -1617,9 +1617,19 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
             return false;
         }
 
-    } while (fabs(x) > 50);
+    } while (fabs(x) > 30);
 
     Serial.println("Centred on post");
+
+    if (x < 0) {
+        this->drive_system->update(0.90, -3.0);
+    }
+    else if (x > 0) {
+        this->drive_system->update(-3.0, 0.90);
+    }
+
+    this->drive_system->actuate();
+    delay(50);
 
     this->drive_system->update(0.0, 0.0);
     this->drive_system->actuate();
