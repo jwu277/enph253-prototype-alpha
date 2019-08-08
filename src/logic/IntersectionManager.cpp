@@ -605,9 +605,6 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->update(0.95, -2.8);
                         this->drive_system->actuate();
                         delay(280);
-                        this->drive_system->update(0.95, 0.95);
-                        this->drive_system->actuate();
-                        delay(90);
                         
                     }
                     else {
@@ -622,9 +619,9 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(-2.7, 0.89);
+                        this->drive_system->update(0.95, -2.8);
                         this->drive_system->actuate();
-                        delay(250);
+                        delay(280);
                     }
                     Serial.println("starting centering to tall post ");
 
@@ -900,9 +897,9 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("pushing through medium T to gauntlet");
 
-                    // this->drive_system->update(0.93, 0.93);
-                    // this->drive_system->actuate();
-                    // delay(100);
+                    this->drive_system->update(0.86, 0.86);
+                    this->drive_system->actuate();
+                    delay(80);
 
                     this->far_off_add = 0.0;
 
