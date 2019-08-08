@@ -627,7 +627,7 @@ void IntersectionManager::handle_intersection() {
 
                     while (true) {
                         
-                        if (center_post((this->side), this->side ? 45 : 60)) {
+                        if (center_post((this->side), this->side ? 60 : 60)) {
                             break;
                         }
                         else {
@@ -1558,7 +1558,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // TODO: tune values
 
-        for (int i = 0; i < duty_val * 2; i++) {
+        for (int i = 0; i < duty_val * 2.5; i++) {
 
             if (Serial.read() == 'P') {
 
@@ -1589,7 +1589,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 50; i++) {
 
             if (Serial.read() == 'P') {
 
