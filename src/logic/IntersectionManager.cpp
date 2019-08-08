@@ -50,6 +50,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
     this->task = TASK_R;
 
+    this->far_off_add = 0.0;
+
 }
 
 void IntersectionManager::set_side(bool side) {
@@ -886,6 +888,8 @@ void IntersectionManager::handle_intersection() {
                     
                     this->intersection_count++;
 
+                    this->far_off_add = 0.12;
+
                 }
                     break;
 
@@ -896,6 +900,8 @@ void IntersectionManager::handle_intersection() {
                     this->drive_system->update(0.93, 0.93);
                     this->drive_system->actuate();
                     delay(100);
+
+                    this->far_off_add = 0.0;
 
                     this->intersection_count++;
 

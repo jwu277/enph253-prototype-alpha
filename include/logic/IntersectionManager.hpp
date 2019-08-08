@@ -92,6 +92,8 @@ class IntersectionManager {
         
         void test_stone(int);
 
+        double far_off_add;
+
 };
 
 #endif
