@@ -536,7 +536,7 @@ void IntersectionManager::handle_intersection() {
                     this->tasksToDo.pop_back();
                     this->task = TASK_G1; // handoff to G1 task
 
-                    DELAY_TIME = 500;
+                    DELAY_TIME = 600;
 
                 }
                     break;
@@ -770,14 +770,16 @@ void IntersectionManager::handle_intersection() {
                     unsigned long t_timeout = millis();
 
                     if (this->side == DOOR_SIDE) {
+
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
+                        delay(100);
 
                         // wait till side qrds are on T to stop reverse 
-                        this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
-                            this->tape_sensor->update();
-                        }
+                        // this->tape_sensor->update();
+                        // while(!this->tape_sensor->qrd1.is_on()&&!this->tape_sensor->qrd0.is_on()&&!this->tape_sensor->qrd2.is_on()&&(millis()-t_timeout<2000 )) {
+                        //     this->tape_sensor->update();
+                        // }
                         // delay(240);
                         this->drive_system->update(-2.6, 0.93);
                         this->drive_system->actuate();
@@ -787,13 +789,14 @@ void IntersectionManager::handle_intersection() {
                     else {
                         this->drive_system->update(-3.0, -3.0);
                         this->drive_system->actuate();
+                        delay(100);
                         // delay(220);
 
                         // wait till side qrds are on T to stop reverse 
-                        this->tape_sensor->update();
-                        while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
-                            this->tape_sensor->update();
-                        }
+                        // this->tape_sensor->update();
+                        // while(!this->tape_sensor->qrd7.is_on()&&!this->tape_sensor->qrd6.is_on()&&!this->tape_sensor->qrd0.is_on()&&(millis()-t_timeout<2000)) {
+                        //     this->tape_sensor->update();
+                        // }
 
                         this->drive_system->update(0.89, -2.7);
                         this->drive_system->actuate();
@@ -1265,6 +1268,7 @@ void IntersectionManager::handle_intersection() {
 void IntersectionManager::initialize_tasksToDo() {
     this->tasksToDo.push_back(TASK_S1);
     this->tasksToDo.push_back(TASK_S2A);
+    this->tasksToDo.push_back(TASK_S3);
 }
 
 int IntersectionManager::getNextTask() {
