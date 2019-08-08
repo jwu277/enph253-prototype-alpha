@@ -50,6 +50,8 @@ IntersectionManager::IntersectionManager(MainTapeSensor* tape_sensor,
 
     this->task = TASK_R;
 
+    this->drive_system->set_speed_add(0.01);
+
 }
 
 void IntersectionManager::set_side(bool side) {
@@ -350,6 +352,7 @@ bool IntersectionManager::at_t_intersection() {
 void IntersectionManager::handle_intersection() {
     switch (this->task) {
         case TASK_R: {
+            this->drive_system->set_speed_add(0.0);
             off_ramp = true;
             Serial.println("Off ramp, going to home");
             DELAY_TIME = 800;
@@ -950,10 +953,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.93);
+                        this->drive_system->update(-3.5, 0.94);
                     }
                     else {
-                        this->drive_system->update(0.93, -3.5);
+                        this->drive_system->update(0.94, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1128,10 +1131,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.93);
+                        this->drive_system->update(-3.5, 0.94);
                     }
                     else {
-                        this->drive_system->update(0.93, -3.5);
+                        this->drive_system->update(0.94, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1244,10 +1247,10 @@ void IntersectionManager::handle_intersection() {
                     delay(200);
                     
                     if (this->side == DOOR_SIDE) {
-                        this->drive_system->update(-3.5, 0.9);
+                        this->drive_system->update(-3.5, 0.93);
                     }
                     else {
-                        this->drive_system->update(0.9, -3.5);
+                        this->drive_system->update(0.93, -3.5);
                     }
                     
                     this->drive_system->actuate();
@@ -1553,11 +1556,11 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
 
         // turn left
         if (x < 0) {
-            this->drive_system->update(-3.0, 0.90);
+            this->drive_system->update(-2.9, 0.89);
         }
         //turn right
         else if (x > 0) {
-            this->drive_system->update(0.91, -3.2);
+            this->drive_system->update(0.89, -2.9);
         }
         this->drive_system->actuate();
 
@@ -1594,7 +1597,7 @@ bool IntersectionManager::center_post(bool init_dir, int duty_val) {
         }
         this->drive_system->actuate();
 
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < 35; i++) {
 
             if (Serial.read() == 'P') {
 
