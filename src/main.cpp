@@ -213,10 +213,10 @@ void compute() {
     intersection_manager.update();
     
     if (tape_sensor.is_far_left()) {
-        drive_system.update(0.74+pid_output*0.2 + intersection_manager.far_off_add, -2.8 - 2.0 * intersection_manager.far_off_add);
+        drive_system.update(0.74+pid_output*0.2 + intersection_manager.far_off_add, -2.8 - 3.1 * intersection_manager.far_off_add);
     }
     if (tape_sensor.is_far_right()) {
-        drive_system.update(-2.8 - 2 * intersection_manager.far_off_add, 0.74-pid_output*0.2 + intersection_manager.far_off_add);
+        drive_system.update(-2.8 - 3.1 * intersection_manager.far_off_add, 0.74-pid_output*0.2 + intersection_manager.far_off_add);
     }
 
     delay(2);

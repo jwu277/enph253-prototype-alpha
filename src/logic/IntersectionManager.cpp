@@ -731,7 +731,7 @@ void IntersectionManager::handle_intersection() {
         
         case TASK_S3: {
             
-            Serial.println("In task medium post");
+            Serial.println("In task short post");
 
             switch(this->intersection_count) {
 
@@ -755,11 +755,13 @@ void IntersectionManager::handle_intersection() {
                 
                 case 1: {
 
-                    this->drive_system->update(0.93, 0.93);
-                    this->drive_system->actuate();
-                    delay(100);
+                    // this->drive_system->update(0.93, 0.93);
+                    // this->drive_system->actuate();
+                    // delay(100);
 
-                    Serial.println("pushing through medium T to stone");
+                    this->far_off_add = 0.07;
+
+                    Serial.println("pushing through medium T to small stone");
 
                     this->intersection_count++;
 
@@ -885,7 +887,7 @@ void IntersectionManager::handle_intersection() {
 
                     }
 
-                    Serial.println("ending centering to medium post, going back to gauntlet ");
+                    Serial.println("ending centering to short post, going back to gauntlet ");
                     
                     this->intersection_count++;
 
@@ -898,9 +900,9 @@ void IntersectionManager::handle_intersection() {
 
                     Serial.println("pushing through medium T to gauntlet");
 
-                    this->drive_system->update(0.93, 0.93);
-                    this->drive_system->actuate();
-                    delay(100);
+                    // this->drive_system->update(0.93, 0.93);
+                    // this->drive_system->actuate();
+                    // delay(100);
 
                     this->far_off_add = 0.0;
 
@@ -961,7 +963,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(200);
+                    delay(175);
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.93);
@@ -1103,7 +1105,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(200);
+                    delay(175);
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.93);
@@ -1244,7 +1246,7 @@ void IntersectionManager::handle_intersection() {
 
                     this->drive_system->update(0.0, 0.0);
                     this->drive_system->actuate();
-                    delay(200);
+                    delay(175);
                     
                     if (this->side == DOOR_SIDE) {
                         this->drive_system->update(-3.5, 0.9);
@@ -1302,7 +1304,7 @@ void IntersectionManager::handle_intersection() {
                         this->drive_system->set_speed_add(0.0);
 
                         this->hard_wiggle(4, 150);
-                        this->handle_gauntlet(this->side ? 2 : 3, true);
+                        this->handle_gauntlet(this->side ? 5 : 0, true);
                         
                         // end program
                         this->drive_system->update(0.0, 0.0);
@@ -1493,7 +1495,7 @@ bool IntersectionManager::place_stone(int slot, bool inClaw) {
 
     this->drive_system->update(0.88, 0.88);
     this->drive_system->actuate();
-    delay(1200);
+    delay(2000);
 
     // 3. Deposit stone
     // todo: match deposit crystal number to circle

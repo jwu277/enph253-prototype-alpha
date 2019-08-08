@@ -173,7 +173,6 @@ void MainTapeSensor::reset_thresholds() {
 }
 
 void MainTapeSensor::print_qrds() {
-    this->update();
     Serial.print(qrd0.get_value());
     Serial.print("    ");
     Serial.print(qrd1.get_value());
