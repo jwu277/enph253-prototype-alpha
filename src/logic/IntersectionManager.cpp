@@ -421,7 +421,7 @@ void IntersectionManager::handle_intersection() {
                         // delay(240);
                         this->drive_system->update(-2.7, 0.89);
                         this->drive_system->actuate();
-                        delay(200);
+                        delay(180);
                         
                     }
                     else {
@@ -435,7 +435,7 @@ void IntersectionManager::handle_intersection() {
                             this->tape_sensor->update();
                         }
 
-                        this->drive_system->update(0.89, -2.7);
+                        this->drive_system->update(0.91, 0.0);
                         this->drive_system->actuate();
                         delay(200);
                     }
@@ -670,6 +670,7 @@ void IntersectionManager::handle_intersection() {
                         while(!this->tape_sensor->qrd5.is_on()) {
                             this->tape_sensor->update();
                         }
+                     
                         Serial.println("Closed loop QRD turning complete");
 
                         this->tape_sensor->set_state(MainTapeSensor::FAR_RIGHT);
