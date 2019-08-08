@@ -713,7 +713,14 @@ void IntersectionManager::handle_intersection() {
                     // Drive straight through B(Y)
                     this->intersection_count = 0;
                     // driveforwardabit
-                    this->drive_system->update(0.9, 0.9);
+
+                    if (this->side) {
+                        this->drive_system->update(0.84, 0.93);
+                    }
+                    else {
+                        this->drive_system->update(0.93, 0.84);
+                    }
+
                     this->drive_system->actuate();
                     delay(150);
 
